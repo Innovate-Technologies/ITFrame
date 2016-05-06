@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -x
+
+ln -s -i ../../scripts/pre-commit-hook .git/hooks/pre-commit
+ln -s -i ../../scripts/post-checkout-hook .git/hooks/post-checkout

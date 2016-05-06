@@ -1,0 +1,7 @@
+#!/bin/sh
+
+FILES=$(find components/ hooks/ http/ runners/ app.js itframe.js -type f -name "*.js" -print0 | base64)
+
+echo -n "$FILES" | base64 -d | xargs -0 esformatter -i
+echo -n "$FILES" | base64 -d | xargs -0 sed -i 's/{ }/{}/g'
+echo -n "$FILES" | base64 -d | xargs -0 sed -i 's/, }/ }/g'

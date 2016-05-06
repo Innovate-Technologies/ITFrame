@@ -1,0 +1,6 @@
+ignore: {}
+patch:
+  'npm:ms:20151024':
+    - 'socket.io > socket.io-client > engine.io-client > debug > ms':
+        patched: '2015-12-27T14:28:46.994Z'
+version: v1
