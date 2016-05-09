@@ -10,14 +10,14 @@ module.exports.answerClient = function (ticket) {
 
 let answerClient = function (ticket) {
     let cldAnalyse = wait.for(cld.detect, ticket.content)
-    if (cldAnalyse.languages.length === 1 && ["en", "nl", "fr", "es"].indexOf(cldAnalyse.languages[0].code) === -1) {
+    if (cldAnalyse.languages.length === 1 && ["en", "nl", "fr"].indexOf(cldAnalyse.languages[0].code) === -1) {
         return whmcs.replyTicket({
             id: ticket.id,
             status: "Open",
             message: `
 Hi ${ticket.firstname || "there"},
 
-I am afraid we only provide support in English, French, Dutch and Spanish.
+I am afraid we only provide support in English, French and Dutch.
 If you are unable to reply in one of these languages, we invite you to use a translator service.
 
 Kindest Regards,
