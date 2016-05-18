@@ -9,5 +9,4 @@ runners/debug/
 *.orig
 *.remote
 *.local
-.eslintrc
 .DS_store
