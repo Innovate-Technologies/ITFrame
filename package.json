@@ -4,7 +4,7 @@
   "description": "The central hub for Cast, Control and DJ.",
   "main": "itframe.js",
   "author": "Innovate Technologies",
-  "license": "AGPL",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/Innovate-Technologies/ITFrame/issues"
   },
