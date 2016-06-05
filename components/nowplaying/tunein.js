@@ -59,6 +59,33 @@ module.exports.sendSong = function (username, title, artist) {
     })
 }
 
+module.exports.testInfo = (settings, callback) => {
+    let data = {
+        partnerId: settings.partnerId,
+        partnerKey: settings.partnerKey,
+        id: settings.id,
+        title: "Test title",
+        artist: "Now Playing Integration",
+    };
+    rest.post("https://air.radiotime.com/Playing.ashx", {
+        data: data,
+        timeout: 5000,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "SHOUTca.st",
+        },
+    }).on("complete", function (response, info) {
+        if (response instanceof Error) {
+            return callback("Invalid details provided for TuneIn AIR")
+        }
+        if (typeof response === "string" && response.includes("<status>403</status>")
+                || info.statusCode === 403) {
+            return callback("Invalid details provided for TuneIn AIR");
+        }
+        callback(null)
+    })
+}
+
 module.exports.getAllUsers = function (callback) {
     database.getAllUsers(callback)
 }
