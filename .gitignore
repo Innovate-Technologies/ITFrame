@@ -10,3 +10,4 @@ runners/debug/
 *.remote
 *.local
 .DS_store
+npm-debug.log
