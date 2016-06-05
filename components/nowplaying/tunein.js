@@ -76,13 +76,13 @@ module.exports.testInfo = (settings, callback) => {
         },
     }).on("complete", function (response, info) {
         if (response instanceof Error) {
-            return callback("Invalid details provided for TuneIn AIR")
+            return callback(new Error("Invalid details provided for TuneIn AIR"))
         }
         if (typeof response === "string" && response.includes("<status>403</status>")
                 || info.statusCode === 403) {
-            return callback("Invalid details provided for TuneIn AIR");
+            return callback(new Error("Invalid details provided for TuneIn AIR"));
         }
-        callback(null)
+        callback()
     })
 }
 
