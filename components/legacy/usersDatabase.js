@@ -93,6 +93,7 @@ usersDatabase.getStreamUrl = (username, callback) => {
                 }
                 let tracks = pls.parse(data);
                 if (typeof tracks[0] === "undefined" || typeof tracks[0].uri === "undefined") {
+                    log.error({ data, username, plsFileUrl }, "Failed to parse PLS file");
                     return callback(new Error("Could not parse the pls file."));
                 }
                 let streamUrlArray = tracks[0].uri.split(":");
