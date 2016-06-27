@@ -8,8 +8,18 @@
  */
 
 let bunyan = require("bunyan");
+let gelfStream = require("gelf-stream");
 let streams = [{ level: "debug", stream: process.stdout }];
 let externalSystem;
+
+if (config.sendLogsToGraylog && config.graylogServer && config.graylogPort) {
+    streams.push({
+        level: "debug",
+        name: "graylog",
+        type: "raw",
+        stream: gelfStream.forBunyan(config.graylogServer, config.graylogPort),
+    });
+}
 
 if (config.sendLogsToExternal) {
     externalSystem = require("./logs-external");
