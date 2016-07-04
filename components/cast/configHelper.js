@@ -114,6 +114,10 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
+                "value": "-/bin/bash -c \"docker kill `docker ps | grep 0.0.0.0:" + res.input.SHOUTcast.toString() + " | awk '{print $1}'`\"",
+            }, {
+                "name": "ExecStartPre",
+                "section": "Service",
                 "value": "-/usr/bin/docker rm " + username,
             }, {
                 "name": "ExecStart",
