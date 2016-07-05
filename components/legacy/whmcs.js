@@ -1,12 +1,27 @@
-import rest from "restler";
 import crypto from "crypto";
+
+import rest from "restler";
+import xml2js from "xml2js";
+import moment from "moment-timezone";
 
 import WHMCSError from "./WHMCSError.js";
 import phpSerialize from "./phpSerialize.js";
+import { Cache, ONE_SECOND } from "~/components/cache.js";
+
+const cache = new Cache();
 
 const moduleLogger = log.child({ component: "legacy/whmcs" });
 
-const sendRequest = (action, data) => new Promise((resolve, reject) => {
+const parseXml = (s) => new Promise((resolve, reject) => {
+    xml2js.parseString(s, { explicitArray: false }, function (err, result) {
+        if (err) {
+            return reject(err);
+        }
+        resolve(result);
+    });
+});
+
+const sendRequest = (action, data, format = "json") => new Promise((resolve, reject) => {
     const logger = moduleLogger.child({ action, data });
 
     data.username = config.whmcsUsername;
@@ -21,13 +36,19 @@ const sendRequest = (action, data) => new Promise((resolve, reject) => {
         timeout: 20000,
     }).on("timeout", () => {
         reject(new WHMCSError("Timeout"));
-    }).on("complete", (info) => {
+    }).on("complete", async (info) => {
         if (info instanceof Error) {
             logger.error(info, "Request to WHMCS failed");
             return reject(info);
         }
         try {
-            info = JSON.parse(info);
+            if (format === "json") {
+                info = JSON.parse(info);
+            } else if (format === "xml") {
+                info = (await parseXml(info)).whmcsapi;
+            } else {
+                throw new Error("Unexpected format");
+            }
         } catch (error) {
             logger.error({ info }, "Failed to parse WHMCS API reply");
             return reject(new Error("Failed to parse WHMCS API reply."));
@@ -119,6 +140,96 @@ export const getProductsForEmail = async (email) => {
         error.message = "Failed to get products: " + error.message;
         throw error;
     }
+};
+
+export const getTicket = async (unused, ticketId, withReplies = false) => {
+    const response = await sendRequest("getticket", { ticketid: ticketId }, "xml");
+    const replies = Array.isArray(response.replies.reply)
+        ? response.replies.reply
+        : [response.replies.reply];
+    const ticket = {
+        id: response.id,
+        date: moment.tz(response.date, "YYYY-MM-DDHH:mm:ss", "Europe/London"),
+        department: response.deptname,
+        status: response.status,
+        subject: response.subject,
+        message: replies[0].message,
+    };
+    if (withReplies) {
+        ticket.replies = replies;
+    }
+    return ticket;
+};
+
+const getSupportDepartments = async () => {
+    const response = await sendRequest("getsupportdepartments", {}, "xml");
+    const departments = Array.isArray(response.departments.department)
+        ? response.departments.department
+        : [response.departments.department];
+    return departments.map((dept) => ({
+        id: dept.id,
+        name: dept.name,
+    }));
+};
+
+const refreshSupportDepartments = async () => {
+    const cacheKey = "supportDepartments";
+    if (Array.isArray(cache.get(cacheKey))) {
+        return;
+    }
+    const departments = await getSupportDepartments();
+    cache.add(cacheKey, departments, ONE_SECOND * 120);
+};
+
+setInterval(refreshSupportDepartments, ONE_SECOND * 105);
+refreshSupportDepartments();
+
+const getSupportDeptName = (id) => {
+    const cacheKey = "supportDepartments";
+    if (Array.isArray(cache.get(cacheKey))) {
+        return cache.get(cacheKey).find((dept) => dept.id === id) || "(unknown)";
+    }
+    return "(unknown)";
+};
+
+export const getTickets = async (email, activeOnly) => {
+    const user = await getInfoForEmail(email);
+    const args = {
+        limitnum: 10000,
+        clientid: user.id,
+    };
+    if (activeOnly) {
+        args.status = "All Active Tickets";
+    }
+    const response = await sendRequest("gettickets", args, "xml");
+    const tickets = Array.isArray(response.tickets.ticket)
+        ? response.tickets.ticket
+        : [response.tickets.ticket];
+    return tickets.map((ticket) => ({
+        id: ticket.id,
+        date: moment.tz(ticket.date, "YYYY-MM-DDHH:mm:ss", "Europe/London"),
+        department: getSupportDeptName(ticket.deptid),
+        status: ticket.status,
+        subject: ticket.subject,
+        message: ticket.message,
+    }));
+};
+
+export const changeStatusForTicket = async (_unused, ticketId, status) => {
+    await sendRequest("updateticket", { ticketid: ticketId, status });
+};
+
+export const getRepliesForTicket = async (unused, ticketId) => {
+    return (await getTicket(unused, ticketId, true)).replies;
+};
+
+// This is different from replyTicket, which posts replies as an admin user.
+export const postReplyForTicket = async (email, ticketId, message) => {
+    await sendRequest("addticketreply", {
+        ticketid: ticketId,
+        email,
+        message,
+    });
 };
 
 export const openTicket = async ({ email, departmentId, subject, message, sendEmail } = {}) => {
