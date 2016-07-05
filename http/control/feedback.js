@@ -1,9 +1,8 @@
-let wait = require("wait.for");
-let controlUser = requireFromRoot("components/control/controlUser.js");
+const controlUser = requireFromRoot("components/control/controlUser.js");
 
-module.exports = function ({ app }) {
-    app.post("/control/feedback", function (req, res) {
-        wait.for(controlUser.openTicket, {
+export default function ({ app, wrap }) {
+    app.post("/control/feedback", wrap(async function (req, res) {
+        await controlUser.openTicket({
             email: req.user.email,
             departmentId: 16,
             subject: req.body.subject,
@@ -11,5 +10,5 @@ module.exports = function ({ app }) {
             sendEmail: false,
         });
         res.json({});
-    });
-};
+    }));
+}
