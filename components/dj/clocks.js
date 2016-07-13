@@ -1,8 +1,7 @@
-/* global requireFromRoot,log,config */
-var mongoose = requireFromRoot("components/database/mongodb.js")
-var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
-var ClocksSchema = new Schema({
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
+const ClocksSchema = new Schema({
     username: String,
     name: String,
     tags: [{
@@ -22,25 +21,40 @@ var ClocksSchema = new Schema({
 }, { collection: "dj_clocks" })
 ClocksSchema.index({
     username: 1,
-    song: 1,
-    artist: 1,
-    internalURL: 1,
 });
-var ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
+const ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
 
-module.exports.clocksForUsername = function (username, callback) {
-    ClocksModel.find({username: username}, callback)
-}
+export const clocksForUsername = (username) => new Promise((resolve, reject) => {
+    ClocksModel.find({username: username}, (err, res) => { err ? reject(err) : resolve(res)})
+})
 
-module.exports.clockForID = function (id, callback) {
+export const clockForID = (id) => new Promise((resolve, reject) => {
     ClocksModel.findOne({
         _id: new ObjectId(id),
-    }, callback)
-}
+    }, (err, res) => { err ? reject(err) : resolve(res)})
+})
 
-module.exports.clockForUserAndID = function (id, username, callback) {
+export const clockForUserAndID = (id, username) => new Promise((resolve, reject) => {
     ClocksModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, callback)
-}
+    }, (err, res) => { err ? reject(err) : resolve(res)})
+})
+
+export const addClock = (clock) => new Promise((resolve, reject) => {
+    return new ClocksModel(clock).save((err) => {
+        err ? reject(err) : resolve()
+    })
+})
+
+export const deleteClockWithID = (id) => new Promise((resolve, reject) => {
+    return ClocksModel.remove({ id }, (err) => {
+        err ? reject(err) : resolve()
+    })
+})
+
+export const deleteClockWithUsername = (username) => new Promise((resolve, reject) => {
+    return ClocksModel.remove({ username }, (err) => {
+        err ? reject(err) : resolve()
+    })
+})
