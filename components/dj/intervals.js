@@ -1,40 +1,42 @@
-/* global requireFromRoot,log,config */
-var mongoose = requireFromRoot("components/database/mongodb.js")
-var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
-var IntervalsSchema = new Schema({
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
+const IntervalsSchema = new Schema({
     username: String,
     name: String,
     songs: [],
-	intervalType: String, // random, ordered, all
+    intervalType: {
+        type: String,
+        enum: ["random", "ordered", "all"],
+    },
     every: Number,
-    intervalMode: String, // songs, seconds
-	songsAtOnce: Number,
+    intervalMode: {
+        type: String,
+        enum: ["songs", "seconds"],
+    },
+    songsAtOnce: Number,
     start: Date,
     end: Date,
-	forever: Boolean,
+    forever: Boolean,
 }, { collection: "dj_intervals" })
 IntervalsSchema.index({
     username: 1,
-    song: 1,
-    artist: 1,
-    internalURL: 1,
 });
-var IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
+const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
-module.exports.intervalsForUsername = function (username, callback) {
-    IntervalsModel.find({username: username}, callback)
-}
+export const intervalsForUsername = (username) => new Promise((resolve, reject) => {
+    IntervalsModel.find({ username: username }, (err, res) => { err ? reject(err) : resolve(res)})
+})
 
-module.exports.intervalForID = function (id, callback) {
+export const intervalForID = (id) => new Promise((resolve, reject) => {
     IntervalsModel.findOne({
         _id: new ObjectId(id),
-    }, callback)
-}
+    }, (err, res) => { err ? reject(err) : resolve(res)})
+})
 
-module.exports.intervalForUserAndID = function (id, username, callback) {
+export const intervalForUserAndID = (id, username) => new Promise((resolve, reject) => {
     IntervalsModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, callback)
-}
+    }, (err, res) => { err ? reject(err) : resolve(res)})
+})
