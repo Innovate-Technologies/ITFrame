@@ -1,6 +1,8 @@
 /* global requireFromRoot */
-let wait = require("wait.for");
-let cast = requireFromRoot("components/cast/manage.js");
+import wait from "wait.for"
+const cast = requireFromRoot("components/cast/manage.js");
+import * as clocks from "../../components/dj/clocks.js"
+import * as intervals from "../../components/dj/intervals.js"
 import BadRequestError from "~/http/classes/BadRequestError";
 
 module.exports = ({ app }) => {
@@ -27,4 +29,20 @@ module.exports = ({ app }) => {
             }
         });
     });
+
+    app.get("/control/cast/dj/clocks/:username", async (req, res, next) => {
+        try {
+            res.json(await clocks.clocksForUsername(req.params.username))
+        } catch (error) {
+            return next(error)
+        }
+    })
+
+    app.get("/control/cast/dj/intervals/:username", async (req, res, next) => {
+        try {
+            res.json(await intervals.intervalsForUsername(req.params.username))
+        } catch (error) {
+            return next(error)
+        }
+    })
 };
