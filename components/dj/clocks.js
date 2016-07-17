@@ -58,3 +58,11 @@ export const deleteClockWithUsername = (username) => new Promise((resolve, rejec
         err ? reject(err) : resolve()
     })
 })
+
+
+export const replaceClocksForUsername = async (username, clocks) => {
+    await deleteClockWithUsername(username)
+    for (let clock of clocks) {
+        await addClock(clock)
+    }
+}

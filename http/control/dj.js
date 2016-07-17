@@ -7,6 +7,10 @@ import BadRequestError from "~/http/classes/BadRequestError";
 
 module.exports = ({ app }) => {
 
+    //////////////////////////////////////////////////////
+    // General settings                                 //
+    //////////////////////////////////////////////////////
+
     app.post("/control/cast/dj/settings/:username", function (req, res, next) {
         if (!req.body.enabled) {
             throw new BadRequestError();
@@ -29,7 +33,9 @@ module.exports = ({ app }) => {
             }
         });
     });
-
+    //////////////////////////////////////////////////////
+    // Clocks                                           //
+    //////////////////////////////////////////////////////
     app.get("/control/cast/dj/clocks/:username", async (req, res, next) => {
         try {
             res.json(await clocks.clocksForUsername(req.params.username))
@@ -37,6 +43,18 @@ module.exports = ({ app }) => {
             return next(error)
         }
     })
+
+    app.put("/control/cast/dj/clocks/:username", async (req, res, next) => {
+        try {
+            await clocks.replaceClocksForUsername(req.params.username, req.params.clocks)
+            res.json({status: "ok"})
+        } catch (error) {
+            return next(error)
+        }
+    });
+    //////////////////////////////////////////////////////
+    // Intervals                                        //
+    //////////////////////////////////////////////////////
 
     app.get("/control/cast/dj/intervals/:username", async (req, res, next) => {
         try {
