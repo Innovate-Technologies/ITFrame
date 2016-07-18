@@ -1,33 +1,32 @@
-let controlUser = {};
-let userBackend = require(global.appRoot + config.controlAuthClass);
+const userBackend = requireFromRoot(config.controlAuthClass);
 
 /**
  * Try to log in with the specified email and password
  * This method calls the authentication class's checkLogin() method to check.
  * @param  {String}   email    Email address
  * @param  {String}   password Password
- * @param  {Function} callback Callback function (err, loginIsCorrect)
+ * @return {Boolean}  Whether credentials are correct
  */
-controlUser.checkLogin = function (email, password, callback) {
-    userBackend.checkLogin(email, password, callback);
+export const checkLogin = (email, password) => {
+    return userBackend.checkLogin(email, password);
 };
 
 /**
  * Get user information for a specified email
  * @param  {String}   email    Email address
- * @param  {Function} callback Callback function (err, info)
+ * @return {Object}   Info
  */
-controlUser.getInfoForEmail = function (email, callback) {
-    userBackend.getInfoForEmail(email, callback);
+export const getInfoForEmail = function (email) {
+    return userBackend.getInfoForEmail(email);
 };
 
 /**
  * Get products for a specified email
  * @param  {String}   email    Email address
- * @param  {Function} callback Callback function (err, products)
+ * @return {Array}    Array of product objects
  */
-controlUser.getProductsForEmail = function (email, callback) {
-    userBackend.getProductsForEmail(email, callback);
+export const getProductsForEmail = function (email) {
+    return userBackend.getProductsForEmail(email);
 };
 
 /**
@@ -38,27 +37,23 @@ controlUser.getProductsForEmail = function (email, callback) {
  * @param  {String}   options.subject      Ticket subject
  * @param  {String}   options.message      Ticket message
  * @param  {Boolean}  options.sendEmail    Send an email about the ticket to the client
- * @param  {Function} callback             Callback function (err)
  */
-controlUser.openTicket = function ({ email, departmentId, subject, message, sendEmail }, callback) {
-    userBackend.openTicket({
+export const openTicket = function ({ email, departmentId, subject, message, sendEmail } = {}) {
+    return userBackend.openTicket({
         email,
         departmentId,
         subject,
         message,
         sendEmail,
-    }, callback);
+    });
 };
 
 /**
  * Send an email related to a product
  * @param  {String}   emailTemplateName      Email template name (may not be the email subject)
- * @param  {String}   relatedProductUsername Related product username
+ * @param  {String}   relatedUsername        Related product username
  * @param  {Object}   customFields           Custom fields (optional)
- * @param  {Function} cb                     Callback function (err)
  */
-controlUser.sendProductEmail = function (emailTemplateName, relatedProductUsername, customFields = {}, cb) {
-    userBackend.sendProductEmail(emailTemplateName, relatedProductUsername, customFields, cb);
+export const sendProductEmail = function (emailTemplateName, relatedUsername, customFields = {}) {
+    return userBackend.sendProductEmail(emailTemplateName, relatedUsername, customFields);
 };
-
-module.exports = controlUser;

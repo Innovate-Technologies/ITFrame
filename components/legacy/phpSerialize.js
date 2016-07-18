@@ -120,4 +120,4 @@ function serialize(mixedValue) {
     return val;
 }
 
-module.exports = serialize;
+export default serialize;
