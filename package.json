@@ -33,6 +33,8 @@
     "jsonwebtoken": "^5.4.1",
     "lwip": "0.0.8",
     "maxmind": "~0.6.0",
+    "moment": "^2.14.1",
+    "moment-timezone": "^0.5.4",
     "mongoose": "^4.3.4",
     "mongoose-function": "~0.1.0",
     "mongoose-paginate": "^5.0.0",
@@ -57,7 +59,7 @@
     "unirest": "^0.4.2",
     "util": "~0.10.3",
     "wait.for": "~0.6.6",
-    "xml2js": "^0.4.15"
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "esformatter-braces": "^1.2.1",
