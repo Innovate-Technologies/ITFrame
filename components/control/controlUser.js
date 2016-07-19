@@ -61,6 +61,7 @@ export const getTickets = (email, activeOnly = false) => {
  * @param  {String}   options.subject      Ticket subject
  * @param  {String}   options.message      Ticket message
  * @param  {Boolean}  options.sendEmail    Send an email about the ticket to the client
+ * @return {String}   Opened ticket ID
  */
 export const openTicket = function ({ email, departmentId, subject, message, sendEmail } = {}) {
     if (!departmentId || !subject || !message) {
