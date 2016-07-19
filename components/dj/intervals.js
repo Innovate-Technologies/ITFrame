@@ -1,3 +1,5 @@
+import _ from "underscore"
+
 const mongoose = requireFromRoot("components/database/mongodb.js")
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
@@ -38,5 +40,27 @@ export const intervalForUserAndID = (id, username) => new Promise((resolve, reje
     IntervalsModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, (err, res) => { err ? reject(err) : resolve(res)})
+    }, (err, res) => { err ? reject(err) : resolve(res) })
+})
+
+export const addNewIntervalForUsername = (username, interval) => new Promise((resolve, reject) => {
+    interval.username = username
+    new IntervalsModel(interval).save((err) =>{ err ? reject(err) : resolve() })
+})
+
+export const updateIntervalWithUsernameAndID = (username, id, interval) => new Promise((resolve, reject) => {
+    IntervalsModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    }, (err, res) => {
+        if (err) {
+            return reject(err)
+        }
+        if (!res) {
+            return reject(new Error("No matching entry found"))
+        }
+        res = _.extend(res, interval)
+        res.username = username
+        res.save((error) => { error ? reject(error) : resolve() })
+    })
 })

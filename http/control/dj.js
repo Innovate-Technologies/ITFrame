@@ -51,7 +51,7 @@ module.exports = ({ app }) => {
         } catch (error) {
             return next(error)
         }
-    });
+    })
     //////////////////////////////////////////////////////
     // Intervals                                        //
     //////////////////////////////////////////////////////
@@ -63,4 +63,23 @@ module.exports = ({ app }) => {
             return next(error)
         }
     })
+
+    app.patch("/control/cast/dj/intervals/:username/:id", async (req, res, next) => {
+        try {
+            await intervals.updateIntervalWithUsernameAndID(req.params.username, req.params.interval._id, req.params.interval)
+            res.json({status: "ok"})
+        } catch (error) {
+            return next(error)
+        }
+    })
+
+    app.put("/control/cast/dj/intervals/:username", async (req, res, next) => {
+        try {
+            await intervals.addNewIntervalForUsername(res.params.username, req.params.interval)
+            res.json({status: "ok"})
+        } catch (error) {
+            return next(error)
+        }
+    })
+
 };
