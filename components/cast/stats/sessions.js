@@ -21,7 +21,7 @@ export const startSession = (username, listenerId) => new Promise((resolve, reje
         username,
         listenerId,
         startTime: new Date(),
-    }).save((error) => {error ? reject(error) : resolve()})
+    }).save((error, res) => {error ? reject(error) : resolve(res)})
 })
 
 export const endSession = (username, id) => new Promise((resolve, reject) => {
