@@ -33,3 +33,10 @@ export const endSession = (username, id) => new Promise((resolve, reject) => {
         res.save((error) => {error ? reject(error) : resolve()})
     })
 })
+
+export const getAllSessionsForUsernameSince = (username, since) => new Promise((resolve, reject) => {
+    SessionsModel.find({username})
+    .where("startTime").gt(since)
+    .populate("listenerId")
+    .exec((err, res) => {err ? reject(err) : resolve(res)})
+})
