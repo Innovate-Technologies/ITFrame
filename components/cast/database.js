@@ -22,6 +22,10 @@ let castSchema = new Schema({
     "apikey": String,
     "input": {
         "SHOUTcast": Number,
+        "Icecast": {
+            type: Number,
+            default: 1000,
+        }
     },
     "directories": {
         "Icecast": Object,
@@ -57,6 +61,14 @@ let castSchema = new Schema({
         countryCodes: [String],
         mode: { type: String, enum: ["blacklist", "whitelist"] },
     },
+    antiStreamRipper: {
+        type: Boolean,
+        default: false,
+    },
+    hideListenerCount: {
+        type: Boolean,
+        default: false,
+    }
 }, { collection: "cast" });
 let CastModel = mongoose.model("cast", castSchema, "cast");
 
