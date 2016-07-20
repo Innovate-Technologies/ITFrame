@@ -3,7 +3,10 @@ const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 const SessionsSchema = new Schema({
     username: String,
-    listenerId: ObjectId,
+    listenerId: {
+        type: ObjectId,
+        ref: "cast_listeners",
+    },
     startTime: Date,
     endTime: Date,
 }, { collection: "cast_sessions" })
