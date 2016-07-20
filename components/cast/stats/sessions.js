@@ -1,0 +1,32 @@
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
+const SessionsSchema = new Schema({
+    username: String,
+    listenerId: ObjectId,
+    startTime: Date,
+    endTime: Date,
+}, { collection: "cast_sessions" })
+SessionsSchema.index({
+    username: 1,
+    listenerId: 1,
+});
+const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
+
+export const startSession = (username, listenerId) => new Promise((resolve, reject) => {
+    new SessionsModel({
+        username,
+        listenerId,
+        startTime: new Date(),
+    }).save((error) => {error ? reject(error) : resolve()})
+})
+
+export const endSession = (username, id) => new Promise((resolve, reject) => {
+    SessionsModel.findOne({_id: new ObjectId(id)}, (err, res) => {
+        if (err) {
+            return reject(err)
+        }
+        res.endTime = new Date()
+        res.save((error) => {error ? reject(error) : resolve()})
+    })
+})
