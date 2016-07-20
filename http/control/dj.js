@@ -3,6 +3,7 @@ import wait from "wait.for"
 const cast = requireFromRoot("components/cast/manage.js");
 import * as clocks from "../../components/dj/clocks.js"
 import * as intervals from "../../components/dj/intervals.js"
+import * as dj from "../../components/dj/manage.js"
 import BadRequestError from "~/http/classes/BadRequestError";
 
 module.exports = ({ app }) => {
@@ -47,6 +48,7 @@ module.exports = ({ app }) => {
     app.put("/control/cast/dj/clocks/:username", async (req, res, next) => {
         try {
             await clocks.replaceClocksForUsername(req.params.username, req.params.clocks)
+            await dj.reloadClocks(req.params.username)
             res.json({status: "ok"})
         } catch (error) {
             return next(error)
@@ -67,6 +69,7 @@ module.exports = ({ app }) => {
     app.patch("/control/cast/dj/intervals/:username/:id", async (req, res, next) => {
         try {
             await intervals.updateIntervalWithUsernameAndID(req.params.username, req.params.interval._id, req.params.interval)
+            await dj.reloadClocks(req.params.username)
             res.json({status: "ok"})
         } catch (error) {
             return next(error)
@@ -76,6 +79,7 @@ module.exports = ({ app }) => {
     app.put("/control/cast/dj/intervals/:username", async (req, res, next) => {
         try {
             await intervals.addNewIntervalForUsername(res.params.username, req.params.interval)
+            await dj.reloadClocks(req.params.username)
             res.json({status: "ok"})
         } catch (error) {
             return next(error)
