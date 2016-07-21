@@ -61,9 +61,9 @@ module.exports.sendSong = function (username, title, artist) {
 
 module.exports.testInfo = (settings, callback) => {
     let data = {
-        partnerId: settings.partnerId,
-        partnerKey: settings.partnerKey,
-        id: settings.id,
+        partnerId: settings.partnerId.toString(),
+        partnerKey: settings.partnerKey.toString(),
+        id: settings.stationId,
         title: "Test title",
         artist: "Now Playing Integration",
     };
