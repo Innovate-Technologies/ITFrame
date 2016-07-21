@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- '4'
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+os:
+- linux
+
+script:
+- npm install 
+- ./node_modules/.bin/babel ./ -d bin --minified --ignore 'node_modules/'
