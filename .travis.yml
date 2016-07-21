@@ -13,4 +13,5 @@ os:
 - linux
 
 script:
-- ./node_modules/.bin/babel ./ -d bin --minified --ignore 'node_modules/'
+- npm -g install babel-cli
+- babel ./ -d bin --minified --ignore 'node_modules/'
