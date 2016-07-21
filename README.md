@@ -1,4 +1,4 @@
-# ITFrame [![Build Status](https://travis-ci.org/Innovate-Technologies/ITFrame.svg?branch=travis)](https://travis-ci.org/Innovate-Technologies/ITFrame)
+# ITFrame [![Build Status](https://travis-ci.org/Innovate-Technologies/ITFrame.svg?branch=master)](https://travis-ci.org/Innovate-Technologies/ITFrame)
 
 ITFrame stands for Innovate Technologies Framework
 and started back in March 2014 as a fast Centova Cast backend used by our current services.
