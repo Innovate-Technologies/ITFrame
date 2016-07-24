@@ -10,7 +10,11 @@ const ListenersSchema = new Schema({
         latitude: Number,
         longitude: Number,
     },
-    lastSeen: Date,
+    lastSeen: {
+        type: Date,
+        expires: "2y",
+        default: Date.now,
+    },
 }, { collection: "cast_listeners" })
 ListenersSchema.index({
     username: 1,
