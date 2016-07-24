@@ -8,7 +8,11 @@ const SessionsSchema = new Schema({
         ref: "cast_listeners",
     },
     startTime: Date,
-    endTime: Date,
+    endTime: {
+        type: Date,
+        expires: "1y",
+        default: Date.now,
+    },
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
     username: 1,
