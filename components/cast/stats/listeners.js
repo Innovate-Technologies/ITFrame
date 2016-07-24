@@ -30,19 +30,15 @@ export const getListenerForInfo = (ip, client) => new Promise((resolve, reject) 
     })
 })
 
-export const addListenerProfile = (info) => new Promise((resolve, reject) => {
+export const addListenerProfile = async (info) => {
     info.lastSeen = new Date()
-    new ListenersModel(info).save((err) => {err ? reject(err) : resolve()})
-})
+    return await new ListenersModel(info).save()
+}
 
-export const updateLastSeen = (id) => new Promise((resolve, reject) => {
-    ListenersModel.findOne({
-        _id: new ObjectId(id)
-    }, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        res.lastSeen = new Date()
-        res.save((error) => {error ? reject(error) : resolve()})
+export const updateLastSeen = async (id) => {
+    const listener = ListenersModel.findOne({
+        _id: new ObjectId(id),
     })
-})
+    listener.lastSeen = new Date()
+    return await listener.save()
+}
