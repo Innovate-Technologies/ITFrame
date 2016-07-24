@@ -12,7 +12,10 @@ const SessionsSchema = new Schema({
         expires: "1y",
         default: Date.now,
     },
-    endTime: Date,
+    endTime: {
+        type: Date,
+        default: null,
+    },
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
     username: 1,
@@ -20,27 +23,32 @@ SessionsSchema.index({
 });
 const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
 
-export const startSession = (username, listenerId) => new Promise((resolve, reject) => {
-    new SessionsModel({
+export const startSession = async (username, listenerId) => {
+    const session = new SessionsModel({
         username,
         listenerId,
         startTime: new Date(),
-    }).save((error, res) => {error ? reject(error) : resolve(res)})
-})
-
-export const endSession = (username, id) => new Promise((resolve, reject) => {
-    SessionsModel.findOne({_id: new ObjectId(id)}, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        res.endTime = new Date()
-        res.save((error) => {error ? reject(error) : resolve()})
     })
-})
+    return await session.save()
+}
 
-export const getAllSessionsForUsernameSince = (username, since) => new Promise((resolve, reject) => {
-    SessionsModel.find({username})
-    .where("startTime").gt(since)
-    .populate("listenerId")
-    .exec((err, res) => {err ? reject(err) : resolve(res)})
-})
+export const endSession = async (username, id) => {
+    const session = await SessionsModel.findOne({_id: new ObjectId(id)})
+    session.endTime = new Date()
+    return await session.save()
+}
+
+export const getAllSessionsForUsernameSince = async (username, since) => {
+    return await SessionsModel.find({username}).where("startTime").gt(since).populate("listenerId").exec()
+}
+
+export const closeAllSessionsForUsername = async (username) => {
+    const openSessions = await SessionsModel.find({
+        username,
+        endTime: null,
+    })
+    for (let session of openSessions) {
+        session.endTime = new Date()
+        await session.save()
+    }
+}
