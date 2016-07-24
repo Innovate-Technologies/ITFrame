@@ -16,6 +16,7 @@ const SessionsSchema = new Schema({
         type: Date,
         default: null,
     },
+    returningListener: Boolean,
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
     username: 1,
