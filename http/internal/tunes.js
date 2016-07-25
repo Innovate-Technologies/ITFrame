@@ -139,7 +139,7 @@ module.exports = function ({ app, wrap }) {
         });
     });
 
-    app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap(async (req, res, next) => {
+    app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap(async (req, res) => {
         if (!req.query.link) {
             throw new Error("No link provided");
         }
