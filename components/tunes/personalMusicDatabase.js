@@ -160,12 +160,6 @@ module.exports.removeSong = function (username, id, callback) {
             if (remerr) {
                 return callback(err)
             }
-            if (typeof entry.internalURL === "string" && entry.internalURL !== "") {
-                lookForLonelyInternalLink(entry.internalURL)
-            }
-            if (entry.processedURLS && entry.processedURLS.length > 0) {
-                lookForLonelyProcessedLink(entry.processedURLS)
-            }
             callback(err, res)
         })
     })
@@ -207,46 +201,18 @@ module.exports.calculateUsedSpace = (username, callback) => {
     })
 }
 
-
-/*
-    The functions under here are planned to be replaced by a worker so there is better scalability
-*/
-
-
-var lookForLonelyInternalLink = function (link) {
-    TunesPersonalModel.find({ internalURL: link }, (err, res) => {
-        if (err) {
-            return
-        }
-        if (res.length === 0) {
-            swift.deleteFile({
-                container: config.tunesUploadContainer,
-                name: link.split("/")[link.split("/").length - 1],
-            }, () => {
-            })
-        }
-    })
-}
-
-var lookForLonelyProcessedLink = function (processedURLS) {
-    for (var id in processedURLS) {
-        if (processedURLS.hasOwnProperty(id)) {
-            var search = { }
-            search["processedURLS." + id] = processedURLS[id];
-            lookInProcessedAndDelete(search, processedURLS[id])
-        }
+module.exports.isLinkInUse = async (link) => {
+    const internalURLs = await TunesPersonalModel.find({ internalURL: link })
+    if (internalURLs.length !== 0) {
+        return true
     }
+    const findArray = []
+    for (let bitrate of [32, 64, 98, 128, 192, 265, 320]) {
+        const selector = {}
+        selector[`processedURLS.${bitrate}`] = link
+        findArray.push(selector)
+    }
+    const processedUrls = await TunesPersonalModel.find({$or: findArray})
+    return processedUrls.length !== 0
 }
-var lookInProcessedAndDelete = function (search, link) {
-    TunesPersonalModel.find(search, (err, res) => {
-        if (err) {
-            return
-        }
-        if (res.length === 0) {
-            swift.deleteFile({
-                container: config.tunesUploadContainer,
-                name: link.split("/")[link.split("/").length - 1],
-            }, () => {})
-        }
-    })
-}
+

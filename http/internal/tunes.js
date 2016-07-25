@@ -81,7 +81,7 @@ let upload = multer({
     },
 });
 
-module.exports = function ({ app }) {
+module.exports = function ({ app, wrap }) {
     app.get("/tunes/getSongForID/" + config.tunesKey, (req, res, next) => {
         if (!req.query.id) {
             return next(new Error("No ID provided"));
@@ -138,5 +138,13 @@ module.exports = function ({ app }) {
             name: req.file.name,
         });
     });
+
+    app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap(async (req, res) => {
+        if (!req.query.link) {
+            throw new Error("No link provided");
+        }
+        const isInUse = await db.isLinkInUse(req.query.link)
+        res.json({ isInUse })
+    }));
 
 };
