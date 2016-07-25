@@ -139,17 +139,12 @@ module.exports = function ({ app, wrap }) {
         });
     });
 
-    app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap( async (req, res, next) => {
+    app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap(async (req, res, next) => {
         if (!req.query.link) {
-            return next(new Error("No link provided"));
+            throw new Error("No link provided");
         }
-        try {
-            const isInUse = await db.isLinkInUse(req.query.link)
-            res.json({isInUse})
-
-        } catch (error) {
-            return next(error)
-        }
+        const isInUse = await db.isLinkInUse(req.query.link)
+        res.json({ isInUse })
     }));
 
 };
