@@ -208,9 +208,9 @@ module.exports.isLinkInUse = async (link) => {
     }
     const findArray = []
     for (let bitrate of [32, 64, 98, 128, 192, 265, 320]) {
-        const find = {}
-        find[`processedURLS.${bitrate}`] = link
-        findArray.push(find)
+        const selector = {}
+        selector[`processedURLS.${bitrate}`] = link
+        findArray.push(selector)
     }
     const processedURLS = await TunesPersonalModel.find({$or: findArray})
     if (processedURLS.length !== 0) {
