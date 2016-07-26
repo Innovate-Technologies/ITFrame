@@ -35,6 +35,27 @@ module.exports = ({ app }) => {
         });
     });
     //////////////////////////////////////////////////////
+    // Dashboard                                           //
+    //////////////////////////////////////////////////////
+    app.get("/control/cast/dj/queue/:username", async (req, res, next) => {
+        try {
+            res.json(await dj.getQueue(req.params.username))
+        } catch (error) {
+            return next(error)
+        }
+    })
+
+    app.post("/control/cast/dj/skip/:username", async (req, res, next) => {
+        try {
+            dj.skipSong(req.params.username)
+            res.json({status: "ok"})
+        } catch (error) {
+            return next(error)
+        }
+    })
+
+
+    //////////////////////////////////////////////////////
     // Clocks                                           //
     //////////////////////////////////////////////////////
     app.get("/control/cast/dj/clocks/:username", async (req, res, next) => {
