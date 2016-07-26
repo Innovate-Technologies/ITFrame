@@ -29,6 +29,14 @@ TunesPersonalSchema.index({
     song: 1,
     artist: 1,
     internalURL: 1,
+    type: 1,
+    "processedURLS.32": 1,
+    "processedURLS.64": 1,
+    "processedURLS.96": 1,
+    "processedURLS.128": 1,
+    "processedURLS.192": 1,
+    "processedURLS.265": 1,
+    "processedURLS.320": 1,
 });
 TunesPersonalSchema.plugin(mongoosePaginate)
 var TunesPersonalModel = mongoose.model("TunesPersonal", TunesPersonalSchema, "TunesPersonal")
@@ -207,7 +215,7 @@ module.exports.isLinkInUse = async (link) => {
         return true
     }
     const findArray = []
-    for (let bitrate of [32, 64, 98, 128, 192, 265, 320]) {
+    for (let bitrate of [32, 64, 96, 128, 192, 265, 320]) {
         const selector = {}
         selector[`processedURLS.${bitrate}`] = link
         findArray.push(selector)
