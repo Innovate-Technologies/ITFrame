@@ -102,7 +102,7 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
-                "value": "-/bin/bash -c '/usr/bin/docker pull docker.innovatete.ch/cast:`dpkg --print-architecture`-latest'",
+                "value": "-/bin/bash -c '/usr/bin/docker pull docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest'",
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
@@ -122,7 +122,7 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "ExecStart",
                 "section": "Service",
-                value: `/bin/bash -c "/usr/bin/docker run -p ${res.input.SHOUTcast.toString()}:${(res.input.SHOUTcast).toString()} -p ${(res.input.SHOUTcast + 1).toString()}:${(res.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} docker.innovatete.ch/cast:\`dpkg --print-architecture\`-latest"`,
+                value: `/bin/bash -c "/usr/bin/docker run -p ${res.input.SHOUTcast.toString()}:${(res.input.SHOUTcast).toString()} -p ${(res.input.SHOUTcast + 1).toString()}:${(res.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest"`,
             }, {
                 "name": "ExecStartPost",
                 "section": "Service",
