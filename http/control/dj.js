@@ -6,7 +6,7 @@ import * as intervals from "../../components/dj/intervals.js"
 import * as dj from "../../components/dj/manage.js"
 import BadRequestError from "~/http/classes/BadRequestError";
 
-module.exports = ({ app }) => {
+module.exports = ({ app, wrap }) => {
 
     //////////////////////////////////////////////////////
     // General settings                                 //
@@ -34,77 +34,50 @@ module.exports = ({ app }) => {
             }
         });
     });
-    //////////////////////////////////////////////////////
-    // Dashboard                                           //
-    //////////////////////////////////////////////////////
-    app.get("/control/cast/dj/queue/:username", async (req, res, next) => {
-        try {
-            res.json(await dj.getQueue(req.params.username))
-        } catch (error) {
-            return next(error)
-        }
-    })
 
-    app.post("/control/cast/dj/skip/:username", async (req, res, next) => {
-        try {
-            dj.skipSong(req.params.username)
-            res.json({status: "ok"})
-        } catch (error) {
-            return next(error)
-        }
-    })
+    //////////////////////////////////////////////////////
+    // Dashboard                                        //
+    //////////////////////////////////////////////////////
+    app.get("/control/cast/dj/queue/:username", wrap(async (req, res) => {
+        res.json(await dj.getQueue(req.params.username))
+    }))
+
+    app.post("/control/cast/dj/skip/:username", wrap(async (req, res) => {
+        dj.skipSong(req.params.username)
+        res.json({status: "ok"})
+    }))
 
 
     //////////////////////////////////////////////////////
     // Clocks                                           //
     //////////////////////////////////////////////////////
-    app.get("/control/cast/dj/clocks/:username", async (req, res, next) => {
-        try {
-            res.json(await clocks.clocksForUsername(req.params.username))
-        } catch (error) {
-            return next(error)
-        }
-    })
+    app.get("/control/cast/dj/clocks/:username", wrap(async (req, res) => {
+        res.json(await clocks.clocksForUsername(req.params.username))
+    }))
 
-    app.put("/control/cast/dj/clocks/:username", async (req, res, next) => {
-        try {
-            await clocks.replaceClocksForUsername(req.params.username, req.params.clocks)
-            await dj.reloadClocks(req.params.username)
-            res.json({status: "ok"})
-        } catch (error) {
-            return next(error)
-        }
-    })
+    app.put("/control/cast/dj/clocks/:username", wrap(async (req, res) => {
+        await clocks.replaceClocksForUsername(req.params.username, req.params.clocks)
+        await dj.reloadClocks(req.params.username)
+        res.json({status: "ok"})
+    }))
     //////////////////////////////////////////////////////
     // Intervals                                        //
     //////////////////////////////////////////////////////
 
-    app.get("/control/cast/dj/intervals/:username", async (req, res, next) => {
-        try {
-            res.json(await intervals.intervalsForUsername(req.params.username))
-        } catch (error) {
-            return next(error)
-        }
-    })
+    app.get("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
+        res.json(await intervals.intervalsForUsername(req.params.username))
+    }))
 
-    app.patch("/control/cast/dj/intervals/:username/:id", async (req, res, next) => {
-        try {
-            await intervals.updateIntervalWithUsernameAndID(req.params.username, req.params.interval._id, req.params.interval)
-            await dj.reloadClocks(req.params.username)
-            res.json({status: "ok"})
-        } catch (error) {
-            return next(error)
-        }
-    })
+    app.patch("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
+        await intervals.updateIntervalWithUsernameAndID(req.params.username, req.params.interval._id, req.params.interval)
+        await dj.reloadClocks(req.params.username)
+        res.json({status: "ok"})
+    }))
 
-    app.put("/control/cast/dj/intervals/:username", async (req, res, next) => {
-        try {
-            await intervals.addNewIntervalForUsername(res.params.username, req.params.interval)
-            await dj.reloadClocks(req.params.username)
-            res.json({status: "ok"})
-        } catch (error) {
-            return next(error)
-        }
-    })
+    app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
+        await intervals.addNewIntervalForUsername(res.params.username, req.params.interval)
+        await dj.reloadClocks(req.params.username)
+        res.json({status: "ok"})
+    }))
 
 };
