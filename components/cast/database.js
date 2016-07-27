@@ -1,4 +1,4 @@
-/* global requireFromRoot */
+const randtoken = require("rand-token");
 let castDatabase = {};
 let buildinfo = requireFromRoot("components/buildinfo/database.js")
 let _ = require("underscore");
@@ -37,7 +37,20 @@ let castSchema = new Schema({
             default: "0",
         },
     },
-    "internal": Object,
+    "internal": {
+        "dj": {
+            "key": {
+                type: String,
+                default: () => { randtoken.generate(30) },
+            },
+        },
+        "statistics": {
+            "key": {
+                type: String,
+                default: () => { randtoken.generate(30) },
+            },
+        },
+    },
     "DJ": {
         "enabled": {
             type: Boolean,
@@ -79,7 +92,7 @@ castDatabase.addConfigForUsername = (username, conf, callback) => {
             return callback(err)
         }
         if (typeof conf.version !== "object") {
-            conf.version = {Cast: 0, DJ: 0}
+            conf.version = { Cast: 0, DJ: 0 }
         }
         conf.version.Cast = build.version
         new CastModel(conf).save(callback);
@@ -99,7 +112,7 @@ castDatabase.updateVersion = (username, callback) => {
                 return callback(buildErr)
             }
             if (typeof conf.version !== "object") {
-                conf.version = {Cast: 0, DJ: 0}
+                conf.version = { Cast: 0, DJ: 0 }
             }
             conf.version.Cast = build.version
             conf.save(callback)
@@ -120,7 +133,7 @@ castDatabase.updateDJVersion = (username, callback) => {
                 return callback(buildErr)
             }
             if (typeof conf.version !== "object") {
-                conf.version = {Cast: 0, DJ: 0}
+                conf.version = { Cast: 0, DJ: 0 }
             }
             conf.version.DJ = build.version
             conf.save(callback)
