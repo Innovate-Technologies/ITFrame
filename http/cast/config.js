@@ -6,7 +6,7 @@ import BadRequestError from "~/http/classes/BadRequestError";
 import AccessDeniedError from "~/http/classes/AccessDeniedError";
 
 module.exports = function ({ app }) {
-    app.all("/cast/*", function checkToken(req, res, next) {
+    app.all("/cast/config", function checkToken(req, res, next) {
         wait.launchFiber(() => {
             if (!req.body.token) {
                 return next(new BadRequestError("No token found in the request body."));

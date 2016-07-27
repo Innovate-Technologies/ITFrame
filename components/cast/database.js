@@ -183,6 +183,16 @@ castDatabase.getStreamUrl = (username, callback) => {
     });
 }
 
+castDatabase.checkStatsKey = async (username, key) => {
+    const accountInfo = await CastModel.findOne({ username })
+
+    if (!accountInfo || !accountInfo.internal || !accountInfo.internal.statistics) {
+        return false
+    }
+
+    return accountInfo.internal.statistics.key === key
+}
+
 castDatabase.getAll = (callback) => {
     CastModel.find({}, callback)
 }

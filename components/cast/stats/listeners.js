@@ -30,7 +30,8 @@ export const getListenerForInfo = (ip, client) => new Promise((resolve, reject) 
     })
 })
 
-export const addListenerProfile = async (info) => {
+export const addListenerProfile = async (username, info) => {
+    info.username = username
     info.lastSeen = new Date()
     return await new ListenersModel(info).save()
 }
