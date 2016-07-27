@@ -13,4 +13,15 @@ patch:
         patched: '2016-07-27T13:29:16.924Z'
     - twit > request:
         patched: '2016-07-27T13:29:16.924Z'
+  'npm:negotiator:20160616':
+    - socket.io > engine.io > accepts > negotiator:
+        patched: '2016-07-27T13:38:38.866Z'
+  'npm:tough-cookie:20160722':
+    - unirest > request > tough-cookie:
+        patched: '2016-07-27T13:38:38.866Z'
+  'npm:ws:20160624':
+    - socket.io > engine.io > ws:
+        patched: '2016-07-27T13:38:38.866Z'
+    - socket.io > socket.io-client > engine.io-client > ws:
+        patched: '2016-07-27T13:38:38.866Z'
 version: v1.5.0
