@@ -26,41 +26,37 @@ IntervalsSchema.index({
 });
 const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
-export const intervalsForUsername = (username) => new Promise((resolve, reject) => {
-    IntervalsModel.find({ username: username }, (err, res) => { err ? reject(err) : resolve(res)})
-})
+export const intervalsForUsername = async (username) => {
+    return IntervalsModel.find({ username: username })
+}
 
-export const intervalForID = (id) => new Promise((resolve, reject) => {
-    IntervalsModel.findOne({
+export const intervalForID = async (id) => {
+    return IntervalsModel.findOne({
         _id: new ObjectId(id),
-    }, (err, res) => { err ? reject(err) : resolve(res)})
-})
-
-export const intervalForUserAndID = (id, username) => new Promise((resolve, reject) => {
-    IntervalsModel.findOne({
-        _id: new ObjectId(id),
-        username: username,
-    }, (err, res) => { err ? reject(err) : resolve(res) })
-})
-
-export const addNewIntervalForUsername = (username, interval) => new Promise((resolve, reject) => {
-    interval.username = username
-    new IntervalsModel(interval).save((err) =>{ err ? reject(err) : resolve() })
-})
-
-export const updateIntervalWithUsernameAndID = (username, id, interval) => new Promise((resolve, reject) => {
-    IntervalsModel.findOne({
-        _id: new ObjectId(id),
-        username: username,
-    }, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        if (!res) {
-            return reject(new Error("No matching entry found"))
-        }
-        res = _.extend(res, interval)
-        res.username = username
-        res.save((error) => { error ? reject(error) : resolve() })
     })
-})
+}
+
+export const intervalForUserAndID = async (id, username) => {
+    return IntervalsModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    })
+}
+
+export const addNewIntervalForUsername = async (username, interval) => {
+    interval.username = username
+    return new IntervalsModel(interval).save()
+}
+
+export const updateIntervalWithUsernameAndID = async (username, id, interval) => {
+    let oldInterval = await IntervalsModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    })
+    if (!oldInterval) {
+        throw new Error("No matching entry found")
+    }
+    oldInterval = _.extend(oldInterval, interval)
+    oldInterval.username = username
+    return oldInterval.save()
+}

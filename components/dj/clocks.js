@@ -24,45 +24,40 @@ ClocksSchema.index({
 });
 const ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
 
-export const clocksForUsername = (username) => new Promise((resolve, reject) => {
-    ClocksModel.find({username: username}, (err, res) => { err ? reject(err) : resolve(res)})
-})
+export const clocksForUsername = async (username) => {
+    return ClocksModel.find({username: username})
+}
 
-export const clockForID = (id) => new Promise((resolve, reject) => {
-    ClocksModel.findOne({
+export const clockForID = async (id) => {
+    return ClocksModel.findOne({
         _id: new ObjectId(id),
-    }, (err, res) => { err ? reject(err) : resolve(res)})
-})
+    })
+}
 
-export const clockForUserAndID = (id, username) => new Promise((resolve, reject) => {
-    ClocksModel.findOne({
+export const clockForUserAndID = async (id, username) => {
+    return ClocksModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, (err, res) => { err ? reject(err) : resolve(res)})
-})
-
-export const addClock = (clock) => new Promise((resolve, reject) => {
-    return new ClocksModel(clock).save((err) => {
-        err ? reject(err) : resolve()
     })
-})
+}
 
-export const deleteClockWithID = (id) => new Promise((resolve, reject) => {
-    return ClocksModel.remove({ id }, (err) => {
-        err ? reject(err) : resolve()
-    })
-})
+export const addClock = async (username, clock) => {
+    clock.username = username
+    return new ClocksModel(clock).save()
+}
 
-export const deleteClockWithUsername = (username) => new Promise((resolve, reject) => {
-    return ClocksModel.remove({ username }, (err) => {
-        err ? reject(err) : resolve()
-    })
-})
+export const deleteClockWithID = async (id) => {
+    return ClocksModel.remove({ id })
+}
+
+export const deleteClockWithUsername = async (username) => {
+    return ClocksModel.remove({ username })
+}
 
 
 export const replaceClocksForUsername = async (username, clocks) => {
     await deleteClockWithUsername(username)
     for (let clock of clocks) {
-        await addClock(clock)
+        await addClock(username, clock)
     }
 }
