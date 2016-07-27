@@ -1,22 +1,14 @@
 import * as intervalsDB from "../../components/dj/intervals.js"
 
-module.exports = function ({ app }) {
-    app.get("/dj/:user/:key/all-intervals/", async (req, res, next) => {
-        try {
-            res.json(await intervalsDB.intervalsForUsername(req.params.user))
-        } catch (error) {
-            return next(error)
-        }
-    })
+module.exports = function ({ app, wrap }) {
+    app.get("/dj/:user/:key/all-intervals/", wrap(async (req, res) => {
+        res.json(await intervalsDB.intervalsForUsername(req.params.user))
+    }))
 
-    app.get("/dj/:user/:key/interval/:id/", (req, res, next) => {
+    app.get("/dj/:user/:key/interval/:id/", wrap(async (req, res) => {
         if (!req.params.id) {
-            return next(new Error("Missing info"))
+            throw new Error("Missing info")
         }
-        try {
-            res.json(intervalsDB.intervalForUserAndID(req.params.id, req.params.user))
-        } catch (error) {
-            return next(error)
-        }
-    })
+        res.json(await intervalsDB.intervalForUserAndID(req.params.id, req.params.user))
+    }))
 }
