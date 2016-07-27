@@ -1,6 +1,16 @@
 ignore: {}
 patch:
   'npm:ms:20151024':
-    - 'socket.io > socket.io-client > engine.io-client > debug > ms':
+    - socket.io > socket.io-client > engine.io-client > debug > ms:
         patched: '2015-12-27T14:28:46.994Z'
-version: v1
+  'npm:hawk:20160119':
+    - pkgcloud > request > hawk:
+        patched: '2016-07-27T13:29:16.924Z'
+    - twit > request > hawk:
+        patched: '2016-07-27T13:29:16.924Z'
+  'npm:request:20160119':
+    - pkgcloud > request:
+        patched: '2016-07-27T13:29:16.924Z'
+    - twit > request:
+        patched: '2016-07-27T13:29:16.924Z'
+version: v1.5.0
