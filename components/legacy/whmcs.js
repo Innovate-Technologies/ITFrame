@@ -27,7 +27,7 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
     data.username = config.whmcsUsername;
     data.password = config.whmcsPassword;
     data.accesskey = config.whmcsKey;
-    data.responsetype = "json";
+    data.responsetype = format;
     data.action = action;
 
     rest.post(`${config.whmcsURL}/includes/api.php`, {
