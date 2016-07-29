@@ -37,7 +37,7 @@ module.exports.processSong = function ({ id }) {
         }, {
             "name": "ExecStart",
             "section": "Service",
-            value: "/bin/bash -c \"/usr/bin/docker run --name 'tunes-" + id + "' -e ID=" + id + " docker.innovatete.ch/tunes-worker:`dpkg --print-architecture`-latest\"",
+            value: `/bin/bash -c "/usr/bin/docker run --name 'tunes-${id}' -e ID="${id}" -e randomNumber="${randomNumber}" docker.innovatete.ch/tunes-worker:$(dpkg --print-architecture)-latest"`,
         }, {
             "name": "ExecStop",
             "section": "Service",
@@ -70,6 +70,6 @@ module.exports.processSong = function ({ id }) {
     }, () => {})
 }
 
-module.exports.stopContainer = (id) => {
-    fleet.destroyUnit("tunes-" + id + ".service", () => {})
+module.exports.stopContainer = (randomNumber, id) => {
+    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {})
 }
