@@ -1,4 +1,4 @@
-import controlUser from "~/components/control/controlUser.js";
+import * as controlUser from "~/components/control/controlUser.js";
 import NotFoundError from "~/http/classes/NotFoundError";
 import BadRequestError from "~/http/classes/BadRequestError";
 
