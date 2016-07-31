@@ -71,5 +71,7 @@ module.exports.processSong = function ({ id }) {
 }
 
 module.exports.stopContainer = (randomNumber, id) => {
-    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {})
+    fleet.stopUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {
+        setTimeout(() => {fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {})}, 10000)
+    })
 }
