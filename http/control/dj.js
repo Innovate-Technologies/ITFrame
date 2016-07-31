@@ -6,7 +6,7 @@ import * as intervals from "../../components/dj/intervals.js"
 import * as dj from "../../components/dj/manage.js"
 import BadRequestError from "~/http/classes/BadRequestError";
 
-module.exports = ({ app, wrap }) => {
+export default ({ app, wrap }) => {
 
     //////////////////////////////////////////////////////
     // General settings                                 //
