@@ -2,6 +2,7 @@ import BadRequestError from "../classes/BadRequestError";
 import AccessDeniedError from "../classes/AccessDeniedError";
 import * as listeners from "../../components/cast/stats/listeners.js"
 import * as sessions from "../../components/cast/stats/sessions.js"
+import * as calculated from "../../components/cast/stats/calculated.js"
 
 const cast = require("../../components/cast/database.js")
 
@@ -41,4 +42,11 @@ export default ({ app, wrap }) => {
         res.json({status: "ok"})
     }))
 
+    app.get("/cast/statistics/:user/:key/get-all-sessions-since/:since", wrap(async (req, res) => {
+        res.json(await sessions.getAllSessionsForUsernameSince(req.params.username, new Date(req.params.since)))
+    }))
+
+    app.get("/cast/statistics/:user/:key/get-calculated-info/:since/:resolution", wrap(async (req, res) => {
+        res.json(await calculated.getDataForUsername(req.params.username, req.params.resolution, new Date(req.params.since)))
+    }))
 }
