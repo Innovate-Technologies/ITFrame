@@ -2,7 +2,7 @@
 let fleet = requireFromRoot("components/coreos/fleet.js")
 
 module.exports.processSong = function ({ id }) {
-    const randomNumber = Math.floor(Math.random() * 3)
+    const randomNumber = Math.floor(Math.random() * 4)
     fleet.newUnit(`tunes-worker-${randomNumber}-${id}.service`, {
         desiredState: "launched",
         name: `tunes-worker-${randomNumber}-${id}.service`,
