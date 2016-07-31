@@ -74,6 +74,12 @@ module.exports = ({ app, wrap }) => {
         res.json({ status: "ok" })
     }))
 
+    app.delete("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
+        await intervals.removeIntervalForUsernameAndID(req.params.username, req.body._id)
+        await dj.reloadClocks(req.params.username)
+        res.json({ status: "ok" })
+    }))
+
     app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
         await intervals.addNewIntervalForUsername(res.params.username, req.body)
         await dj.reloadClocks(req.params.username)
