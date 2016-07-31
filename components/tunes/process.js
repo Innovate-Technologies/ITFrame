@@ -63,9 +63,9 @@ module.exports.processSong = function ({ id }) {
             "section": "X-Fleet",
             "value": "model=C2S",
         }, {
-            "name": "MachineMetadata",
+            "name": "Conflicts",
             "section": "X-Fleet",
-            "value": `Conflicts=tunes-worker-${randomNumber}*`,
+            "value": `tunes-worker-${randomNumber}*`,
         }],
     }, () => {})
 }
