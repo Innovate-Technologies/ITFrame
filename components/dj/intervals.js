@@ -26,26 +26,37 @@ IntervalsSchema.index({
 });
 const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
-export const intervalsForUsername = async (username) => {
-    return IntervalsModel.find({ username: username })
+export const intervalsForUsername = (username) => {
+    return IntervalsModel.find({ username: username }).exec()
 }
 
-export const intervalForID = async (id) => {
+export const intervalForID = (id) => {
     return IntervalsModel.findOne({
         _id: new ObjectId(id),
-    })
+    }).exec()
 }
 
-export const intervalForUserAndID = async (id, username) => {
+export const intervalForUserAndID = (id, username) => {
     return IntervalsModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    })
+    }).exec()
 }
 
-export const addNewIntervalForUsername = async (username, interval) => {
+export const addNewIntervalForUsername = (username, interval) => {
     interval.username = username
     return new IntervalsModel(interval).save()
+}
+
+export const removeIntervalForUsername = (username) => {
+    return IntervalsModel.remove({ username }).exec()
+}
+
+export const removeIntervalForUsernameAndID = (username, id) => {
+    return IntervalsModel.remove({
+        username,
+        _id: id,
+    }).exec()
 }
 
 export const updateIntervalWithUsernameAndID = async (username, id, interval) => {

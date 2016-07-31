@@ -24,34 +24,34 @@ ClocksSchema.index({
 });
 const ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
 
-export const clocksForUsername = async (username) => {
-    return ClocksModel.find({username: username})
+export const clocksForUsername = (username) => {
+    return ClocksModel.find({username: username}).exec()
 }
 
-export const clockForID = async (id) => {
+export const clockForID = (id) => {
     return ClocksModel.findOne({
         _id: new ObjectId(id),
-    })
+    }).exec()
 }
 
-export const clockForUserAndID = async (id, username) => {
+export const clockForUserAndID = (id, username) => {
     return ClocksModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    })
+    }).exec()
 }
 
-export const addClock = async (username, clock) => {
+export const addClock = (username, clock) => {
     clock.username = username
     return new ClocksModel(clock).save()
 }
 
-export const deleteClockWithID = async (id) => {
-    return ClocksModel.remove({ id })
+export const deleteClockWithID = (id) => {
+    return ClocksModel.remove({ id }).exec()
 }
 
-export const deleteClockWithUsername = async (username) => {
-    return ClocksModel.remove({ username })
+export const deleteClockWithUsername = (username) => {
+    return ClocksModel.remove({ username }).exec()
 }
 
 
