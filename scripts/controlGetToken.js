@@ -46,5 +46,5 @@ console.log(token.cyan);
 
 console.log();
 console.log("Tip: Set it in the dev tools for Control with: ".blue);
-console.log("localStorage.setItem('ls.token', '" + token + "')");
+console.log("localStorage.setItem(\"ls.sessionData\", `{\"token\":\"" + token + "\"}`)");
 console.log("…then reload the page to use the new token.".blue);
