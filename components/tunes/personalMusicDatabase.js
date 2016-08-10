@@ -151,7 +151,7 @@ export const calculateUsedSpace = async (username) => {
     return spaceUsed
 }
 
-module.exports.isLinkInUse = async (link) => {
+export const isLinkInUse = async (link) => {
     const internalURLs = await TunesPersonalModel.find({ internalURL: link })
     if (internalURLs.length !== 0) {
         return true
