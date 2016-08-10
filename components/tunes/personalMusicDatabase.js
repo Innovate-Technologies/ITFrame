@@ -1,10 +1,10 @@
-/* global requireFromRoot,log,config */
-var mongoose = requireFromRoot("components/database/mongodb.js")
-var Schema = mongoose.Schema
-var swift = requireFromRoot("components/openstack/swift.js")
-var ObjectId = mongoose.Types.ObjectId
-let mongoosePaginate = require("mongoose-paginate")
-var TunesPersonalSchema = new Schema({
+import _ from "underscore"
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const swift = requireFromRoot("components/openstack/swift.js")
+const ObjectId = mongoose.Types.ObjectId
+const mongoosePaginate = require("mongoose-paginate")
+const TunesPersonalSchema = new Schema({
     type: {
         type: String,
         default: "legacy", // legacy means that the song is imported by Connect-Centova
@@ -13,7 +13,9 @@ var TunesPersonalSchema = new Schema({
     song: String,
     artist: String,
     album: String,
-    externalURL: Object, // {itunes:url} (Would have called it buy url but since streaming)
+    externalURL: {
+        itunes: String,
+    },
     artwork: String,
     genre: String,
     internalURL: String,
@@ -38,175 +40,115 @@ TunesPersonalSchema.index({
     "processedURLS.265": 1,
     "processedURLS.320": 1,
 });
-TunesPersonalSchema.plugin(mongoosePaginate)
-var TunesPersonalModel = mongoose.model("TunesPersonal", TunesPersonalSchema, "TunesPersonal")
 
-module.exports.getSongForUsername = function (username, song, artist, callback) {
-    TunesPersonalModel.findOne({
+TunesPersonalSchema.plugin(mongoosePaginate)
+const TunesPersonalModel = mongoose.model("TunesPersonal", TunesPersonalSchema, "TunesPersonal")
+
+export const getSongForUsername = (username, song, artist) => {
+    return TunesPersonalModel.findOne({
         username: username,
         song: song,
         artist: artist,
-    }, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, res)
+    }).exec()
+}
+
+export const getSongForID = (id) => {
+    return TunesPersonalModel.findOne({
+        _id: new ObjectId(id),
+    }).exec()
+}
+
+export const getSongForUserWithID = (username, id) => {
+    return TunesPersonalModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    }).exec()
+}
+
+export const setSongTagForUserWithID = async (username, id, tags) => {
+    const song = await TunesPersonalModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    }).exec()
+    if (!song) {
+        return
+    }
+    song.tags = tags
+    return song.save()
+}
+
+export const updateSong = function (username, id, newInfo) {
+    let song = TunesPersonalModel.findOne({
+        username: username,
+        _id: new ObjectId(id),
     })
+    if (!song) {
+        return
+    }
+    song = _.extend(song, newInfo)
+
+    song._id = new ObjectId(id)
+    return song.save()
 }
 
-module.exports.getSongForID = function (id, callback) {
-    TunesPersonalModel.findOne({
-        _id: new ObjectId(id),
-    }, callback)
-}
-
-module.exports.getSongForUserWithID = function (username, id, callback) {
-    TunesPersonalModel.findOne({
-        _id: new ObjectId(id),
-        username: username,
-    }, callback)
-}
-
-module.exports.setSongTagForUserWithID = function (username, id, tags, callback) {
-    TunesPersonalModel.findOne({
-        _id: new ObjectId(id),
-        username: username,
-    }, (err, song) => {
-        if (err) {
-            return callback(err)
-        }
-        song.tags = tags
-        song.save(callback)
-    })
-}
-
-module.exports.updateSong = function (username, id, newInfo, callback) {
-    TunesPersonalModel.findOne({
-        username: username,
-        _id: new ObjectId(id),
-    }, function (err, res) {
-        if (err) {
-            return callback(err)
-        }
-        newInfo._id = new ObjectId(id)
-        var oldRes = res
-        res.update(newInfo, function (updateErr, updateRes) {
-            if (newInfo.internalURL && newInfo.internalURL !== oldRes.internalURL) {
-                lookForLonelyInternalLink(oldRes.internalURL)
-            }
-            if (oldRes.processedURLS && oldRes.processedURLS.length > 0) {
-                lookForLonelyProcessedLink(oldRes.processedURLS)
-            }
-            return callback(updateErr, updateRes);
-        })
-    });
-}
-
-module.exports.getDefaultForUsername = function (username, callback) {
-    TunesPersonalModel.findOne({
+export const getDefaultForUsername = (username) => {
+    return TunesPersonalModel.findOne({
         username: username,
         type: "default",
-    }, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, res)
-    })
+    }).exec()
 }
 
-module.exports.getAllSongsForUser = function (username, callback) {
-    TunesPersonalModel.find({ username: username }, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, res)
-    })
+export const getAllSongsForUser = (username) => {
+    return TunesPersonalModel.find({ username }).exec()
 }
 
-module.exports.getSongsForUser = function (username, itemsPerPage, page, sortBy, callback) {
-    TunesPersonalModel.paginate({ username: username }, {page: page, limit: itemsPerPage, sort: sortBy}, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, res.docs)
-    })
+export const getSongsForUser = async (username, itemsPerPage, page, sortBy) => {
+    const result = await TunesPersonalModel.paginate({ username: username }, { page: page, limit: itemsPerPage, sort: sortBy })
+    return result.docs
 }
 
-module.exports.getSongsForUserWithTag = function (username, tag, callback) {
-    TunesPersonalModel.find({
+export const getSongsForUserWithTag = (username, tag) => {
+    return TunesPersonalModel.find({
         username: username,
         tags: tag,
         available: true,
-    }, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        callback(null, res)
     })
 }
 
-module.exports.addSong = function (username, song, callback) {
+export const addSong = (username, song) => {
     song.username = username
-    new TunesPersonalModel(song).save(callback)
+    return new TunesPersonalModel(song).save()
 }
 
-module.exports.removeSong = function (username, id, callback) {
-    TunesPersonalModel.findOne({
+export const removeSong = async (username, id) => {
+    const song = TunesPersonalModel.findOne({
         username: username,
         _id: new ObjectId(id),
-    }, (err, entry) => {
-        if (err) {
-            return callback(err);
-        }
-        if (entry === null) {
-            return callback(new Error("Song not found"))
-        }
-        TunesPersonalModel.remove({
-            username: username,
-            _id: new ObjectId(id),
-        }, (remerr, res) => {
-            if (remerr) {
-                return callback(err)
-            }
-            callback(err, res)
-        })
-    })
-}
+    }).exec()
 
-module.exports.removeUser = function (username) {
-    TunesPersonalModel.find({ username: username }, function (err, res) {
-        if (err) {
-            return;
-        }
-        for (var id in res) {
-            if (res.hasOwnProperty(id)) {
-                if (typeof res[id].internalURL !== "undefined" && res[id].internalURL !== "") {
-                    setTimeout(lookForLonelyInternalLink, 1000, res[id].internalURL)
-                }
-                if (res[id].processedURLS && res[id].processedURLS.length > 0) {
-                    setTimeout(lookForLonelyProcessedLink, 1000, res[id].processedURLS)
-                }
-                TunesPersonalSchema.remove({
-                    _id: res[id]._id,
-                })
-            }
-        }
-    })
-}
+    if (!song) {
+        throw new Error("song not found")
+    }
 
-module.exports.calculateUsedSpace = (username, callback) => {
-    TunesPersonalModel.find({
+    return TunesPersonalModel.remove({
         username: username,
-    }, function (err, res) {
-        if (err) {
-            return callback(err)
-        }
-        let spaceUsed = 0
-        for (let song of res) {
-            spaceUsed += song.size
-        }
-        callback(null, spaceUsed)
+        _id: new ObjectId(id),
     })
+}
+
+export const removeUser = (username) => {
+    return TunesPersonalModel.remove({ username })
+}
+
+export const calculateUsedSpace = async (username) => {
+    const songs = await TunesPersonalModel.find({
+        username: username,
+    }).exec()
+    let spaceUsed = 0
+    for (let song of songs) {
+        spaceUsed += song.size
+    }
+    return spaceUsed
 }
 
 module.exports.isLinkInUse = async (link) => {
@@ -220,7 +162,7 @@ module.exports.isLinkInUse = async (link) => {
         selector[`processedURLS.${bitrate}`] = link
         findArray.push(selector)
     }
-    const processedUrls = await TunesPersonalModel.find({$or: findArray})
+    const processedUrls = await TunesPersonalModel.find({ $or: findArray })
     return processedUrls.length !== 0
 }
 
