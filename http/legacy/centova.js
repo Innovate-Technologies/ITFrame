@@ -1,14 +1,13 @@
-let timetoken = requireFromRoot("components/auth/timetoken.js")
-let dns = requireFromRoot("components/coreos/dns.js")
-let nowPlayingHandler = requireFromRoot("components/nowplaying/handle.js")
+const dns = requireFromRoot("components/coreos/dns.js")
+const nowPlayingHandler = requireFromRoot("components/nowplaying/handle.js")
 import BadRequestError from "~/http/classes/BadRequestError"
 
-module.exports = function ({ app }) {
-    app.post("/connect/updateSong/", function (req, res) {
+export default ({ app, wrap }) => {
+    app.post("/connect/updateSong/", wrap(async (req, res) => {
         if (!req.body.token || req.body.token !== config.connectKey) {
             throw new BadRequestError("No token found in the request");
         }
-        let data = {
+        const data = {
             username: req.body.username,
             title: req.body.song,
             artist: req.body.artist,
@@ -16,10 +15,10 @@ module.exports = function ({ app }) {
         if (process.env.DEBUG) {
             req.log.debug(data, "Updating now playing database")
         }
-        nowPlayingHandler(data)
+        await nowPlayingHandler(data)
         res.json({ status: "ok" })
 
-    })
+    }))
 
     app.post("/connect/addDNS/", function (req, res) {
         if (!req.body.token) {
