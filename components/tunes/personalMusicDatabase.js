@@ -16,7 +16,10 @@ const TunesPersonalSchema = new Schema({
     externalURL: {
         itunes: String,
     },
-    artwork: String,
+    artwork: {
+        type: String,
+        default: "https://photon.shoutca.st/cdn.shoutca.st/noalbum.png",
+    },
     genre: String,
     internalURL: String,
     processedURLS: Object,
