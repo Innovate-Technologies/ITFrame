@@ -1,40 +1,73 @@
-/* global requireFromRoot,log,config */
-var mongoose = requireFromRoot("components/database/mongodb.js")
-var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
-var IntervalsSchema = new Schema({
+import _ from "underscore"
+
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
+const IntervalsSchema = new Schema({
     username: String,
     name: String,
     songs: [],
-	intervalType: String, // random, ordered, all
+    intervalType: {
+        type: String,
+        enum: ["random", "ordered", "all"],
+    },
     every: Number,
-    intervalMode: String, // songs, seconds
-	songsAtOnce: Number,
+    intervalMode: {
+        type: String,
+        enum: ["songs", "seconds"],
+    },
+    songsAtOnce: Number,
     start: Date,
     end: Date,
-	forever: Boolean,
+    forever: Boolean,
 }, { collection: "dj_intervals" })
 IntervalsSchema.index({
     username: 1,
-    song: 1,
-    artist: 1,
-    internalURL: 1,
 });
-var IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
+const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
-module.exports.intervalsForUsername = function (username, callback) {
-    IntervalsModel.find({username: username}, callback)
+export const intervalsForUsername = (username) => {
+    return IntervalsModel.find({ username: username }).exec()
 }
 
-module.exports.intervalForID = function (id, callback) {
-    IntervalsModel.findOne({
+export const intervalForID = (id) => {
+    return IntervalsModel.findOne({
         _id: new ObjectId(id),
-    }, callback)
+    }).exec()
 }
 
-module.exports.intervalForUserAndID = function (id, username, callback) {
-    IntervalsModel.findOne({
+export const intervalForUserAndID = (id, username) => {
+    return IntervalsModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, callback)
+    }).exec()
+}
+
+export const addNewIntervalForUsername = (username, interval) => {
+    interval.username = username
+    return new IntervalsModel(interval).save()
+}
+
+export const removeIntervalForUsername = (username) => {
+    return IntervalsModel.remove({ username }).exec()
+}
+
+export const removeIntervalForUsernameAndID = (username, id) => {
+    return IntervalsModel.remove({
+        username,
+        _id: id,
+    }).exec()
+}
+
+export const updateIntervalWithUsernameAndID = async (username, id, interval) => {
+    let oldInterval = await IntervalsModel.findOne({
+        _id: new ObjectId(id),
+        username: username,
+    })
+    if (!oldInterval) {
+        throw new Error("No matching entry found")
+    }
+    oldInterval = _.extend(oldInterval, interval)
+    oldInterval.username = username
+    return oldInterval.save()
 }

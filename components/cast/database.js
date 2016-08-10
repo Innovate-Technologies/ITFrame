@@ -84,6 +84,7 @@ castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) 
     });
 }
 
+
 castDatabase.addConfigForUsername = (username, conf, callback) => {
     conf.username = username;
     buildinfo.buildInfoForName("Cast", function (err, build) {
