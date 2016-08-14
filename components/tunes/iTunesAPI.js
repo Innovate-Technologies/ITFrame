@@ -18,7 +18,7 @@ export const searchSong = async (song, artist, num) => {
     const songs = await search({
         media: "music",
         term: song + " " + artist,
-        limit: num
+        limit: num,
     })
     if (songs.errorMessage) {
         throw new Error(songs.errorMessage)
@@ -30,7 +30,7 @@ export const searchAlbum = async (album, num) => {
     const songs = await search({
         media: "music",
         term: album,
-        limit: num
+        limit: num,
     })
     if (songs.errorMessage) {
         throw new Error(songs.errorMessage)

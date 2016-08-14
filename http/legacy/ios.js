@@ -7,12 +7,12 @@ module.exports = function ({ app, wrap}) {
         if (typeof req.query.sku === "undefined") {
             return res.status(400).send("Missing SKU")
         }
-        iOSDatabase.getAppForSKU(req.query.sku, function (err, app) {
+        iOSDatabase.getAppForSKU(req.query.sku, function (err, appInfo) {
             if (err) {
                 res.status(500).json({ error: err })
                 return
             }
-            res.json(app)
+            res.json(appInfo)
         })
     });
 
@@ -58,21 +58,21 @@ module.exports = function ({ app, wrap}) {
         })
     });
 
-    app.get("/mobile/iOS/nowplayingForUser/", wrap(async (req, res) {
+    app.get("/mobile/iOS/nowplayingForUser/", wrap(async (req, res) => {
         if (typeof req.query.user === "undefined") {
             return res.status(400).send("Missing Username")
         }
 
         const np = await nowPlaying.getLatestSongs(req.query.user, 6)
-            if (np.length === 0) {
-                return res.json([{
-                    "song": "Unknown",
-                    "artist": "Unknown",
-                    "cover": "https://cdn.shoutca.st/noalbum.png",
-                    "buy": "",
-                    "wiki": "Coming Soon",
-                }])
-            }
-            res.json(np)
+        if (np.length === 0) {
+            return res.json([{
+                "song": "Unknown",
+                "artist": "Unknown",
+                "cover": "https://cdn.shoutca.st/noalbum.png",
+                "buy": "",
+                "wiki": "Coming Soon",
+            }])
+        }
+        res.json(np)
     }))
 }

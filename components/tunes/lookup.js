@@ -34,6 +34,6 @@ export const lookUp = async (username, song, artist) => {
         }
     }
 
-    await personalDB.addSong(username, info)
-    return info
+    await personalDB.addSong(username, songInfo)
+    return songInfo
 }
