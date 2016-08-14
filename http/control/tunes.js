@@ -1,7 +1,4 @@
-/* global Buffer */
-/* global requireFromRoot,config */
 let multer = require("multer");
-let wait = require("wait.for");
 let tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js");
 let processingWorker = requireFromRoot("components/tunes/process.js");
 let castDatabase = requireFromRoot("components/cast/database.js");
@@ -101,28 +98,26 @@ module.exports = function ({ app, wrap }) {
         })
     }))
 
-    app.get("/control/cast/tunes/get-songs/:page", wrap(async (req, res, next) => {
-        wait.launchFiber(function () {
-            let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page || 0, req.body.sortBy)
-            for (let song of songs) {
-                song.internalURL = "";
-                song.processedURLS = "";
-            }
-            res.json(songs)
-        });
+    app.get("/control/cast/tunes/get-songs/:page", wrap(async (req, res) => {
+        let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page || 0, req.body.sortBy)
+        for (let song of songs) {
+            song.internalURL = "";
+            song.processedURLS = "";
+        }
+        res.json(songs)
     }))
 
-    app.post("/control/cast/tunes/set-tags/:song", wrap(async (req, res, next) => {
+    app.post("/control/cast/tunes/set-tags/:song", wrap(async (req, res) => {
         await tunesDB.setSongTagForUserWithID(req.body.username, req.params.song, req.body.tags)
         res.json({})
     }))
 
-    app.delete("/control/cast/tunes/delete/:song", wrap(async (req, res, next) => {
+    app.delete("/control/cast/tunes/delete/:song", wrap(async (req, res) => {
         await tunesDB.removeSong(req.body.username, req.params.song)
         res.json({})
     }))
 
-    app.post("/control/cast/tunes/update-artwork/:song", uploadImage.single("image"), wrap(async (req, res, next) => {
+    app.post("/control/cast/tunes/update-artwork/:song", uploadImage.single("image"), wrap(async (req, res) => {
         if (!req.file) {
             throw new Error("Failed to upload the image.");
         }
