@@ -1,5 +1,6 @@
 const dns = requireFromRoot("components/coreos/dns.js")
 const nowPlayingHandler = requireFromRoot("components/nowplaying/handle.js")
+const timetoken = requireFromRoot("components/auth/timetoken.js")
 import BadRequestError from "~/http/classes/BadRequestError"
 
 export default ({ app, wrap }) => {

@@ -20,22 +20,22 @@ export const searchSong = async (song, artist, num) => {
         term: song + " " + artist,
         limit: num
     })
-    if (res.errorMessage) {
-        throw new Error(res.errorMessage)
+    if (songs.errorMessage) {
+        throw new Error(songs.errorMessage)
     }
-    return JSON.parse(res).results
+    return JSON.parse(songs).results
 }
 
-export const searchAlbum = async (album, num, callback) => {
+export const searchAlbum = async (album, num) => {
     const songs = await search({
         media: "music",
         term: album,
         limit: num
     })
-    if (res.errorMessage) {
-        throw new Error(res.errorMessage)
+    if (songs.errorMessage) {
+        throw new Error(songs.errorMessage)
     }
-    return JSON.parse(res).results
+    return JSON.parse(songs).results
 }
 
 module.exports.searchTitle = searchSong

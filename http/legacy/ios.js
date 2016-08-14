@@ -36,37 +36,34 @@ module.exports = function ({ app, wrap}) {
             }
             res.json(np)
         })
-    })
+    }))
 
     app.get("/mobile/iOS/tunein/", function (req, res) {
-            if (typeof req.query.sku === "undefined") {
-                return res.status(400).json({
-                    error: "Missing parameters",
-                })
-            }
-
-            iOSDatabase.getAppForSKU(req.query.sku, function (err, app) {
-                if (err) {
-                    return res.status(500).json({ error: err })
-                }
-                iOS.getPlsForUsername(app.username, function (error, link) {
-                    if (error) {
-                        return res.status(500).json({ error })
-                    }
-                    res.json({ link })
-                })
+        if (typeof req.query.sku === "undefined") {
+            return res.status(400).json({
+                error: "Missing parameters",
             })
-        });
+        }
 
-    app.get("/mobile/iOS/nowplayingForUser/", function (req, res) {
+        iOSDatabase.getAppForSKU(req.query.sku, function (err, appInfo) {
+            if (err) {
+                return res.status(500).json({ error: err })
+            }
+            iOS.getPlsForUsername(appInfo.username, function (error, link) {
+                if (error) {
+                    return res.status(500).json({ error })
+                }
+                res.json({ link })
+            })
+        })
+    });
+
+    app.get("/mobile/iOS/nowplayingForUser/", wrap(async (req, res) {
         if (typeof req.query.user === "undefined") {
             return res.status(400).send("Missing Username")
         }
 
-        NowPlaying.getLatestSongs(req.query.user, 6, function (error, np) {
-            if (error) {
-                return res.status(500).json({ error: error })
-            }
+        const np = await nowPlaying.getLatestSongs(req.query.user, 6)
             if (np.length === 0) {
                 return res.json([{
                     "song": "Unknown",
@@ -77,8 +74,5 @@ module.exports = function ({ app, wrap}) {
                 }])
             }
             res.json(np)
-        })
-    })
-
-
+    }))
 }

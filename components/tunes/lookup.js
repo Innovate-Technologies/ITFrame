@@ -8,18 +8,18 @@ export const lookUp = async (username, song, artist) => {
     }
 
     const songInfo = {
-                    song: song,
-                    artist: artist,
-                    externalURL: {}
-                }
+        song: song,
+        artist: artist,
+        externalURL: {},
+    }
 
     if (song && artist) {
-        const iTunesResults = await iTunes.searchTitle(song, artist, 1)
+        const iTunesResults = await iTunes.searchSong(song, artist, 1)
         if (iTunesResults.length !== 0) {
-            songInfo.album = searchRes[0].collectionName
-            songInfo.externalURL = { "itunes": searchRes[0].trackViewUrl }
-            songInfo.artwork =  "https://photon.shoutca.st/" + ((searchRes[0].artworkUrl100 || "").replace("100x100", "1200x1200")).replace("https://", "").replace("http://", "")
-            songInfo.genre = searchRes[0].primaryGenreName
+            songInfo.album = iTunesResults[0].collectionName
+            songInfo.externalURL = { "itunes": iTunesResults[0].trackViewUrl }
+            songInfo.artwork = "https://photon.shoutca.st/" + ((iTunesResults[0].artworkUrl100 || "").replace("100x100", "1200x1200")).replace("https://", "").replace("http://", "")
+            songInfo.genre = iTunesResults[0].primaryGenreName
         }
     }
 

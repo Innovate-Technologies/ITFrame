@@ -1,7 +1,6 @@
 import _ from "underscore"
 const mongoose = requireFromRoot("components/database/mongodb.js")
 const Schema = mongoose.Schema
-const swift = requireFromRoot("components/openstack/swift.js")
 const ObjectId = mongoose.Types.ObjectId
 const mongoosePaginate = require("mongoose-paginate")
 const TunesPersonalSchema = new Schema({
