@@ -16,7 +16,7 @@ export default async (info) => {
         artist: tunesInfo.artist,
         cover: tunesInfo.artwork,
         wiki: "",
-        buy: (tunesSongInfo.external_url || {}).itunes || "",
+        buy: (tunesInfo.external_url || {}).itunes || "",
         time: Math.round((new Date()).getTime() / 1000),
     }
     logger.debug(info.username, "Saving song")
