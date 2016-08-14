@@ -6,6 +6,6 @@ module.exports = ({ app, wrap }) => {
             return res.status(400).send("Missing Username")
         }
         res.json(await nowPlaying.getLatestSongs(req.params.username, 10))
-    })
+    }))
 }
 
