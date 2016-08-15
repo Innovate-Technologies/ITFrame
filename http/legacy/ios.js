@@ -1,8 +1,9 @@
+import BadRequestError from "~/http/classes/BadRequestError"
 const iOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js")
 const nowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
 const iOS = requireFromRoot("components/iOS/legacy.js")
 
-module.exports = function ({ app, wrap}) {
+module.exports = function ({ app, wrap }) {
     app.get("/mobile/iOS/", function (req, res) {
         if (typeof req.query.sku === "undefined") {
             return res.status(400).send("Missing SKU")
@@ -16,9 +17,9 @@ module.exports = function ({ app, wrap}) {
         })
     });
 
-    app.get("/mobile/iOS/nowplaying/", wrap((req, res) => {
+    app.get("/mobile/iOS/nowplaying/", wrap(async (req, res) => {
         if (typeof req.query.sku === "undefined") {
-            return res.status(400).send("Missing SKU")
+            throw new BadRequestError("Missing username")
         }
         iOSDatabase.getAppForSKU(req.query.sku, async (err, dbres) => {
             if (err) {
@@ -40,9 +41,7 @@ module.exports = function ({ app, wrap}) {
 
     app.get("/mobile/iOS/tunein/", function (req, res) {
         if (typeof req.query.sku === "undefined") {
-            return res.status(400).json({
-                error: "Missing parameters",
-            })
+            throw new BadRequestError("Missing parameters")
         }
 
         iOSDatabase.getAppForSKU(req.query.sku, function (err, appInfo) {

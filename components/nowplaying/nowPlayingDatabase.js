@@ -23,7 +23,7 @@ export const getLatestSong = (username) => {
     return NowPlayingModel.findOne({ username: username }).sort("-_id").exec()
 };
 
-export const etLatestSongs = (username, num) => {
+export const getLatestSongs = (username, num) => {
     return NowPlayingModel.find({ username: username }).sort("-_id").limit(num).exec()
 };
 

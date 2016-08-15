@@ -74,9 +74,15 @@ const createUnit = (randomNumber, id) => new Promise((resolve, reject) => {
             "section": "X-Fleet",
             "value": `tunes-worker-${randomNumber}*`,
         }],
-    }, (err) => {err ? reject(err) : resolve})
+    }, (err) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve();
+        }
+    })
 })
 
 export const stopContainer = (randomNumber, id) => {
-    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {})
+    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, Function.prototype)
 }

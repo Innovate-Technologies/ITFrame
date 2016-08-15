@@ -1,8 +1,8 @@
 import _ from "underscore"
 const mongoose = requireFromRoot("components/database/mongodb.js")
+const mongoosePaginate = require("mongoose-paginate")
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
-const mongoosePaginate = require("mongoose-paginate")
 const TunesPersonalSchema = new Schema({
     type: {
         type: String,
@@ -129,7 +129,7 @@ export const removeSong = async (username, id) => {
     }).exec()
 
     if (!song) {
-        throw new Error("song not found")
+        throw new Error("Song not found")
     }
 
     return TunesPersonalModel.remove({
@@ -146,11 +146,7 @@ export const calculateUsedSpace = async (username) => {
     const songs = await TunesPersonalModel.find({
         username: username,
     }).exec()
-    let spaceUsed = 0
-    for (let song of songs) {
-        spaceUsed += song.size
-    }
-    return spaceUsed
+    return songs.reduce((prev, cur) => prev.size + cur.size, 0);
 }
 
 export const isLinkInUse = async (link) => {

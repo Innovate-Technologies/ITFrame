@@ -14,11 +14,11 @@ const search = (data) => new Promise((resolve, reject) => {
     })
 })
 
-export const searchSong = async (song, artist, num) => {
+export const searchSong = async (song, artist, limit) => {
     const songs = await search({
         media: "music",
         term: song + " " + artist,
-        limit: num,
+        limit,
     })
     if (songs.errorMessage) {
         throw new Error(songs.errorMessage)
@@ -26,11 +26,11 @@ export const searchSong = async (song, artist, num) => {
     return JSON.parse(songs).results
 }
 
-export const searchAlbum = async (album, num) => {
+export const searchAlbum = async (album, limit) => {
     const songs = await search({
         media: "music",
         term: album,
-        limit: num,
+        limit,
     })
     if (songs.errorMessage) {
         throw new Error(songs.errorMessage)

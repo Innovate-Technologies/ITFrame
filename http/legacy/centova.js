@@ -1,7 +1,8 @@
+import BadRequestError from "~/http/classes/BadRequestError"
 const dns = requireFromRoot("components/coreos/dns.js")
 const nowPlayingHandler = requireFromRoot("components/nowplaying/handle.js")
 const timetoken = requireFromRoot("components/auth/timetoken.js")
-import BadRequestError from "~/http/classes/BadRequestError"
+
 
 export default ({ app, wrap }) => {
     app.post("/connect/updateSong/", wrap(async (req, res) => {
@@ -16,7 +17,7 @@ export default ({ app, wrap }) => {
         if (process.env.DEBUG) {
             req.log.debug(data, "Updating now playing database")
         }
-        await nowPlayingHandler(data)
+        nowPlayingHandler(data)
         res.json({ status: "ok" })
 
     }))

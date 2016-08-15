@@ -1,10 +1,10 @@
-let multer = require("multer");
-let tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js");
-let processingWorker = requireFromRoot("components/tunes/process.js");
-let castDatabase = requireFromRoot("components/cast/database.js");
-let moduleLogger = log.child({ component: "control-tunes" });
-let getFileType = require("file-type");
-let sbuff = require("simple-bufferstream");
+import multer from "multer"
+const tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js");
+const processingWorker = requireFromRoot("components/tunes/process.js");
+const castDatabase = requireFromRoot("components/cast/database.js");
+const moduleLogger = log.child({ component: "control-tunes" });
+const getFileType = require("file-type");
+const sbuff = require("simple-bufferstream");
 import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 const ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "gif"];
@@ -63,7 +63,7 @@ let uploadImage = multer({
 });
 
 module.exports = function ({ app, wrap }) {
-    app.post("/control/cast/tunes/upload", upload.single("song"), wrap((req, res, next) => {
+    app.post("/control/cast/tunes/upload", upload.single("song"), wrap(async (req, res, next) => {
         if (!req.file) {
             throw new Error("Failed to upload the song.");
         }
@@ -101,8 +101,8 @@ module.exports = function ({ app, wrap }) {
     app.get("/control/cast/tunes/get-songs/:page", wrap(async (req, res) => {
         let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page || 0, req.body.sortBy)
         for (let song of songs) {
-            song.internalURL = "";
-            song.processedURLS = "";
+            delete song.internalURL
+            delete song.processedURLS
         }
         res.json(songs)
     }))
