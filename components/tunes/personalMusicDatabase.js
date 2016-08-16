@@ -1,6 +1,6 @@
 import _ from "underscore"
+import mongoosePaginate from "mongoose-paginate"
 const mongoose = requireFromRoot("components/database/mongodb.js")
-const mongoosePaginate = require("mongoose-paginate")
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 const TunesPersonalSchema = new Schema({
@@ -105,7 +105,7 @@ export const getAllSongsForUser = (username) => {
 }
 
 export const getSongsForUser = async (username, itemsPerPage, page, sortBy) => {
-    const result = await TunesPersonalModel.paginate({ username: username }, { page: page, limit: itemsPerPage, sort: sortBy })
+    const result = await TunesPersonalModel.paginate({ username: username }, { page, limit: itemsPerPage, sort: sortBy })
     return result.docs
 }
 

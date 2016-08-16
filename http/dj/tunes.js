@@ -1,4 +1,5 @@
-var tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js")
+import NotFoundError from "~/http/classes/NotFoundError"
+const tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js")
 
 module.exports = function ({ app, wrap }) {
     app.get("/dj/:user/:key/song/:id", wrap(async (req, res) => {
@@ -7,7 +8,7 @@ module.exports = function ({ app, wrap }) {
         }
         const song = await tunesDB.getSongForUserWithID(req.params.user, req.params.id)
         if (song === null) {
-            throw new Error("Song not found.")
+            throw new NotFoundError("Song not found.")
         }
         res.json(song)
     }))
@@ -19,7 +20,7 @@ module.exports = function ({ app, wrap }) {
 
         const songs = await tunesDB.getSongsForUserWithTag(req.params.user, req.params.tag)
         if (songs === null) {
-            throw new Error("Song not found.")
+            throw new NotFoundError("Song not found.")
         }
         res.json(songs)
     }))
