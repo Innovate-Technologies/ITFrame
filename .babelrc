@@ -5,6 +5,8 @@
   ],
   "plugins": [
     "add-module-exports",
-    "babel-root-import"
+    "babel-root-import",
+    "syntax-class-properties",
+    "transform-class-properties"
   ]
 }

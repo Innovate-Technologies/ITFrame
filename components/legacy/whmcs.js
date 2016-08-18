@@ -27,7 +27,7 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
     data.username = config.whmcsUsername;
     data.password = config.whmcsPassword;
     data.accesskey = config.whmcsKey;
-    data.responsetype = "json";
+    data.responsetype = format;
     data.action = action;
 
     rest.post(`${config.whmcsURL}/includes/api.php`, {
@@ -241,13 +241,14 @@ export const postReplyForTicket = async (email, ticketId, message) => {
 export const openTicket = async ({ email, departmentId, subject, message, sendEmail } = {}) => {
     try {
         const user = await getInfoForEmail(email);
-        await sendRequest("openticket", {
+        const response = await sendRequest("openticket", {
             clientid: user.id,
             deptid: departmentId,
             subject,
             message,
             noemail: !sendEmail,
         });
+        return response.id;
     } catch (error) {
         error.message = "Failed to open ticket: " + error.message;
         throw error;

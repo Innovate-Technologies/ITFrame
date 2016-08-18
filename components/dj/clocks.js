@@ -1,8 +1,7 @@
-/* global requireFromRoot,log,config */
-var mongoose = requireFromRoot("components/database/mongodb.js")
-var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
-var ClocksSchema = new Schema({
+const mongoose = requireFromRoot("components/database/mongodb.js")
+const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
+const ClocksSchema = new Schema({
     username: String,
     name: String,
     tags: [{
@@ -22,25 +21,43 @@ var ClocksSchema = new Schema({
 }, { collection: "dj_clocks" })
 ClocksSchema.index({
     username: 1,
-    song: 1,
-    artist: 1,
-    internalURL: 1,
 });
-var ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
+const ClocksModel = mongoose.model("dj_clocks", ClocksSchema, "dj_clocks")
 
-module.exports.clocksForUsername = function (username, callback) {
-    ClocksModel.find({username: username}, callback)
+export const clocksForUsername = (username) => {
+    return ClocksModel.find({username: username}).exec()
 }
 
-module.exports.clockForID = function (id, callback) {
-    ClocksModel.findOne({
+export const clockForID = (id) => {
+    return ClocksModel.findOne({
         _id: new ObjectId(id),
-    }, callback)
+    }).exec()
 }
 
-module.exports.clockForUserAndID = function (id, username, callback) {
-    ClocksModel.findOne({
+export const clockForUserAndID = (id, username) => {
+    return ClocksModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }, callback)
+    }).exec()
+}
+
+export const addClock = (username, clock) => {
+    clock.username = username
+    return new ClocksModel(clock).save()
+}
+
+export const deleteClockWithID = (id) => {
+    return ClocksModel.remove({ id }).exec()
+}
+
+export const deleteClockWithUsername = (username) => {
+    return ClocksModel.remove({ username }).exec()
+}
+
+
+export const replaceClocksForUsername = async (username, clocks) => {
+    await deleteClockWithUsername(username)
+    for (let clock of clocks) {
+        await addClock(username, clock)
+    }
 }

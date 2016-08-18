@@ -134,4 +134,34 @@ module.exports = ({ app }) => {
         });
     });
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // Extra features
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    app.put("/control/cast/anti-stream-ripper/:username", (req, res, next) => {
+        wait.launchFiber(function () {
+            try {
+                wait.for(cast.setAntiStreamRipper, req.body.isEnabled);
+                res.json({});
+            } catch (error) {
+                req.log.warn(error, "Failed to configure streams");
+                error.message = "Failed to configure streams: " + error.message;
+                return next(error);
+            }
+        });
+    });
+
+    app.put("/control/cast/hide-listener-count/:username", (req, res, next) => {
+        wait.launchFiber(function () {
+            try {
+                wait.for(cast.setHideListenerCount, req.body.isEnabled);
+                res.json({});
+            } catch (error) {
+                req.log.warn(error, "Failed to configure streams");
+                error.message = "Failed to configure streams: " + error.message;
+                return next(error);
+            }
+        });
+    });
+
 };

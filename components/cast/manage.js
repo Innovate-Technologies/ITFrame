@@ -453,4 +453,34 @@ cast.setGeoLock = (username, geolockConfig, callback) => {
     });
 }
 
+cast.setAntiStreamRipper = (username, isEnabled, callback) => {
+    castDB.getInfoForUsername(username, (err, res) => {
+        if (err) {
+            return callback(err);
+        }
+        res.antiStreamRipper = isEnabled;
+        castDB.updateConfig(username, res, function (error) {
+            if (error) {
+                return callback(error);
+            }
+            cast.restartNode(username, callback);
+        });
+    });
+}
+
+cast.setHideListenerCount = (username, isEnabled, callback) => {
+    castDB.getInfoForUsername(username, (err, res) => {
+        if (err) {
+            return callback(err);
+        }
+        res.hideListenerCount = isEnabled;
+        castDB.updateConfig(username, res, function (error) {
+            if (error) {
+                return callback(error);
+            }
+            cast.restartNode(username, callback);
+        });
+    });
+}
+
 module.exports = cast;

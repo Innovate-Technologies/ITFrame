@@ -1,10 +1,18 @@
-/* global requireFromRoot */
-let fleet = requireFromRoot("components/coreos/fleet.js")
+const fleet = requireFromRoot("components/coreos/fleet.js")
 
-module.exports.processSong = function ({ id }) {
-    fleet.newUnit("tunes-" + id + ".service", {
+export const processSong = async ({ id }) => {
+    const randomNumber = Math.floor(Math.random() * 4)
+    try {
+        await createUnit(randomNumber, id)
+    } catch (error) {
+        processSong({ id })
+    }
+}
+
+const createUnit = (randomNumber, id) => new Promise((resolve, reject) => {
+    fleet.newUnit(`tunes-worker-${randomNumber}-${id}.service`, {
         desiredState: "launched",
-        name: "tunes-" + id + ".service",
+        name: `tunes-worker-${randomNumber}-${id}.service`,
         options: [{
             name: "Description",
             section: "Unit",
@@ -36,7 +44,7 @@ module.exports.processSong = function ({ id }) {
         }, {
             "name": "ExecStart",
             "section": "Service",
-            value: "/bin/bash -c \"/usr/bin/docker run --name 'tunes-" + id + "' -e ID=" + id + " docker.innovatete.ch/tunes-worker:`dpkg --print-architecture`-latest\"",
+            value: `/bin/bash -c "/usr/bin/docker run --name 'tunes-${id}' -e ID='${id}' -e randomNumber='${randomNumber}' docker.innovatete.ch/tunes-worker:$(dpkg --print-architecture)-latest"`,
         }, {
             "name": "ExecStop",
             "section": "Service",
@@ -61,10 +69,20 @@ module.exports.processSong = function ({ id }) {
             "name": "MachineMetadata",
             "section": "X-Fleet",
             "value": "model=C2S",
+        }, {
+            "name": "Conflicts",
+            "section": "X-Fleet",
+            "value": `tunes-worker-${randomNumber}*`,
         }],
-    }, () => {})
-}
+    }, (err) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve();
+        }
+    })
+})
 
-module.exports.stopContainer = (id) => {
-    fleet.destroyUnit("tunes-" + id + ".service", () => {})
+export const stopContainer = (randomNumber, id) => {
+    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, Function.prototype)
 }

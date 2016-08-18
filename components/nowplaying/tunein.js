@@ -60,13 +60,16 @@ module.exports.sendSong = function (username, title, artist) {
 }
 
 module.exports.testInfo = (settings, callback) => {
+    let logger = moduleLogger.child({ username: settings.username });
     let data = {
-        partnerId: settings.partnerId,
-        partnerKey: settings.partnerKey,
-        id: settings.id,
+        partnerId: settings.partnerId.toString(),
+        partnerKey: settings.partnerKey.toString(),
+        id: settings.stationId,
         title: "Test title",
         artist: "Now Playing Integration",
     };
+    logger = logger.child({ data });
+    logger.debug("Sending test request");
     rest.post("https://air.radiotime.com/Playing.ashx", {
         data: data,
         timeout: 5000,

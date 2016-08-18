@@ -1,17 +1,12 @@
-/* global requireFromRoot */
-let NowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
+import BadRequestError from "~/http/classes/BadRequestError"
+const nowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
 
-module.exports = ({ app }) => {
-    app.get("/nowplaying/:username", function (req, res) {
-        if (typeof req.params.username === "undefined") {
-            return res.status(400).send("Missing Username")
+module.exports = ({ app, wrap }) => {
+    app.get("/nowplaying/:username", wrap(async (req, res) => {
+        if (!req.params.username) {
+            throw new BadRequestError("Missing username")
         }
+        res.json(await nowPlaying.getLatestSongs(req.params.username, 10))
+    }))
+}
 
-        NowPlaying.getLatestSongs(req.params.username, 10, function (error, np) {
-            if (error) {
-                return res.status(500).json({ error: error })
-            }
-            res.json(np)
-        })
-    });
-};
