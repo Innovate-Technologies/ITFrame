@@ -8,7 +8,7 @@ export default async (info) => {
         return
     }
     logger.debug(info.username, "Checking tunes")
-    const tunesInfo = tunes.lookUp(info.username, info.title, info.artist)
+    const tunesInfo = await tunes.lookUp(info.username, info.title, info.artist)
 
     const entry = {
         username: info.username,
