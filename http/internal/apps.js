@@ -6,8 +6,7 @@ const users = requireFromRoot("components/legacy/usersDatabase.js");
 const controlUser = requireFromRoot("components/control/controlUser.js");
 const legacyiOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js");
 const castDatabase = requireFromRoot("components/cast/database.js");
-const nowPlayingDatabase = promisify(requireFromRoot("components/nowplaying/nowPlayingDatabase.js"),
-    undefined, true);
+const nowPlayingDatabase = requireFromRoot("components/nowplaying/nowPlayingDatabase.js");
 const legacyNowPlaying = promisify(requireFromRoot("components/nowplaying/legacyNowPlaying.js"),
     undefined, true);
 const AppsService = requireFromRoot("components/apps/api.js");

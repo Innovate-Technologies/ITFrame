@@ -1,8 +1,15 @@
-/* global requireFromRoot */
-let fleet = requireFromRoot("components/coreos/fleet.js")
+const fleet = requireFromRoot("components/coreos/fleet.js")
 
-module.exports.processSong = function ({ id }) {
+export const processSong = async ({ id }) => {
     const randomNumber = Math.floor(Math.random() * 4)
+    try {
+        await createUnit(randomNumber, id)
+    } catch (error) {
+        processSong({ id })
+    }
+}
+
+const createUnit = (randomNumber, id) => new Promise((resolve, reject) => {
     fleet.newUnit(`tunes-worker-${randomNumber}-${id}.service`, {
         desiredState: "launched",
         name: `tunes-worker-${randomNumber}-${id}.service`,
@@ -67,11 +74,15 @@ module.exports.processSong = function ({ id }) {
             "section": "X-Fleet",
             "value": `tunes-worker-${randomNumber}*`,
         }],
-    }, () => {})
-}
-
-module.exports.stopContainer = (randomNumber, id) => {
-    fleet.stopUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {
-        setTimeout(() => {fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, () => {})}, 10000)
+    }, (err) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve();
+        }
     })
+})
+
+export const stopContainer = (randomNumber, id) => {
+    fleet.destroyUnit(`tunes-worker-${randomNumber}-${id}.service`, Function.prototype)
 }
