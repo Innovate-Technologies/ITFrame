@@ -12,14 +12,14 @@ export default async (info) => {
 
     const entry = {
         username: info.username,
-        song: tunesInfo.title,
+        song: tunesInfo.song,
         artist: tunesInfo.artist,
         cover: tunesInfo.artwork,
         wiki: "",
         buy: (tunesInfo.external_url || {}).itunes || "",
         time: Math.round((new Date()).getTime() / 1000),
     }
-    logger.debug(info.username, "Saving song")
+    logger.debug(info.username, "Saving song", entry)
     await database.addSong(entry)
     logger.debug(info.username, "Triggering hooks")
     global.hooks.runHooks("newSong", entry)

@@ -8,8 +8,8 @@ export const lookUp = async (username, song, artist) => {
     }
 
     const songInfo = {
-        song: song,
-        artist: artist,
+        song,
+        artist,
         externalURL: {},
     }
 
