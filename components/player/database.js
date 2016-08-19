@@ -16,6 +16,11 @@ let playerSchema = new Schema({
         type: String,
         required: true,
     },
+    transparentBackground: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
     backgroundColour: {
         type: String,
         required: true,
