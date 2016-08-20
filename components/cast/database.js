@@ -2,7 +2,7 @@ import randtoken from "rand-token"
 import _ from "underscore"
 const buildinfo = requireFromRoot("components/buildinfo/database.js")
 const mongoose = requireFromRoot("components/database/mongodb.js")
-const castDatabase = {};
+const castDatabase = {}
 const Schema = mongoose.Schema
 const castSchema = new Schema({
     name: {
