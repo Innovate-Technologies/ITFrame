@@ -158,7 +158,7 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "MachineMetadata",
                 "section": "X-Fleet",
-                "value": "model=C1",
+                "value": "model=C2M",
             }],
         })
     })
