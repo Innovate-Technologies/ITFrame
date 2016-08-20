@@ -1,66 +1,66 @@
-const randtoken = require("rand-token");
-let castDatabase = {};
-let buildinfo = requireFromRoot("components/buildinfo/database.js")
-let _ = require("underscore");
-let mongoose = requireFromRoot("components/database/mongodb.js");
-let Schema = mongoose.Schema;
-let castSchema = new Schema({
-    "name": {
+import randtoken from "rand-token"
+import _ from"underscore"
+const buildinfo = requireFromRoot("components/buildinfo/database.js")
+const mongoose = requireFromRoot("components/database/mongodb.js");
+const castDatabase = {};
+const Schema = mongoose.Schema;
+const castSchema = new Schema({
+    name: {
         type: String,
         default: "",
     },
-    "genre": {
+    genre: {
         type: String,
         default: "Misc",
     },
-    "username": String,
-    "httpPort": Number,
-    "httpsPort": Number,
-    "httpsCert": String,
-    "httpsKey": String,
-    "hostname": String,
-    "apikey": String,
-    "input": {
-        "SHOUTcast": Number,
-        "Icecast": {
+    username: String,
+    httpPort: Number,
+    httpsPort: Number,
+    httpsCert: String,
+    httpsKey: String,
+    hostname: String,
+    apikey: String,
+    input: {
+        SHOUTcast: Number,
+        Icecast: {
             type: Number,
             default: 1000,
-        }
+        },
     },
-    "directories": {
-        "Icecast": Object,
+    directories: {
+        Icecast: Object,
     },
-    "streams": Object,
-    "version": {
-        "Cast": {
+    streams: Object,
+    version: {
+        Cast: {
             type: String,
             default: "0",
         },
-        "DJ": {
+        DJ: {
             type: String,
             default: "0",
         },
     },
-    "internal": {
-        "dj": {
-            "key": {
+    internal: {
+        dj: {
+            key: {
                 type: String,
                 default: () => { randtoken.generate(30) },
             },
         },
-        "statistics": {
-            "key": {
+        statistics: {
+            key: {
                 type: String,
                 default: () => { randtoken.generate(30) },
             },
         },
     },
-    "DJ": {
-        "enabled": {
+    DJ: {
+        enabled: {
             type: Boolean,
             default: false,
         },
-        "fadeLength": {
+        fadeLength: {
             type: Number,
             default: 0,
         },
@@ -72,7 +72,10 @@ let castSchema = new Schema({
     geolock: {
         enabled: Boolean,
         countryCodes: [String],
-        mode: { type: String, enum: ["blacklist", "whitelist"] },
+        mode: {
+            type: String,
+            enum: ["blacklist", "whitelist"],
+        },
     },
     antiStreamRipper: {
         type: Boolean,
@@ -83,7 +86,7 @@ let castSchema = new Schema({
         default: false,
     }
 }, { collection: "cast" });
-let CastModel = mongoose.model("cast", castSchema, "cast");
+const CastModel = mongoose.model("cast", castSchema, "cast");
 
 castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) => {
     CastModel.findOne({ username: username }, function (err, res) {
@@ -184,7 +187,7 @@ castDatabase.getStreamUrl = (username, callback) => {
 }
 
 castDatabase.checkStatsKey = async (username, key) => {
-    const accountInfo = await CastModel.findOne({ username })
+    const accountInfo = await CastModel.findOne({ username }).exec()
 
     if (!accountInfo || !accountInfo.internal || !accountInfo.internal.statistics) {
         return false

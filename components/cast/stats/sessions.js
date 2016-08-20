@@ -16,7 +16,7 @@ const SessionsSchema = new Schema({
         type: Date,
         default: null,
     },
-    returningListener: Boolean,
+    isReturningListener: Boolean,
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
     username: 1,
@@ -24,32 +24,28 @@ SessionsSchema.index({
 });
 const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
 
-export const startSession = async (username, listenerId) => {
+export const startSession = (username, listenerId) => {
     const session = new SessionsModel({
         username,
         listenerId,
         startTime: new Date(),
     })
-    return await session.save()
+    return session.save()
 }
 
-export const endSession = async (username, id) => {
-    const session = await SessionsModel.findOne({_id: new ObjectId(id)})
-    session.endTime = new Date()
-    return await session.save()
+export const endSession = (username, id) => {
+    return SessionsModel.update({_id: new ObjectId(id)}, {endTime: new Date()}).exec()
 }
 
-export const getAllSessionsForUsernameSince = async (username, since) => {
-    return await SessionsModel.find({username}).where("startTime").gt(since).populate("listenerId").exec()
+export const getAllSessionsForUsernameSince = (username, since) => {
+    return SessionsModel.find({username}).where("startTime").gt(since).populate("listenerId").exec()
 }
 
 export const closeAllSessionsForUsername = async (username) => {
-    const openSessions = await SessionsModel.find({
+    return SessionsModel.update({
         username,
         endTime: null,
-    })
-    for (let session of openSessions) {
-        session.endTime = new Date()
-        await session.save()
-    }
+    }, {
+        endTime: new Date(),
+    }).exec()
 }

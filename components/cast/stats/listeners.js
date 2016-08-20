@@ -21,25 +21,20 @@ ListenersSchema.index({
 });
 const ListenersModel = mongoose.model("cast_listeners", ListenersSchema, "cast_listeners")
 
-export const getListenerForInfo = (ip, client) => new Promise((resolve, reject) => {
-    ListenersModel.findOne({ip, client}, (err, res) => {
-        if (err) {
-            reject(err)
-        }
-        resolve(res)
-    })
-})
-
-export const addListenerProfile = async (username, info) => {
-    info.username = username
-    info.lastSeen = new Date()
-    return await new ListenersModel(info).save()
+export const getListenerForInfo = (username, ip, client) => {
+    return ListenersModel.findOne({ username, ip, client }).exec()
 }
 
-export const updateLastSeen = async (id) => {
-    const listener = ListenersModel.findOne({
+export const addListenerProfile = (username, info) => {
+    info.username = username
+    info.lastSeen = new Date()
+    return new ListenersModel(info).save()
+}
+
+export const updateLastSeen = (id) => {
+    return ListenersModel.update({
         _id: new ObjectId(id),
-    })
-    listener.lastSeen = new Date()
-    return await listener.save()
+    }, {
+        lastSeen: new Date(),
+    }).exec()
 }

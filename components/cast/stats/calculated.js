@@ -5,7 +5,7 @@ const CalculatedSchema = new Schema({
     username: String,
     resulution: {
         type: String,
-        emum: ["minute", "hour", "day"],
+        enum: ["minute", "hour", "day"],
     },
     totalSessions: Number,
     averageListeners: Number,
@@ -27,21 +27,23 @@ CalculatedSchema.index({
 });
 const CalculatedModel = mongoose.model("cast_calculated", CalculatedSchema, "cast_calculated")
 
+
+const ONE_MILLISECOND = 1000
+const ONE_SECOND = 60
+const ONE_MINUTE = 60
+const ONE_HOUR = 60
+const ONE_DAY = 24
+const ONE_YEAR = 365
+
+const delayForResolution = {
+    "minute": 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    "hour": 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    "day": 10 * ONE_YEAR * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+}
+
 export const insertDataForUsername = async (username, info) => {
     info.username = username
-    switch (info.resulution) {
-        case "minute":
-            info.expiresAt = new Date((new Date()).getTime() + (90 * 24 * 60 * 60 * 1000))
-            break
-        case "hour":
-            info.expiresAt = new Date((new Date()).getTime() + (365 * 24 * 60 * 60 * 1000))
-            break
-        case "year":
-            info.expiresAt = new Date((new Date()).getTime() + (10 * 365 * 24 * 60 * 60 * 1000))
-            break
-        default:
-            info.expiresAt = new Date((new Date()).getTime() + (90 * 24 * 60 * 60 * 1000))
-    }
+    info.expiresAt = new Date((new Date()).getTime() + delayForResolution(info.resolution))
     return await new CalculatedModel(info).save()
 }
 
