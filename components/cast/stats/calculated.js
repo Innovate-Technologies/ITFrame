@@ -36,9 +36,9 @@ const ONE_DAY = 24
 const ONE_YEAR = 365
 
 const delayForResolution = {
-    "minute": 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
-    "hour": 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
-    "day": 10 * ONE_YEAR * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    minute: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    hour: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    day: 10 * ONE_YEAR * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
 }
 
 export const insertDataForUsername = async (username, info) => {

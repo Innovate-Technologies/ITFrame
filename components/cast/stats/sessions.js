@@ -34,11 +34,11 @@ export const startSession = (username, listenerId) => {
 }
 
 export const endSession = (username, id) => {
-    return SessionsModel.update({_id: new ObjectId(id)}, {endTime: new Date()}).exec()
+    return SessionsModel.update({ _id: new ObjectId(id) }, {endTime: new Date()}).exec()
 }
 
 export const getAllSessionsForUsernameSince = (username, since) => {
-    return SessionsModel.find({username}).where("startTime").gt(since).populate("listenerId").exec()
+    return SessionsModel.find({ username }).where("startTime").gt(since).populate("listenerId").exec()
 }
 
 export const closeAllSessionsForUsername = async (username) => {

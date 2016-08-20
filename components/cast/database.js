@@ -1,9 +1,9 @@
 import randtoken from "rand-token"
-import _ from"underscore"
+import _ from "underscore"
 const buildinfo = requireFromRoot("components/buildinfo/database.js")
-const mongoose = requireFromRoot("components/database/mongodb.js");
+const mongoose = requireFromRoot("components/database/mongodb.js")
 const castDatabase = {};
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 const castSchema = new Schema({
     name: {
         type: String,
@@ -84,9 +84,9 @@ const castSchema = new Schema({
     hideListenerCount: {
         type: Boolean,
         default: false,
-    }
-}, { collection: "cast" });
-const CastModel = mongoose.model("cast", castSchema, "cast");
+    },
+}, { collection: "cast" })
+const CastModel = mongoose.model("cast", castSchema, "cast")
 
 castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) => {
     CastModel.findOne({ username: username }, function (err, res) {
