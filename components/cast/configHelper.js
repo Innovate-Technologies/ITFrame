@@ -114,10 +114,6 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
-                value: util.format('-/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/AAAA/\' \'[{\\"value\\":\\"\'$(curl -f v6.myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
                 "value": "-/usr/bin/docker kill " + username,
             }, {
                 "name": "ExecStartPre",
