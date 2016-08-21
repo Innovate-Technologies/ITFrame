@@ -100,6 +100,20 @@ export const getDefaultForUsername = (username) => {
     }).exec()
 }
 
+export const setDefaultForUsername = async (username, info) => {
+    let defaultInfo = await TunesPersonalModel.findOne({
+        username,
+        type: "default",
+    }).exec()
+    if (!defaultInfo) {
+        defaultInfo = new TunesPersonalModel()
+    }
+    _.extend(defaultInfo, info)
+    defaultInfo.type = "default"
+    defaultInfo.username = username
+    return defaultInfo.save()
+}
+
 export const getAllSongsForUser = (username) => {
     return TunesPersonalModel.find({ username }).exec()
 }
