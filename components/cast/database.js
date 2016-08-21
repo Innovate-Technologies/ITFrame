@@ -19,7 +19,10 @@ const castSchema = new Schema({
     httpsCert: String,
     httpsKey: String,
     hostname: String,
-    apikey: String,
+    apikey: {
+        type: String,
+        default: () => { return randtoken.generate(30) },
+    },
     input: {
         SHOUTcast: Number,
         Icecast: {
