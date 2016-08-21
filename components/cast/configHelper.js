@@ -19,6 +19,10 @@ function getLeastUsedPort(callback) {
             "14000": 0,
             "15000": 0,
             "16000": 0,
+            "17000": 0,
+            "18000": 0,
+            "19000": 0,
+            "20000": 0,
         }
         for (let unit of res.units) {
             if (unit.name.split("-").length > 1) {
@@ -110,6 +114,10 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
+                value: util.format('-/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/AAAA/\' \'[{\\"value\\":\\"\'$(curl -f v6.myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
+            }, {
+                "name": "ExecStartPre",
+                "section": "Service",
                 "value": "-/usr/bin/docker kill " + username,
             }, {
                 "name": "ExecStartPre",
@@ -158,7 +166,7 @@ function createFleetUnit(username, callback) {
             }, {
                 "name": "MachineMetadata",
                 "section": "X-Fleet",
-                "value": "model=C1",
+                "value": "model=C2M",
             }],
         })
     })
