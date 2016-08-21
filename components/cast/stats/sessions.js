@@ -4,7 +4,7 @@ const ObjectId = mongoose.Types.ObjectId
 const SessionsSchema = new Schema({
     username: String,
     listenerId: {
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "cast_listeners",
     },
     startTime: {
