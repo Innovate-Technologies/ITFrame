@@ -125,4 +125,14 @@ module.exports = function ({ app, wrap }) {
         await tunesDB.updateSong(req.body.username, req.params.song, { artwork: req.file.link })
         res.json({})
     }))
+
+    app.post("/control/tunes/update-default-artwork/:username", uploadImage.single("image"), wrap(async (req, res) => {
+        if (!req.file) {
+            throw new Error("Failed to upload the image.");
+        }
+        req.log.info({ link: req.file.link }, "Uploaded file");
+        const link = req.file.link.replace("https://", "https://photon.shoutca.st/")
+        await tunesDB.setDefaultForUsername(req.body.username, { artwork: link })
+        res.json({ link })
+    }))
 };
