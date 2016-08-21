@@ -26,7 +26,7 @@ export default ({ app, wrap }) => {
         }
         let listenerProfile = await listeners.getListenerForInfo(req.params.user, req.body.ip, req.body.client)
         if (!listenerProfile) {
-            listenerProfile = await listeners.addListenerProfile(req.params.user, req.params)
+            listenerProfile = await listeners.addListenerProfile(req.params.user, req.body)
         }
         const session = await sessions.startSession(req.params.user, listenerProfile._id)
         res.json({ uid: session._id })
