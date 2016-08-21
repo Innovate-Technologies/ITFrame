@@ -120,7 +120,7 @@ castDatabase.updateVersion = (username, callback) => {
         if (buildErr) {
             return callback(buildErr)
         }
-        CastModel.findOne({ username: username }, (err, castInfo) => {
+        CastModel.findOne({ username: username }).lean().exec((err, castInfo) => {
             if (err) {
                 return callback(err)
             }
@@ -131,6 +131,11 @@ castDatabase.updateVersion = (username, callback) => {
                 if (rerr) {
                     return callback(err)
                 }
+                delete castInfo._id
+                if (!castInfo.version) {
+                    castInfo.version = {}
+                }
+                castInfo.version.Cast = build.version
                 new CastModel(castInfo).save(callback)
             })
         })
