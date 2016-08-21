@@ -45,13 +45,13 @@ const castSchema = new Schema({
         dj: {
             key: {
                 type: String,
-                default: () => { randtoken.generate(30) },
+                default: () => { return randtoken.generate(30) },
             },
         },
         statistics: {
             key: {
                 type: String,
-                default: () => { randtoken.generate(30) },
+                default: () => { return randtoken.generate(30) },
             },
         },
     },
