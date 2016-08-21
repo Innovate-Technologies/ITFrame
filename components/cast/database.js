@@ -116,23 +116,24 @@ castDatabase.addConfigForUsername = (username, conf, callback) => {
 }
 
 castDatabase.updateVersion = (username, callback) => {
-    CastModel.findOne({ username: username }, (err, conf) => {
-        if (err) {
-            return callback(err)
+    buildinfo.buildInfoForName("Cast", function (buildErr, build) {
+        if (buildErr) {
+            return callback(buildErr)
         }
-        if (conf === null) {
-            return callback(new Error("No such username"))
-        }
-        buildinfo.buildInfoForName("Cast", function (buildErr, build) {
-            if (buildErr) {
-                return callback(buildErr)
+        CastModel.findOneAndUpdate({ username: username }, { "version.Cast": build.version }, {
+            // Return the document after updates are applied
+            new: true,
+            // Create a document if one isn't found. Required
+            // for `setDefaultsOnInsert`
+            upsert: true,
+            setDefaultsOnInsert: true,
+        }, (err) => {
+            if (err) {
+                return callback(err)
             }
-            if (typeof conf.version !== "object") {
-                conf.version = { Cast: 0, DJ: 0 }
-            }
-            conf.version.Cast = build.version
-            conf.save(callback)
+            callback()
         })
+
     })
 }
 
