@@ -120,18 +120,19 @@ castDatabase.updateVersion = (username, callback) => {
         if (buildErr) {
             return callback(buildErr)
         }
-        CastModel.findOneAndUpdate({ username: username }, { "version.Cast": build.version }, {
-            // Return the document after updates are applied
-            new: true,
-            // Create a document if one isn't found. Required
-            // for `setDefaultsOnInsert`
-            upsert: true,
-            setDefaultsOnInsert: true,
-        }, (err) => {
+        CastModel.findOne({ username: username }, (err, castInfo) => {
             if (err) {
                 return callback(err)
             }
-            callback()
+            if (!castInfo) {
+                return callback(new Error("username not found"))
+            }
+            CastModel.remove({ username }, (rerr) => {
+                if (rerr) {
+                    return callback(err)
+                }
+                new CastModel(castInfo).save(callback)
+            })
         })
 
     })
