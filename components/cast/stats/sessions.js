@@ -47,5 +47,7 @@ export const closeAllSessionsForUsername = async (username) => {
         endTime: null,
     }, {
         endTime: new Date(),
+    }, { 
+        multi: true,
     }).exec()
 }
