@@ -6,7 +6,7 @@ const ListenersSchema = new Schema({
     ip: String,
     client: String,
     geo: {
-        countryCode: String,
+        country: String,
         latitude: Number,
         longitude: Number,
     },

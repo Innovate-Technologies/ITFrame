@@ -24,6 +24,8 @@ export default ({ app, wrap }) => {
         if (!req.body.ip || !req.body.starttime) {
             throw new BadRequestError("Missing parameters")
         }
+        req.body.geo = req.body.location || {}
+        req.body.geo.country = req.body.country
         let listenerProfile = await listeners.getListenerForInfo(req.params.user, req.body.ip, req.body.client)
         if (!listenerProfile) {
             listenerProfile = await listeners.addListenerProfile(req.params.user, req.body)
