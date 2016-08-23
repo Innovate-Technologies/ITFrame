@@ -23,6 +23,8 @@ export const lookUp = async (username, song, artist) => {
         }
     }
 
+    await personalDB.addSong(username, songInfo)
+
     const defaultInfo = await personalDB.getDefaultForUsername(username)
 
     if (defaultInfo) {
@@ -34,6 +36,5 @@ export const lookUp = async (username, song, artist) => {
         }
     }
 
-    await personalDB.addSong(username, songInfo)
     return songInfo
 }
