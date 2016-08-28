@@ -1,7 +1,9 @@
-var fleet = requireFromRoot("components/coreos/fleet.js")
-var castDB = require("./database.js")
-var util = require("util")
-let randtoken = require("rand-token");
+import util from "util"
+
+import fleet from "app/components/coreos/fleet.js"
+import randtoken from "rand-token"
+
+import * as castDB from "app/components/cast/database.js"
 
 function getLeastUsedPort(callback) {
     fleet.getAllUnits(function getAllUnitsCallback(err, res) {
@@ -47,7 +49,7 @@ function getLeastUsedPort(callback) {
     })
 }
 
-function createConfigForNewUser(username, callback) {
+export function createConfigForNewUser(username, callback) {
     getLeastUsedPort(function (err, port) {
         if (err) {
             return callback(err)
@@ -79,7 +81,7 @@ function createConfigForNewUser(username, callback) {
     })
 }
 
-function createFleetUnit(username, callback) {
+export function createFleetUnit(username, callback) {
     castDB.getInfoForUsername(username, function (err, res) {
         if (err) {
             return callback(err)
@@ -172,7 +174,7 @@ function createFleetUnit(username, callback) {
     })
 }
 
-function createDJFleetUnit(username, callback) {
+export function createDJFleetUnit(username, callback) {
     castDB.getInfoForUsername(username, function (err, res) {
         if (err) {
             return callback(err)
@@ -256,7 +258,3 @@ function createDJFleetUnit(username, callback) {
         })
     })
 }
-
-module.exports.createConfigForNewUser = createConfigForNewUser
-module.exports.createFleetUnit = createFleetUnit
-module.exports.createDJFleetUnit = createDJFleetUnit

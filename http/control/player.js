@@ -1,8 +1,9 @@
-let wait = require("wait.for");
-let playerDatabase = requireFromRoot("components/player/database.js");
-import NotFoundError from "~/http/classes/NotFoundError";
+import wait from "wait.for";
 
-module.exports = ({ app }) => {
+import * as playerDatabase from "app/components/player/database.js";
+import NotFoundError from "app/http/classes/NotFoundError";
+
+export default ({ app }) => {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Configuration

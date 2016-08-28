@@ -1,3 +1,4 @@
-let etcd = requireFromRoot("components/coreos/etcd.js");
+import * as etcd from "app/components/coreos/etcd.js";
+
 etcd.connectEtcd();
-module.exports = etcd
+export default etcd;

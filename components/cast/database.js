@@ -1,8 +1,9 @@
-import randtoken from "rand-token"
 import _ from "underscore"
-const buildinfo = requireFromRoot("components/buildinfo/database.js")
-const mongoose = requireFromRoot("components/database/mongodb.js")
-const castDatabase = {}
+import randtoken from "rand-token"
+
+import * as buildinfo from "app/components/buildinfo/database.js"
+import mongoose from "app/components/database/mongodb.js"
+
 const Schema = mongoose.Schema
 const castSchema = new Schema({
     name: {
@@ -91,7 +92,8 @@ const castSchema = new Schema({
 }, { collection: "cast" })
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
-castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) => {
+
+export const getInfoForUsername = (username, callback) => {
     CastModel.findOne({ username: username }, function (err, res) {
         if (err) {
             return callback(err);
@@ -102,9 +104,9 @@ castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) 
         return callback(null, res);
     });
 }
+export const getConfig = getInfoForUsername
 
-
-castDatabase.addConfigForUsername = (username, conf, callback) => {
+export const addConfigForUsername = (username, conf, callback) => {
     conf.username = username;
     buildinfo.buildInfoForName("Cast", function (err, build) {
         if (err) {
@@ -118,7 +120,7 @@ castDatabase.addConfigForUsername = (username, conf, callback) => {
     })
 }
 
-castDatabase.updateVersion = (username, callback) => {
+export const updateVersion = (username, callback) => {
     buildinfo.buildInfoForName("Cast", function (buildErr, build) {
         if (buildErr) {
             return callback(buildErr)
@@ -146,7 +148,7 @@ castDatabase.updateVersion = (username, callback) => {
     })
 }
 
-castDatabase.updateDJVersion = (username, callback) => {
+export const updateDJVersion = (username, callback) => {
     CastModel.findOne({ username: username }, (err, conf) => {
         if (err) {
             return callback(err)
@@ -167,11 +169,11 @@ castDatabase.updateDJVersion = (username, callback) => {
     })
 }
 
-castDatabase.deleteUsername = (username, callback) => {
+export const deleteUsername = (username, callback) => {
     CastModel.remove({ username }, callback);
 }
 
-castDatabase.updateConfig = (username, conf, callback) => {
+export const updateConfig = (username, conf, callback) => {
     CastModel.update({ username }, conf, { overwrite: true }, function (error) {
         if (error) {
             return callback(error);
@@ -180,7 +182,7 @@ castDatabase.updateConfig = (username, conf, callback) => {
     });
 }
 
-castDatabase.getStreamUrl = (username, callback) => {
+export const getStreamUrl = (username, callback) => {
     CastModel.findOne({ username }, function (err, account) {
         if (err) {
             return callback(err);
@@ -196,7 +198,7 @@ castDatabase.getStreamUrl = (username, callback) => {
     });
 }
 
-castDatabase.checkStatsKey = async (username, key) => {
+export const checkStatsKey = async (username, key) => {
     const accountInfo = await CastModel.findOne({ username }).exec()
 
     if (!accountInfo || !accountInfo.internal || !accountInfo.internal.statistics) {
@@ -206,8 +208,6 @@ castDatabase.checkStatsKey = async (username, key) => {
     return accountInfo.internal.statistics.key === key
 }
 
-castDatabase.getAll = (callback) => {
+export const getAll = (callback) => {
     CastModel.find({}, callback)
 }
-
-module.exports = castDatabase;

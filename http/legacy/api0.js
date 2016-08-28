@@ -1,7 +1,7 @@
-var iOS = requireFromRoot("components/iOS/legacyDatabase.js")
-var Apps = requireFromRoot("components/apps/api.js")
+import * as iOS from "app/components/iOS/legacyDatabase.js"
+import * as Apps from "app/components/apps/api.js"
 
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.get("/api0/iOS/", function (req, res) {
         if (typeof req.query.sku === "undefined" || typeof req.query.key === "undefined") {
             return res.status(400).send("Error")

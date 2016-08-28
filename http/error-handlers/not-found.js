@@ -1,4 +1,4 @@
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.use(function notFoundHandler(req, res) {
         req.log.debug("Reached the 404 handler");
         res.status(404);
@@ -10,4 +10,4 @@ module.exports = function ({ app }) {
         }
         return res.send("Not found");
     });
-};
+}

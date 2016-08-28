@@ -4,11 +4,11 @@
  */
 
 import _ from "underscore";
+import pls from "pls";
+import rest from "restler";
 
-let usersDatabase = {};
-let rest = require("restler");
-let pls = require("pls");
-let mongoose = requireFromRoot("components/database/mongodb.js");
+import mongoose from "app/components/database/mongodb.js";
+
 let Schema = mongoose.Schema;
 let usersSchema = new Schema({
     username: String,
@@ -18,7 +18,7 @@ let usersSchema = new Schema({
 let UsersModel = mongoose.model("users", usersSchema, "users");
 let moduleLogger = log.child({ component: "legacy/users/database" });
 
-usersDatabase.getInfoForUsername = (username, callback) => {
+export const getInfoForUsername = (username, callback) => {
     UsersModel.findOne({ username: username }, function (err, res) {
         if (err) {
             return callback(err);
@@ -30,7 +30,7 @@ usersDatabase.getInfoForUsername = (username, callback) => {
     });
 }
 
-usersDatabase.upsert = async (username, updatedDocument) => {
+export const upsert = async (username, updatedDocument) => {
     let doc = await UsersModel.findOne({ username });
     doc = doc
         ? _.extend(doc, updatedDocument)
@@ -38,9 +38,9 @@ usersDatabase.upsert = async (username, updatedDocument) => {
     await doc.save();
 }
 
-usersDatabase.register = (username, server, groupName, callback = () => {}) => {
+export const register = (username, server, groupName, callback = () => {}) => {
     let logger = moduleLogger.child({ username, server, groupName });
-    usersDatabase.getInfoForUsername(username, function (err, info) {
+    getInfoForUsername(username, function (err, info) {
         if (err && err.message !== "No such username") {
             return callback(err);
         }
@@ -73,11 +73,11 @@ usersDatabase.register = (username, server, groupName, callback = () => {}) => {
     });
 };
 
-usersDatabase.getStreamUrl = (username, callback) => {
+export const getStreamUrl = (username, callback) => {
     if (!username) {
         return callback(new Error("No username specified"));
     }
-    usersDatabase.getInfoForUsername(username, (err, { server } = {}) => {
+    getInfoForUsername(username, (err, { server } = {}) => {
         if (err) {
             return callback(err);
         }
@@ -110,5 +110,3 @@ usersDatabase.getStreamUrl = (username, callback) => {
             });
     });
 };
-
-module.exports = usersDatabase;

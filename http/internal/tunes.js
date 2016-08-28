@@ -1,20 +1,19 @@
-/* global requireFromRoot, config, Buffer, log */
-// Tunes Worker backend
+import getFileType from "file-type";
+import multer from "multer";
+import sbuff from "simple-bufferstream";
+
+import convertImage from "app/components/bufferImageConvert";
+import * as db from "app/components/tunes/personalMusicDatabase.js";
+import * as processSong from "app/components/tunes/process.js";
+import resizeImage from "app/components/bufferImageResize";
+import SwiftMulterStorage from "app/components/openstack/SwiftMulterStorage";
+
 const ALLOWED_IMAGE_TYPES = ["jpg", "png", "gif"];
 const ONE_MEGABYTE = 1 * Math.pow(10, 6);
 const MAX_IMAGE_SIZE = 5 * ONE_MEGABYTE;
 const MAX_FILE_SIZE = 1024 * ONE_MEGABYTE;
 
-let moduleLogger = log.child({ component: "tunes-internal" });
-let multer = require("multer");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
-import convertImage from "~/components/bufferImageConvert";
-import resizeImage from "~/components/bufferImageResize";
-let sbuff = require("simple-bufferstream");
-let getFileType = require("file-type");
-
-let db = requireFromRoot("components/tunes/personalMusicDatabase.js");
-let processSong = requireFromRoot("components/tunes/process.js");
+const moduleLogger = log.child({ component: "tunes-internal" });
 
 let processImageUpload = (req, { stream }, callback) => {
     let logger = moduleLogger.child({ req });
@@ -81,7 +80,7 @@ let upload = multer({
     },
 });
 
-module.exports = function ({ app, wrap }) {
+export default function ({ app, wrap }) {
     app.get("/tunes/getSongForID/" + config.tunesKey, (req, res, next) => {
         if (!req.query.id) {
             return next(new Error("No ID provided"));
@@ -147,4 +146,4 @@ module.exports = function ({ app, wrap }) {
         res.json({ isInUse })
     }));
 
-};
+}

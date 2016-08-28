@@ -1,11 +1,11 @@
-/* global requireFromRoot */
-let wait = require("wait.for");
-let cast = requireFromRoot("components/cast/manage.js");
-let castDatabase = requireFromRoot("components/cast/database.js");
-import NotFoundError from "~/http/classes/NotFoundError";
-import BadRequestError from "~/http/classes/BadRequestError";
+import wait from "wait.for";
 
-module.exports = ({ app }) => {
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as cast from "app/components/cast/manage.js";
+import * as castDatabase from "app/components/cast/database.js";
+import NotFoundError from "app/http/classes/NotFoundError";
+
+export default ({ app }) => {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Configuration

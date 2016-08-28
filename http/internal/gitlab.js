@@ -1,6 +1,6 @@
-let buildInfo = requireFromRoot("components/buildinfo/database.js")
+import * as buildInfo from "app/components/buildinfo/database.js"
 
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.post("/intern/gitlab/:name/build/" + config.gitLabKey, function (req, res, next) {
         if (!req.body.sha) {
             return next(new Error("No sha found"))

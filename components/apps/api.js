@@ -1,6 +1,7 @@
-let _ = require("underscore");
-let EJSON = require("ejson");
-let Asteroid = require("asteroid");
+import _ from "underscore";
+import Asteroid from "asteroid";
+import EJSON from "ejson";
+
 let apps = new Asteroid("apps.shoutca.st", true);
 let moduleLogger = log.child({ component: "apps" });
 
@@ -63,9 +64,6 @@ let getInfoForPlatform = (platform) => {
     }
 };
 
-
-let AppsService = {};
-
 /**
  * Get a request by ID
  * @param  {String} platform  Platform ("android" or "iOS")
@@ -73,7 +71,7 @@ let AppsService = {};
  * @async
  * @return {Object} App request
  */
-AppsService.getRequest = async function (platform, selector) {
+export const getRequest = async function (platform, selector) {
     let logger = moduleLogger.child({
         platform,
         selector,
@@ -98,7 +96,7 @@ AppsService.getRequest = async function (platform, selector) {
  * @async
  * @return {String}   Newly added app request _id
  */
-AppsService.addRequest = async function (platform, request = {}) {
+export const addRequest = async function (platform, request = {}) {
     let { collectionName } = getInfoForPlatform(platform);
     let logger = moduleLogger.child({ platform, collectionName, request });
     await ensureLoggedIn();
@@ -118,12 +116,12 @@ AppsService.addRequest = async function (platform, request = {}) {
  * @param  {Object}   modifier Modifier object
  * @async
  */
-AppsService.updateRequest = async function (platform, selector, modifier = {}) {
+export const updateRequest = async function (platform, selector, modifier = {}) {
     let { collectionName } = getInfoForPlatform(platform);
     let logger = moduleLogger.child({ platform, collectionName, selector, modifier });
 
     try {
-        let request = await AppsService.getRequest(platform, selector);
+        let request = await getRequest(platform, selector);
         let newRequest = _.extend(request, modifier);
         let cleanRequest = await apps.call("cleanAppRequest", platform, newRequest).result;
         await apps.call("itframeUpdateAppRequest", platform, { _id: request._id }, { $set: cleanRequest }).result;
@@ -135,4 +133,3 @@ AppsService.updateRequest = async function (platform, selector, modifier = {}) {
 };
 
 logIn();
-export default AppsService;

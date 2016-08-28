@@ -1,10 +1,10 @@
-let mongoose = require(global.appRoot + "/components/database/mongodb.js");
+import mongoose from "app/components/database/mongodb.js";
 let Schema = mongoose.Schema;
 let timetokensSchema = new Schema({ service: String, key: String });
 let timetokensModel = mongoose.model("time_tokens", timetokensSchema, "time_tokens");
 let moduleLogger = log.child({ component: "timetoken" });
 
-module.exports.getAPIKey = function (service, callback) {
+export const getAPIKey = function (service, callback) {
     let logger = moduleLogger.child({ service });
     timetokensModel.findOne({ service }, function (err, res) {
         if (err) {

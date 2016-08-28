@@ -1,7 +1,9 @@
-var mongoose = requireFromRoot("components/database/mongodb.js");
+import _ from "underscore"
+import wait from "wait.for"
+
+import mongoose from "app/components/database/mongodb.js";
+
 var Schema = mongoose.Schema;
-var _ = require("underscore");
-var wait = require("wait.for");
 
 var mayaSchema = new Schema({
     subjects: Object,
@@ -180,8 +182,6 @@ var concludeBestResponse = function (replies, scores, callback) {
     callback(null, replies[highestscore.id].func)
 }
 
-var getFunc = function (subject, owner, action, verb, adjective, noun, token, callbackslack) {
+export const getFunc = function (subject, owner, action, verb, adjective, noun, token, callbackslack) {
     wait.launchFiber(getFuncSync, subject, owner, action, verb, adjective, noun, token, callbackslack)
 }
-
-module.exports.getFunc = getFunc

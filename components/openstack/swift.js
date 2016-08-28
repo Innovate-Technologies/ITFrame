@@ -1,6 +1,7 @@
-let swift = { }
-let sbuff = require("simple-bufferstream")
-let client = require("pkgcloud").storage.createClient({
+import pkgcloud from "pkgcloud"
+import sbuff from "simple-bufferstream"
+
+const client = pkgcloud.storage.createClient({
     provider: "openstack",
     username: config.swiftUsername,
     password: config.swiftPassword,
@@ -22,7 +23,7 @@ if (process.env.OPENSTACK_DEBUG) {
  * Get the OpenStack storage client
  * @return OpenStack storage client
  */
-swift.getStorageClient = () => client
+export const getStorageClient = () => client
 
 /**
  * Upload a buffer to Swift and return a File with a `name`
@@ -31,7 +32,7 @@ swift.getStorageClient = () => client
  * @param  {Buffer}   options.buffer    Buffer to upload
  * @param  {Function} callback          Callback function (err, File)
  */
-swift.uploadBuffer = function ({ container, name, buffer }, callback) {
+export const uploadBuffer = function ({ container, name, buffer }, callback) {
     let logger = moduleLogger.child({ container, newFileName: name });
     if (!container || !name || !buffer || !callback) {
         throw new TypeError("container, name, buffer and callback are required")
@@ -55,7 +56,7 @@ swift.uploadBuffer = function ({ container, name, buffer }, callback) {
  * @param  {Buffer}   options.stream    Stream to upload
  * @param  {Function} callback          Callback function (err, File)
  */
-swift.uploadStream = function ({ container, name, stream }, callback) {
+export const uploadStream = function ({ container, name, stream }, callback) {
     let logger = moduleLogger.child({ container, newFileName: name });
     if (!container || !name || !stream || !callback) {
         throw new TypeError("container, name, stream and callback are required")
@@ -70,11 +71,9 @@ swift.uploadStream = function ({ container, name, stream }, callback) {
     stream.pipe(writeStream)
 }
 
-swift.deleteFile = function ({ container, name }, callback) {
+export const deleteFile = function ({ container, name }, callback) {
     if (!container || !name || !callback) {
         throw new TypeError("container, name and callback are required")
     }
     client.removeFile(container, name, callback);
 }
-
-module.exports = swift

@@ -1,17 +1,13 @@
-let moduleLogger = log.child({ component: "maya" });
-let _ = require("underscore");
+import _ from "underscore"
+import speak from "speakeasy-nlp"
 
-if (config.mayaHost) {
-    load();
-} else {
-    moduleLogger.info("Not loading Maya since mayaHost is not truthy");
-    module.exports.sendMessage = () => {};
-}
+import * as db from "app/components/maya/database.js"
 
+const moduleLogger = log.child({ component: "maya" });
+
+let realSendMessage;
 function load() {
-    var db = requireFromRoot("components/maya/database.js")
     var slackAPI = require("./slackBot.js")
-    var speak = require("speakeasy-nlp")
     var mood = 0
     moduleLogger.info("Connecting to the Slack API")
     var slack = slackAPI.connect()
@@ -69,11 +65,23 @@ function load() {
         }
     };
 
-    module.exports.sendMessage = function (channel, message) {
+    realSendMessage = function (channel, message) {
         if (readyToSend) {
             return send({ channel, message });
         }
         retryQueue.push({ channel, message });
     }
-
 }
+
+if (config.mayaHost) {
+    load();
+} else {
+    moduleLogger.info("Not loading Maya since mayaHost is not truthy");
+}
+
+export const sendMessage = (...args) => {
+    if (!config.mayaHost) {
+        return;
+    }
+    realSendMessage(...args);
+};

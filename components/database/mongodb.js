@@ -1,9 +1,12 @@
-/* global config,log */
-var fs = require("fs");
-let moduleLogger = log.child({ component: "mongodb" });
-var mongoose = require("mongoose");
-require("mongoose-function")(mongoose);
+import fs from "fs";
+
+import mongoose from "mongoose";
+import mongooseFn from "mongoose-function";
+
+mongooseFn(mongoose);
 mongoose.set("debug", false);
+const moduleLogger = log.child({ component: "mongodb" });
+
 var options = {
     db: {
         "native_parser": true,
@@ -46,4 +49,4 @@ let connectedCheck = setInterval(function showStillNotConnected() {
     moduleLogger.warn(`We still haven't connected to the DB after ${seconds}s.`);
 }, 10000);
 
-module.exports = mongoose;
+export default mongoose;

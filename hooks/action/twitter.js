@@ -1,4 +1,4 @@
-let twitter = requireFromRoot("components/nowplaying/twitter.js")
+import * as twitter from "app/components/nowplaying/twitter.js"
 
 global.hooks.add("newSong", function sendTweetOnSong(meta) {
     twitter.sendTweet(meta.username, {

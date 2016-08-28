@@ -1,1 +1,2 @@
-module.exports = require("node-fleet-api")(config.fleetUrl)
+import fleetApi from "node-fleet-api";
+export default fleetApi(config.fleetUrl);

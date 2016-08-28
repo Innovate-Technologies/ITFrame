@@ -1,8 +1,7 @@
-import BadRequestError from "~/http/classes/BadRequestError"
-const dns = requireFromRoot("components/coreos/dns.js")
-const nowPlayingHandler = requireFromRoot("components/nowplaying/handle.js")
-const timetoken = requireFromRoot("components/auth/timetoken.js")
-
+import BadRequestError from "app/http/classes/BadRequestError"
+import * as dns from "app/components/coreos/dns.js"
+import nowPlayingHandler from "app/components/nowplaying/handle.js"
+import * as timetoken from "app/components/auth/timetoken.js"
 
 export default ({ app, wrap }) => {
     app.post("/connect/updateSong/", wrap(async (req, res) => {

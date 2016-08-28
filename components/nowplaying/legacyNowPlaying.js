@@ -1,8 +1,8 @@
-let legacyNowPlaying = {};
-let rest = require("restler");
-let usersDatabase = requireFromRoot("components/legacy/usersDatabase.js");
+import rest from "restler";
 
-legacyNowPlaying.getNowPlayingInfo = (username, callback) => {
+import * as usersDatabase from "app/components/legacy/usersDatabase.js";
+
+export const getNowPlayingInfo = (username, callback) => {
     if (!username) {
         return callback(new Error("No username specified"));
     }
@@ -46,5 +46,3 @@ legacyNowPlaying.getNowPlayingInfo = (username, callback) => {
             });
     });
 };
-
-module.exports = legacyNowPlaying;

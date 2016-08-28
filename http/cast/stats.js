@@ -1,10 +1,9 @@
-import BadRequestError from "../classes/BadRequestError";
 import AccessDeniedError from "../classes/AccessDeniedError";
+import BadRequestError from "../classes/BadRequestError";
+import * as calculated from "../../components/cast/stats/calculated.js"
+import * as cast from "app/components/cast/database.js"
 import * as listeners from "../../components/cast/stats/listeners.js"
 import * as sessions from "../../components/cast/stats/sessions.js"
-import * as calculated from "../../components/cast/stats/calculated.js"
-
-const cast = requireFromRoot("components/cast/database.js")
 
 export default ({ app, wrap }) => {
 

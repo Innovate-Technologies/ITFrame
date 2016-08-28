@@ -1,11 +1,12 @@
-let timetoken = requireFromRoot("components/auth/timetoken.js");
-let castDB = requireFromRoot("components/cast/database.js");
-let wait = require("wait.for");
+import wait from "wait.for";
 
-import BadRequestError from "~/http/classes/BadRequestError";
-import AccessDeniedError from "~/http/classes/AccessDeniedError";
+import * as timetoken from "app/components/auth/timetoken.js";
+import * as castDB from "app/components/cast/database.js";
 
-module.exports = function ({ app }) {
+import BadRequestError from "app/http/classes/BadRequestError";
+import AccessDeniedError from "app/http/classes/AccessDeniedError";
+
+export default function ({ app }) {
     app.all("/cast/config", function checkToken(req, res, next) {
         wait.launchFiber(() => {
             if (!req.body.token) {
