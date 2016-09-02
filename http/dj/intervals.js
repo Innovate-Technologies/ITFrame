@@ -1,6 +1,6 @@
 import * as intervalsDB from "../../components/dj/intervals.js"
 
-module.exports = function ({ app, wrap }) {
+export default function ({ app, wrap }) {
     app.get("/dj/:user/:key/all-intervals/", wrap(async (req, res) => {
         res.json(await intervalsDB.intervalsForUsername(req.params.user))
     }))

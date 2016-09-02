@@ -1,7 +1,8 @@
-let maxmind = require("maxmind");
+import maxmind from "maxmind";
+
 maxmind.init([
     global.appRoot + "/components/geoip/database/databaseGeoIPCity.dat",
     global.appRoot + "/components/geoip/database/databaseGeoIPCityv6.dat",
 ]);
 
-module.exports.lookUpLocation = (ip) => maxmind.getLocation(ip);
+export const lookUpLocation = (ip) => maxmind.getLocation(ip);

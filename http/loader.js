@@ -1,16 +1,20 @@
-var bodyParser = require("body-parser");
-var fs = require("fs");
-var express = require("express");
-var expressJwt = require("express-jwt");
-var jwt = require("jsonwebtoken");
-var app = express();
-var http = require("http").createServer(app);
-var io = require("socket.io").listen(http);
-var _ = require("underscore");
-var cors = require("cors");
-let moduleLogger = log.child({ component: "http" });
+import fs from "fs";
 
-module.exports = function () {
+import _ from "underscore";
+import bodyParser from "body-parser";
+import cors from "cors";
+import express from "express";
+import expressJwt from "express-jwt";
+import jwt from "jsonwebtoken";
+import socketio from "socket.io";
+
+const app = express();
+const http = require("http").createServer(app);
+const io = socketio.listen(http);
+
+const moduleLogger = log.child({ component: "http" });
+
+export default function () {
 
     app.use(function (req, res, next) {
         let requestId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -72,7 +76,7 @@ module.exports = function () {
         if (module.includes(".")) {
             moduleLogger.info("Loading file: " + module);
             try {
-                require(global.appRoot + "/http/" + module)(params)
+                require("app/http/" + module)(params)
             } catch (error) {
                 moduleLogger.fatal(error, `Failed to load ${module}.`);
                 process.exit(1);
@@ -86,7 +90,7 @@ module.exports = function () {
             let file = `${module}/${submodule}`;
             moduleLogger.info("Loading file: " + file);
             try {
-                requireFromRoot(`http/${file}`)(params);
+                require(`app/http/${file}`)(params);
             } catch (error) {
                 moduleLogger.fatal(error, `Failed to load ${file}.`);
                 process.exit(1);
@@ -94,8 +98,8 @@ module.exports = function () {
         }
     }
 
-    requireFromRoot("http/error-handlers/not-found.js")(params);
-    requireFromRoot("http/error-handlers/all-other-errors.js")(params);
+    require("app/http/error-handlers/not-found.js")(params);
+    require("app/http/error-handlers/all-other-errors.js")(params);
 
     let humanReadableRoutes = app._router.stack
         .filter((route) => route.route && route.route.methods)

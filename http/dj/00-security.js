@@ -1,6 +1,8 @@
-var wait = require("wait.for")
-var cast = requireFromRoot("components/cast/database.js")
-module.exports = function ({ app }) {
+import wait from "wait.for"
+
+import * as cast from "app/components/cast/database.js"
+
+export default function ({ app }) {
     app.all("/dj/:user/:key/*", function checkDJKey(req, res, next) {
         wait.launchFiber(() => {
             if (!req.params.user || !req.params.key) {

@@ -1,7 +1,7 @@
-const controlUser = requireFromRoot("components/control/controlUser.js");
-const castDatabase = requireFromRoot("components/cast/database.js");
-const legacyUsersDatabase = requireFromRoot("components/legacy/usersDatabase.js");
-const profiler = requireFromRoot("profiler.js");
+import * as castDatabase from "app/components/cast/database.js";
+import * as controlUser from "app/components/control/controlUser.js";
+import * as legacyUsersDatabase from "app/components/legacy/usersDatabase.js";
+import * as profiler from "app/profiler.js";
 
 const getStreamUrl = (username) => new Promise((resolve, reject) => {
     castDatabase.getStreamUrl(username, function (err, streamUrl) {

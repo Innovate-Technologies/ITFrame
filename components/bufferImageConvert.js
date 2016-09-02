@@ -1,4 +1,4 @@
-let lwip = require("lwip");
+import lwip from "lwip";
 
 /**
  * Convert an image to a PNG image

@@ -6,7 +6,7 @@ import moment from "moment-timezone";
 
 import WHMCSError from "./WHMCSError.js";
 import phpSerialize from "./phpSerialize.js";
-import { Cache, ONE_SECOND } from "~/components/cache.js";
+import { Cache, ONE_SECOND } from "app/components/cache.js";
 
 const cache = new Cache();
 

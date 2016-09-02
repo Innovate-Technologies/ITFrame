@@ -17,12 +17,6 @@ if (process.env.DEBUG) {
 }
 
 global.appRoot = __dirname;
-global.requireFromRoot = function (path) {
-    if (log) {
-        log.debug("Requiring " + arguments[0]);
-    }
-    return require(global.appRoot + "/" + path);
-};
 
 require("babel-polyfill");
 require("babel-register");

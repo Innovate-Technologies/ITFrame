@@ -1,4 +1,4 @@
-var mongoose = requireFromRoot("components/database/mongodb.js");
+import mongoose from "app/components/database/mongodb.js";
 var mayaSupportSchema = new mongoose.Schema({
     question: String,
     reply: String,

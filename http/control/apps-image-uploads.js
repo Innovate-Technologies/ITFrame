@@ -1,16 +1,18 @@
+import getFileType from "file-type";
+import multer from "multer";
+import sbuff from "simple-bufferstream";
+
+import convertImage from "app/components/bufferImageConvert";
+import SwiftMulterStorage from "app/components/openstack/SwiftMulterStorage";
+import resizeImage from "app/components/bufferImageResize";
+
 const ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "gif"];
 const DIMENSIONS = {
     icon: { width: 1024, height: 1024 },
     featureGraphic: { width: 1024, height: 500 },
 };
 
-let moduleLogger = log.child({ component: "apps-image-uploads" });
-let multer = require("multer");
-let sbuff = require("simple-bufferstream");
-let getFileType = require("file-type");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
-import convertImage from "~/components/bufferImageConvert";
-import resizeImage from "~/components/bufferImageResize";
+const moduleLogger = log.child({ component: "apps-image-uploads" });
 
 let processImageUpload = (req, { stream }, callback) => {
     let logger = moduleLogger.child({ req });
@@ -67,7 +69,7 @@ let upload = multer({
     },
 });
 
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.post("/control/apps/upload-image", upload.single("image"), (req, res) => {
         if (!req.file) {
             throw new Error("Failed to upload the image.");
@@ -78,4 +80,4 @@ module.exports = function ({ app }) {
             name: req.file.name,
         });
     });
-};
+}

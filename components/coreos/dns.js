@@ -1,4 +1,4 @@
-let etcd = requireFromRoot("runners/etcd/etcd");
+import etcd from "app/runners/etcd/etcd";
 
 /**
  * Set a DNS record in etcd
@@ -7,11 +7,9 @@ let etcd = requireFromRoot("runners/etcd/etcd");
  * @param {String}  value DNS record value
  * @param {Integer} ttl   DNS record TTL (time-to-live)
  */
-let setRecord = function (name, type, value, ttl) {
+export const setRecord = function (name, type, value, ttl) {
     etcd.set(`/DNS/${name}/${type}/`, JSON.stringify([{
         "value": value,
         "ttl": ttl,
     }]))
 }
-
-module.exports.setRecord = setRecord;

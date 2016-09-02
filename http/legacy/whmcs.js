@@ -1,7 +1,7 @@
-var cast = requireFromRoot("components/cast/manage.js")
-var mayaSupport = requireFromRoot("components/maya/support.js")
+import * as cast from "app/components/cast/manage.js"
+import * as mayaSupport from "app/components/maya/support.js"
 
-module.exports = function (parm) {
+export default function (parm) {
     parm.app.post("/whmcs/create", function (req, res) {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
             return res.status(400).json({
@@ -85,7 +85,7 @@ module.exports = function (parm) {
         mayaSupport.answerClient({
             content: req.body.content,
             firstname: req.body.firstname,
-            id: req.body.id
+            id: req.body.id,
         })
         res.json({ result: "okay" })
     })

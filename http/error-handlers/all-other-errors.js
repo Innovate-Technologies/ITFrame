@@ -1,4 +1,4 @@
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.use(function errorHandler(err, req, res, next) { // eslint-disable-line no-unused-vars
         if (err.name === "UnauthorizedError" && err.message === "jwt expired") {
             req.log.debug(err, "Caught an UnauthorizedError (jwt expired), sending 419");
@@ -50,4 +50,4 @@ module.exports = function ({ app }) {
         }
         return res.send(err.message);
     });
-};
+}

@@ -1,4 +1,4 @@
-const fleet = requireFromRoot("components/coreos/fleet.js")
+import fleet from "app/components/coreos/fleet.js"
 
 export const processSong = async ({ id }) => {
     const randomNumber = Math.floor(Math.random() * 4)

@@ -1,9 +1,9 @@
-let wait = require("wait.for");
-let tuneinDatabase = requireFromRoot("components/nowplaying/tuneinDatabase.js");
-let tuneinModule = requireFromRoot("components/nowplaying/tunein.js")
-import NotFoundError from "~/http/classes/NotFoundError";
+import wait from "wait.for";
+import * as tuneinDatabase from "app/components/nowplaying/tuneinDatabase.js";
+import * as tuneinModule from "app/components/nowplaying/tunein.js"
+import NotFoundError from "app/http/classes/NotFoundError";
 
-module.exports = function ({ app }) {
+export default function ({ app }) {
     app.get("/control/tunein-air-integration/settings/:username", function (req, res, next) {
         wait.launchFiber(function () {
             try {
@@ -43,4 +43,4 @@ module.exports = function ({ app }) {
             }
         });
     });
-};
+}

@@ -1,5 +1,6 @@
-var database = require("./nowPlayingDatabase.js")
-var tunes = requireFromRoot("components/tunes/lookup.js")
+import * as database from "app/components/nowplaying/nowPlayingDatabase.js";
+import * as tunes from "app/components/tunes/lookup.js";
+
 let logger = log.child({ component: "NP Handle" });
 
 export default async (info) => {
