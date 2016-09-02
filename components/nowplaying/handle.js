@@ -14,7 +14,7 @@ export default async (info) => {
         username: info.username,
         song: tunesInfo.song,
         artist: tunesInfo.artist,
-        cover: tunesInfo.artwork || "http://photon.shoutca.st/cdn.shoutca.st/noalbum.png",
+        cover: tunesInfo.artwork || "https://photon.shoutca.st/cdn.shoutca.st/noalbum.png",
         wiki: "",
         buy: (tunesInfo.external_url || {}).itunes || "",
         time: Math.round((new Date()).getTime() / 1000),
