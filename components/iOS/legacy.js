@@ -1,8 +1,8 @@
-var castDB = require(global.appRoot + "/components/cast/database");
-var usersDB = require(global.appRoot + "/components/legacy/usersDatabase.js")
-var _ = require("underscore")
+import _ from "underscore"
+import * as castDB from "app/components/cast/database.js"
+import * as usersDB from "app/components/legacy/usersDatabase.js";
 
-module.exports.getPlsForUsername = function (username, callback) {
+export const getPlsForUsername = function (username, callback) {
     castDB.getInfoForUsername(username, function (err, res) {
         if (err || typeof res === "undefined") {
             // This might a Centova Cast account

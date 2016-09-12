@@ -1,9 +1,11 @@
-let crypto = require("crypto");
-let swift = requireFromRoot("components/openstack/swift.js");
+import crypto from "crypto";
+import { PassThrough } from "stream";
+
+import * as swift from "app/components/openstack/swift.js";
+import UUID from "app/components/uuid";
+
 let swiftClient = swift.getStorageClient();
-let PassThrough = require("stream").PassThrough;
 let moduleLogger = log.child({ component: "SwiftMulterStorage" });
-import UUID from "~/components/uuid";
 
 class SwiftMulterStorage {
     /**

@@ -63,12 +63,12 @@ log.info({
 }, "Starting the app");
 
 log.info("Loading HTTP handlers");
-requireFromRoot("http/loader.js")();
+require("app/http/loader.js")();
 log.info("Loading runners");
-requireFromRoot("runners/loader.js")();
+require("app/runners/loader.js")();
 
 log.info("Loading hooks");
-global.hooks = requireFromRoot("hooks/loader.js");
+global.hooks = require("app/hooks/loader.js");
 global.hooks.loadHooks();
 
 log.info("Startup completed");

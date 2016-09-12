@@ -1,4 +1,4 @@
-const userBackend = requireFromRoot(config.controlAuthClass);
+const userBackend = require("app/" + config.controlAuthClass);
 
 /**
  * Try to log in with the specified email and password

@@ -7,8 +7,9 @@
  * child(), trace(), debug(), info(), warn(), error(), fatal(), flushQueue().
  */
 
-let bunyan = require("bunyan");
-let gelfStream = require("gelf-stream");
+import bunyan from "bunyan";
+import gelfStream from "gelf-stream";
+
 let streams = [{ level: "debug", stream: process.stdout }];
 let externalSystem;
 
@@ -72,4 +73,4 @@ logger.flushQueue = () => {
     }
 };
 
-module.exports = logger;
+export default logger;

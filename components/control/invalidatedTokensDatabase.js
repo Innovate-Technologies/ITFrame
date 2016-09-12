@@ -1,6 +1,6 @@
-let InvalidatedTokens = {};
-let mongoose = requireFromRoot("components/database/mongodb.js");
-let wait = require("wait.for");
+import wait from "wait.for"
+
+import mongoose from "app/components/database/mongodb.js";
 let Schema = mongoose.Schema;
 let InvalidatedTokensSchema = new Schema({ token: String });
 let InvalidatedTokensModel = mongoose.model("invalidated_tokens", InvalidatedTokensSchema, "invalidated_tokens");
@@ -10,7 +10,7 @@ let InvalidatedTokensModel = mongoose.model("invalidated_tokens", InvalidatedTok
  * @param  {String}   token    Token to check
  * @param  {Function} callback Callback function (err, isInvalidated (bool))
  */
-InvalidatedTokens.isTokenInvalidated = (token, callback) => {
+export const isTokenInvalidated = (token, callback) => {
     wait.launchFiber(() => {
         let result = wait.forMethod(InvalidatedTokensModel, "findOne", {
             token,
@@ -24,8 +24,6 @@ InvalidatedTokens.isTokenInvalidated = (token, callback) => {
  * @param  {String}   token    Token to add
  * @param  {Function} callback Callback function (err)
  */
-InvalidatedTokens.addToken = (token, callback) => {
+export const addToken = (token, callback) => {
     new InvalidatedTokensModel({ token }).save(callback);
 }
-
-module.exports = InvalidatedTokens;

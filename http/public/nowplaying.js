@@ -1,7 +1,7 @@
-import BadRequestError from "~/http/classes/BadRequestError"
-const nowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
+import BadRequestError from "app/http/classes/BadRequestError"
+import * as nowPlaying from "app/components/nowplaying/nowPlayingDatabase.js"
 
-module.exports = ({ app, wrap }) => {
+export default ({ app, wrap }) => {
     app.get("/nowplaying/:username", wrap(async (req, res) => {
         if (!req.params.username) {
             throw new BadRequestError("Missing username")

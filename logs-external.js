@@ -4,16 +4,17 @@
  * only if sendLogsToExternal is truthy in the config.
  */
 
+import _ from "underscore";
+import Asteroid from "asteroid";
+
 if (!config.logsUsername
     || !config.logsPassword
     || !config.logsHostname) {
     throw new Error("Logs: Please configure logsUsername, logsPassword and logsHostname.")
 }
 
-let Asteroid = require("asteroid");
 let useSsl = !config.logsUnsecure;
 let logs = new Asteroid(config.logsHostname, useSsl);
-let _ = require("underscore");
 
 let loggedIn = false;
 let logIn = () => {

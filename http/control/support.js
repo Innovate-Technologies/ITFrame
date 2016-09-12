@@ -1,6 +1,6 @@
-import * as controlUser from "~/components/control/controlUser.js";
-import NotFoundError from "~/http/classes/NotFoundError";
-import BadRequestError from "~/http/classes/BadRequestError";
+import * as controlUser from "app/components/control/controlUser.js";
+import NotFoundError from "app/http/classes/NotFoundError";
+import BadRequestError from "app/http/classes/BadRequestError";
 
 export default function ({ app, wrap }) {
     app.all("/control/support/*", wrap(async function (req, res, next) {

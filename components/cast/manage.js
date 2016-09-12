@@ -1,16 +1,15 @@
-/* global log */
-/* global requireFromRoot */
-let cast = { }
-let castDB = require("./database.js")
-let configHelper = require("./configHelper.js")
-let wait = require("wait.for")
-let fleet = requireFromRoot("components/coreos/fleet.js")
-let _ = require("underscore")
-let moduleLogger = log.child({ component: "cast" })
-let rest = require("restler")
-let randtoken = require("rand-token");
+import _ from "underscore"
+import randtoken from "rand-token"
+import rest from "restler"
+import wait from "wait.for"
 
-cast.createNode = (username, callback) => {
+import * as castDB from "app/components/cast/database.js"
+import * as configHelper from "app/components/cast/configHelper.js"
+import fleet from "app/components/coreos/fleet.js"
+
+const moduleLogger = log.child({ component: "cast" })
+
+export const createNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     wait.launchFiber(() => {
         try {
@@ -30,7 +29,7 @@ cast.createNode = (username, callback) => {
     })
 }
 
-cast.createFleet = (username, callback) => {
+export const createFleet = (username, callback) => {
     let logger = moduleLogger.child({ username });
     wait.launchFiber(() => {
         try {
@@ -46,7 +45,7 @@ cast.createFleet = (username, callback) => {
     })
 }
 
-cast.startNode = (username, callback) => {
+export const startNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("Starting node");
     castDB.getInfoForUsername(username, function (err, res) {
@@ -58,7 +57,7 @@ cast.startNode = (username, callback) => {
     });
 }
 
-cast.stopNode = (username, callback) => {
+export const stopNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("Stopping node");
     castDB.getInfoForUsername(username, function (err, res) {
@@ -70,7 +69,7 @@ cast.stopNode = (username, callback) => {
     })
 }
 
-cast.startDJ = (username, callback) => {
+export const startDJ = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("Starting DJ");
     castDB.getInfoForUsername(username, function (err, res) {
@@ -82,7 +81,7 @@ cast.startDJ = (username, callback) => {
     });
 }
 
-cast.stopDJ = (username, callback) => {
+export const stopDJ = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("Stopping DJ");
     castDB.getInfoForUsername(username, function (err, res) {
@@ -94,12 +93,12 @@ cast.stopDJ = (username, callback) => {
     })
 }
 
-cast.destroyDJUnit = (username, callback) => {
+export const destroyDJUnit = (username, callback) => {
     castDB.getInfoForUsername(username, (err, conf) => {
         if (err) {
             return callback(err)
         }
-        cast.stopNode(username, (stopErr) => {
+        stopNode(username, (stopErr) => {
             if (stopErr) {
                 return callback(stopErr)
             }
@@ -113,12 +112,12 @@ cast.destroyDJUnit = (username, callback) => {
     })
 }
 
-cast.destroyUnit = (username, callback) => {
+export const destroyUnit = (username, callback) => {
     castDB.getInfoForUsername(username, (err, conf) => {
         if (err) {
             return callback(err)
         }
-        cast.stopNode(username, (stopErr) => {
+        stopNode(username, (stopErr) => {
             if (stopErr) {
                 return callback(stopErr)
             }
@@ -132,27 +131,27 @@ cast.destroyUnit = (username, callback) => {
     })
 }
 
-cast.hardRestartNode = (username, callback = () => {}) => {
-    cast.stopNode(username, function (err) {
+export const hardRestartNode = (username, callback = () => {}) => {
+    stopNode(username, function (err) {
         if (err) {
             callback(err);
             return;
         }
-        setTimeout(() => cast.startNode(username, callback), 2000);
+        setTimeout(() => startNode(username, callback), 2000);
     })
 }
 
-cast.hardRestartDJ = (username, callback = () => {}) => {
-    cast.stopDJ(username, function (err) {
+export const hardRestartDJ = (username, callback = () => {}) => {
+    stopDJ(username, function (err) {
         if (err) {
             callback(err);
             return;
         }
-        setTimeout(() => cast.startDJ(username, callback), 2000);
+        setTimeout(() => startDJ(username, callback), 2000);
     })
 }
 
-cast.softRestartNode = (username, callback = () => {}) => {
+export const softRestartNode = (username, callback = () => {}) => {
     let logger = moduleLogger.child({ username });
     castDB.getInfoForUsername(username, function (err, res) {
         if (err) {
@@ -165,27 +164,27 @@ cast.softRestartNode = (username, callback = () => {}) => {
             callback(null, true);
         })
         .on("timeout", function () {
-            cast.hardRestartNode(username, callback)
+            hardRestartNode(username, callback)
         })
         .on("error", function () {
-            cast.hardRestartNode(username, callback)
+            hardRestartNode(username, callback)
         })
     });
 }
 
-cast.softRestartDJ = cast.hardRestartDJ // not supported in beta
+export const softRestartDJ = hardRestartDJ // not supported in beta
 
-cast.restartNode = cast.softRestartNode
+export const restartNode = softRestartNode
 
-cast.terminateNode = (username, callback) => {
+export const terminateNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("Terminating node");
     wait.launchFiber(() => {
         try {
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
+            wait.for(stopNode, username)
+            wait.for(destroyUnit, username)
             wait.for(castDB.deleteUsername, username)
-            cast.destroyDJUnit(username, () => {}) // to do: also destroy tunes in background
+            destroyDJUnit(username, () => {}) // to do: also destroy tunes in background
             logger.info("Terminated")
             return callback(null, true)
         } catch (err) {
@@ -195,14 +194,14 @@ cast.terminateNode = (username, callback) => {
     });
 }
 
-cast.upgradeNode = (username, callback) => {
+export const upgradeNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("updating node");
     wait.launchFiber(() => {
         try {
             wait.for(castDB.updateVersion, username)
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
+            wait.for(stopNode, username)
+            wait.for(destroyUnit, username)
             logger.info("Deleted Unit")
             logger.debug("Adding unit file")
             let fleetUnit = wait.for(configHelper.createFleetUnit, username)
@@ -216,7 +215,7 @@ cast.upgradeNode = (username, callback) => {
     });
 }
 
-cast.upgradeDJ = (username, callback) => {
+export const upgradeDJ = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("updating DJ");
     wait.launchFiber(() => {
@@ -224,8 +223,8 @@ cast.upgradeDJ = (username, callback) => {
             let config = wait.for(castDB.getInfoForUsername, username)
             if (config.DJ.enabled) {
                 wait.for(castDB.updateDJVersion, username)
-                wait.for(cast.stopDJ, username)
-                wait.for(cast.destroyDJUnit, username)
+                wait.for(stopDJ, username)
+                wait.for(destroyDJUnit, username)
                 logger.info("Deleted Unit")
                 logger.debug("Adding unit file")
                 let fleetUnit = wait.for(configHelper.createDJFleetUnit, username)
@@ -233,7 +232,7 @@ cast.upgradeDJ = (username, callback) => {
                 logger.info("Created DJ")
             } else {
                 wait.for(castDB.updateDJVersion, username)
-                wait.for(cast.destroyDJUnit, username)
+                wait.for(destroyDJUnit, username)
             }
             return callback(null, true)
         } catch (err) {
@@ -243,7 +242,7 @@ cast.upgradeDJ = (username, callback) => {
     });
 }
 
-cast.unsuspendNode = (username, callback) => {
+export const unsuspendNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("unsuspending node");
     wait.launchFiber(() => {
@@ -260,14 +259,14 @@ cast.unsuspendNode = (username, callback) => {
     });
 };
 
-cast.suspendNode = (username, callback) => {
+export const suspendNode = (username, callback) => {
     let logger = moduleLogger.child({ username });
     logger.info("suspending node");
     wait.launchFiber(() => {
         try {
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
-            cast.destroyDJUnit(username, () => {})
+            wait.for(stopNode, username)
+            wait.for(destroyUnit, username)
+            destroyDJUnit(username, () => {})
             logger.info("Deleted Unit")
             return callback(null, true)
         } catch (err) {
@@ -277,7 +276,7 @@ cast.suspendNode = (username, callback) => {
     });
 };
 
-cast.supportedDirectories = [{
+export const supportedDirectories = [{
     name: "SHOUTcast.com",
     url: "https://yp.shoutcast.com",
     type: "Icecast",
@@ -287,10 +286,10 @@ cast.supportedDirectories = [{
     type: "Icecast",
 }]
 
-cast.addToDirectory = (username, directory, callback) => {
+export const addToDirectory = (username, directory, callback) => {
     delete directory.isEnabled;
     let logger = moduleLogger.child({ username, directory });
-    if (!_.findWhere(cast.supportedDirectories, directory)) {
+    if (!_.findWhere(supportedDirectories, directory)) {
         logger.warn("Unknown directory, refusing to continue");
         callback(new Error("Unknown directory."));
         return
@@ -313,15 +312,15 @@ cast.addToDirectory = (username, directory, callback) => {
                 return;
             }
             logger.info("Restarting node");
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     });
 }
 
-cast.removeFromDirectory = (username, directory, callback) => {
+export const removeFromDirectory = (username, directory, callback) => {
     delete directory.isEnabled;
     let logger = moduleLogger.child({ username, directory });
-    if (!_.findWhere(cast.supportedDirectories, directory)) {
+    if (!_.findWhere(supportedDirectories, directory)) {
         logger.warn("Unknown directory, refusing to continue");
         callback(new Error("Unknown directory."));
         return
@@ -335,8 +334,7 @@ cast.removeFromDirectory = (username, directory, callback) => {
         if (typeof config.directories[directory.type] === "undefined") {
             config.directories[directory.type] = [];
         }
-        let directories = config.directories[directory.type];
-        directories = _.without(directories, directory);
+        config.directories[directory.type] = _.without(config.directories[directory.type], directory);
         castDB.updateConfig(username, config, function (error) {
             if (error) {
                 logger.error(error);
@@ -344,12 +342,12 @@ cast.removeFromDirectory = (username, directory, callback) => {
                 return;
             }
             logger.info("Restarting node");
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     });
 }
 
-cast.configureStreams = (username, streams = [], callback) => {
+export const configureStreams = (username, streams = [], callback) => {
     let logger = moduleLogger.child({ username, castStreams: streams });
     logger.info("Validating and configuring streams");
     let hasPrimary = false
@@ -395,13 +393,13 @@ cast.configureStreams = (username, streams = [], callback) => {
                 callback(error);
                 return;
             }
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     })
 }
 
 
-cast.configureDJ = (username, djConfig = {}, callback) => {
+export const configureDJ = (username, djConfig = {}, callback) => {
     castDB.getInfoForUsername(username, function (err, config) {
         if (err) {
             callback(err);
@@ -422,16 +420,16 @@ cast.configureDJ = (username, djConfig = {}, callback) => {
                 callback(error);
                 return;
             }
-            cast.upgradeDJ(username, callback)
+            upgradeDJ(username, callback)
         });
     })
 }
 
-cast.getCastStreamUrl = (username, callback) => {
+export const getCastStreamUrl = (username, callback) => {
     castDB.getStreamUrl(username, callback);
 }
 
-cast.setGeoLock = (username, geolockConfig, callback) => {
+export const setGeoLock = (username, geolockConfig, callback) => {
     let logger = moduleLogger.child({ username, geolockConfig });
     castDB.getInfoForUsername(username, (err, res) => {
         if (err) {
@@ -448,12 +446,12 @@ cast.setGeoLock = (username, geolockConfig, callback) => {
                 return;
             }
             logger.info("Restarting node");
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     });
 }
 
-cast.setAntiStreamRipper = (username, isEnabled, callback) => {
+export const setAntiStreamRipper = (username, isEnabled, callback) => {
     castDB.getInfoForUsername(username, (err, res) => {
         if (err) {
             return callback(err);
@@ -463,12 +461,12 @@ cast.setAntiStreamRipper = (username, isEnabled, callback) => {
             if (error) {
                 return callback(error);
             }
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     });
 }
 
-cast.setHideListenerCount = (username, isEnabled, callback) => {
+export const setHideListenerCount = (username, isEnabled, callback) => {
     castDB.getInfoForUsername(username, (err, res) => {
         if (err) {
             return callback(err);
@@ -478,9 +476,7 @@ cast.setHideListenerCount = (username, isEnabled, callback) => {
             if (error) {
                 return callback(error);
             }
-            cast.restartNode(username, callback);
+            restartNode(username, callback);
         });
     });
 }
-
-module.exports = cast;

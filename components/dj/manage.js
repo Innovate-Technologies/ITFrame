@@ -1,5 +1,6 @@
 import rest from "restler"
-const castDatabase = requireFromRoot("components/cast/database.js")
+
+import * as castDatabase from "app/components/cast/database.js"
 
 export const reloadClocks = (username) => new Promise((resolve, reject) => {
     castDatabase.getConfig(username, (err, res) => {

@@ -94,7 +94,6 @@
 
   "globals": {
     "log": true,
-    "requireFromRoot": true,
     "config": true
   },
 

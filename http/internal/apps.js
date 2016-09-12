@@ -1,16 +1,17 @@
 import promisify from "promisify-node";
 
-import BadRequestError from "~/http/classes/BadRequestError";
-import AccessDeniedError from "~/http/classes/AccessDeniedError";
-const users = requireFromRoot("components/legacy/usersDatabase.js");
-const controlUser = requireFromRoot("components/control/controlUser.js");
-const legacyiOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js");
-const castDatabase = requireFromRoot("components/cast/database.js");
-const nowPlayingDatabase = requireFromRoot("components/nowplaying/nowPlayingDatabase.js");
-const legacyNowPlaying = promisify(requireFromRoot("components/nowplaying/legacyNowPlaying.js"),
+import AccessDeniedError from "app/http/classes/AccessDeniedError";
+import * as AppsService from "app/components/apps/api.js";
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as castDatabase from "app/components/cast/database.js";
+import * as controlUser from "app/components/control/controlUser.js";
+import * as legacyiOSDatabase from "app/components/iOS/legacyDatabase.js";
+import * as nowPlayingDatabase from "app/components/nowplaying/nowPlayingDatabase.js";
+import * as profiler from "app/profiler";
+import * as users from "app/components/legacy/usersDatabase.js";
+
+const legacyNowPlaying = promisify(require("app/components/nowplaying/legacyNowPlaying.js"),
     undefined, true);
-const AppsService = requireFromRoot("components/apps/api.js");
-const profiler = requireFromRoot("profiler");
 
 const moduleLogger = log.child({ component: "internal/apps" });
 

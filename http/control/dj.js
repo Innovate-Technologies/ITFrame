@@ -1,10 +1,10 @@
-/* global requireFromRoot */
 import wait from "wait.for"
-const cast = requireFromRoot("components/cast/manage.js");
+
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as cast from "app/components/cast/manage.js";
 import * as clocks from "../../components/dj/clocks.js"
 import * as intervals from "../../components/dj/intervals.js"
 import * as dj from "../../components/dj/manage.js"
-import BadRequestError from "~/http/classes/BadRequestError";
 
 export default ({ app, wrap }) => {
 

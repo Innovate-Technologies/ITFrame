@@ -1,6 +1,6 @@
 /*
-var TuneIn = requireFromRoot("components/nowplaying/tunein.js")
-var NowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
+import TuneIn from "app/components/nowplaying/tunein.js"
+import NowPlaying from "app/components/nowplaying/nowPlayingDatabase.js"
 
 setInterval(function () {
     TuneIn.getAllUsers(function (err, users) {

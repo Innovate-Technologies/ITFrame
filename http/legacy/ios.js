@@ -1,9 +1,9 @@
-import BadRequestError from "~/http/classes/BadRequestError"
-const iOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js")
-const nowPlaying = requireFromRoot("components/nowplaying/nowPlayingDatabase.js")
-const iOS = requireFromRoot("components/iOS/legacy.js")
+import BadRequestError from "app/http/classes/BadRequestError"
+import * as iOS from "app/components/iOS/legacy.js"
+import * as iOSDatabase from "app/components/iOS/legacyDatabase.js"
+import * as nowPlaying from "app/components/nowplaying/nowPlayingDatabase.js"
 
-module.exports = function ({ app, wrap }) {
+export default function ({ app, wrap }) {
     app.get("/mobile/iOS/", function (req, res) {
         if (typeof req.query.sku === "undefined") {
             return res.status(400).send("Missing SKU")

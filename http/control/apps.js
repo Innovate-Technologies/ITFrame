@@ -1,4 +1,4 @@
-let AppsService = requireFromRoot("components/apps/api.js");
+import * as AppsService from "app/components/apps/api.js";
 
 export default function ({ app, wrap }) {
     app.get("/control/apps/:username", wrap(async function (req, res) {

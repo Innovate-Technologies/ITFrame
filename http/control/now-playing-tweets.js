@@ -1,5 +1,5 @@
-let twitterDatabase = requireFromRoot("components/nowplaying/twitterDatabase.js");
-import NotFoundError from "~/http/classes/NotFoundError";
+import * as twitterDatabase from "app/components/nowplaying/twitterDatabase.js";
+import NotFoundError from "app/http/classes/NotFoundError";
 
 export default function ({ app, wrap }) {
     app.get("/control/now-playing-tweets/settings/:username", wrap(async function (req, res) {

@@ -1,7 +1,7 @@
-import NotFoundError from "~/http/classes/NotFoundError"
-const tunesDB = requireFromRoot("components/tunes/personalMusicDatabase.js")
+import NotFoundError from "app/http/classes/NotFoundError"
+import * as tunesDB from "app/components/tunes/personalMusicDatabase.js"
 
-module.exports = function ({ app, wrap }) {
+export default function ({ app, wrap }) {
     app.get("/dj/:user/:key/song/:id", wrap(async (req, res) => {
         if (!req.params.id) {
             throw new Error("Missing info.")

@@ -1,8 +1,10 @@
-let database = require("./twitterDatabase");
-let Twit = require("twit"); // not to be confused with This Week In Tech
+import Twit from "twit";
+
+import * as database from "app/components/nowplaying/twitterDatabase.js";
+
 let moduleLogger = log.child({ component: "twitter" });
 
-module.exports.sendTweet = async (username, songInfo) => {
+export const sendTweet = async (username, songInfo) => {
     let logger = moduleLogger.child({ username });
     try {
         let settings = await database.getSettings(username);

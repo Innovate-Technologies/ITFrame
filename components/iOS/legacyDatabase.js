@@ -1,7 +1,9 @@
-let facebookAPI = require("./facebookGraph.js")
-let colorspaces = require("colorspaces")
+import colorspaces from "colorspaces"
+
+import * as facebookAPI from "app/components/iOS/facebookGraph.js"
+import mongoose from "app/components/database/mongodb.js"
+
 let hexToRgb = colorspaces.converter("hex", "sRGB")
-var mongoose = requireFromRoot("components/database/mongodb.js")
 var Schema = mongoose.Schema
 var iosSchema = new Schema({
     name: String,
@@ -46,7 +48,7 @@ var iosSchema = new Schema({
 }, { collection: "ios" })
 var iosModel = mongoose.model("ios", iosSchema, "ios")
 
-module.exports.getAppForSKU = function (sku, callback) {
+export const getAppForSKU = function (sku, callback) {
     iosModel.findOne({ sku: sku }, function (err, res) {
         if (err) {
             return callback(err);
@@ -59,7 +61,7 @@ module.exports.getAppForSKU = function (sku, callback) {
     })
 }
 
-module.exports.setCount = function (username, count) {
+export const setCount = function (username, count) {
     iosModel.findOne({ username: String }, function (err, res) {
         if (err || res === null) {
             return
@@ -69,7 +71,7 @@ module.exports.setCount = function (username, count) {
     })
 }
 
-module.exports.getAppThatNeedsBuild = function (callback) {
+export const getAppThatNeedsBuild = function (callback) {
     iosModel.findOne({ needsBuild: true }, function (err, res) {
         if (err) {
             return callback(err);
@@ -78,7 +80,7 @@ module.exports.getAppThatNeedsBuild = function (callback) {
     })
 }
 
-module.exports.setAppToBuilt = function (username, callback) {
+export const setAppToBuilt = function (username, callback) {
     iosModel.findOne({ username: username }, function (err, res) {
         if (err) {
             return callback(err)
@@ -88,7 +90,7 @@ module.exports.setAppToBuilt = function (username, callback) {
     })
 }
 
-module.exports.insert = (request, callback) => {
+export const insert = (request, callback) => {
     // Taken straight from the old ITFrame without major changes,
     // so this piece of code is a bit messy.
     iosModel.findOne({ username: request.username }, function (err, app) {
