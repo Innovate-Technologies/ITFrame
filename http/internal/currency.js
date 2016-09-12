@@ -1,7 +1,7 @@
-let whmcs = requireFromRoot("components/legacy/whmcs.js");
-import BadRequestError from "~/http/classes/BadRequestError";
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as whmcs from "app/components/legacy/whmcs.js";
 
-module.exports = function ({ app }) {
+export default function ({ app }) {
     const ONE_SECOND = 1000;
     const ONE_MINUTE = 60 * ONE_SECOND;
     const TTL = 60 * ONE_MINUTE;
@@ -26,4 +26,4 @@ module.exports = function ({ app }) {
             res.json(cachedEntry);
         }, next);
     });
-};
+}

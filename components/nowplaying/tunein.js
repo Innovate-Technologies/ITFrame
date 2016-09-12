@@ -1,8 +1,10 @@
-var database = require("./tuneinDatabase.js")
-var rest = require("restler")
-let moduleLogger = log.child({ component: "tunein" });
+import rest from "restler";
 
-module.exports.sendSong = function (username, title, artist) {
+import * as database from "app/components/nowplaying/tuneinDatabase.js";
+
+const moduleLogger = log.child({ component: "tunein" });
+
+export const sendSong = function (username, title, artist) {
     let logger = moduleLogger.child({ username });
     database.getInfo(username, function (err, res) {
         if (err && err.message !== "Username not in database") {
@@ -59,7 +61,7 @@ module.exports.sendSong = function (username, title, artist) {
     })
 }
 
-module.exports.testInfo = (settings, callback) => {
+export const testInfo = (settings, callback) => {
     let logger = moduleLogger.child({ username: settings.username });
     let data = {
         partnerId: settings.partnerId.toString(),
@@ -89,6 +91,6 @@ module.exports.testInfo = (settings, callback) => {
     })
 }
 
-module.exports.getAllUsers = function (callback) {
+export const getAllUsers = function (callback) {
     database.getAllUsers(callback)
 }

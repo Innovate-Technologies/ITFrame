@@ -1,4 +1,5 @@
-var Slack = require("slack-client")
+import Slack from "slack-client";
+
 var token = config.mayaToken
 var autoReconnect = true
 var autoMark = true
@@ -17,7 +18,7 @@ module.exports.decodeMessage = function (message) {
     var user = s.getUserByID(message.user)
     var text = message.text
     var channelName = channelName + (channel ? channel.name : "UNKNOWN_CHANNEL")
-    var userName = (user != null ? user.name : void 0) != null ? "@" + user.name : "UNKNOWN_USER"
+    var userName = user ? ("@" + user.name) : "UNKNOWN_USER"
 
     return {
         channel: channelName,

@@ -1,10 +1,9 @@
-var mongoose = requireFromRoot("components/database/mongodb.js")
+import mongoose from "app/components/database/mongodb.js"
 var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
 var separationSchema = new Schema({
     enabled: Boolean,
     username: String,
-	separationType: String, // artist, song
+    separationType: String, // artist, song
     interval: Number,
 }, { collection: "dj_separation" })
 separationSchema.index({
@@ -12,6 +11,6 @@ separationSchema.index({
 });
 var separationModel = mongoose.model("dj_separation", separationSchema, "dj_separation")
 
-module.exports.separationForUsername = function (username, callback) {
+export const separationForUsername = function (username, callback) {
     separationModel.find({username: username}, callback)
 }

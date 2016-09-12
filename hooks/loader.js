@@ -1,5 +1,6 @@
+import fs from "fs";
+
 let handlers = {}; // { event: [function handler (args), …], anotherEvent: … }
-let fs = require("fs");
 
 function addHook(event, handler) {
     if (!handlers.hasOwnProperty(event)) {
@@ -8,7 +9,7 @@ function addHook(event, handler) {
     handlers[event].push(handler);
 }
 
-function runHooks(event, ...args) {
+export function runHooks(event, ...args) {
     if (!handlers.hasOwnProperty(event)) {
         log.warn(`Tried to run hooks for non-existing event ${event}.`);
         return;
@@ -18,12 +19,12 @@ function runHooks(event, ...args) {
     }
 }
 
-function loadHooks() {
+export function loadHooks() {
     var hooks = fs.readdirSync(global.appRoot + "/hooks/action");
     for (let hook of hooks) {
         log.info("Loading hook: " + hook);
         try {
-            require(global.appRoot + "/hooks/action/" + hook);
+            require("app/hooks/action/" + hook);
         } catch (error) {
             log.fatal(error, `Failed to load hook ${hook}.`);
             process.exit(1);
@@ -31,6 +32,4 @@ function loadHooks() {
     }
 }
 
-module.exports.add = addHook;
-module.exports.runHooks = runHooks;
-module.exports.loadHooks = loadHooks;
+export const add = addHook;

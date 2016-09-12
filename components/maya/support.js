@@ -1,14 +1,15 @@
-let database = require("./supportDatabase.js")
-let wait = require("wait.for")
-let cld = require("cld")
-let maya = requireFromRoot("runners/maya/maya");
-let whmcs = requireFromRoot("components/legacy/whmcs.js")
+import cld from "cld"
+import wait from "wait.for"
 
-module.exports.answerClient = function (ticket) {
-    wait.launchFiber(answerClient, ticket)
+import database from "app/components/maya/supportDatabase.js"
+import * as maya from "app/runners/maya/maya";
+import * as whmcs from "app/components/legacy/whmcs.js"
+
+export const answerClient = function (ticket) {
+    wait.launchFiber(realAnswerClient, ticket)
 }
 
-let answerClient = function (ticket) {
+let realAnswerClient = function (ticket) {
     let cldAnalyse = wait.for(cld.detect, ticket.content)
     if (cldAnalyse.languages.length === 1 && ["en", "nl", "fr"].indexOf(cldAnalyse.languages[0].code) === -1) {
         return whmcs.replyTicket({
@@ -23,7 +24,7 @@ If you are unable to reply in one of these languages, we invite you to use a tra
 Kindest Regards,
 Maya.
 Artificial Intelligence | Innovate Technologies
-Please ignore this reply if you think this is an error, I am just a robot.`
+Please ignore this reply if you think this is an error, I am just a robot.`,
         })
     }
     let question = ticket.content;

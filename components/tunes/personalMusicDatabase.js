@@ -1,6 +1,6 @@
 import _ from "underscore"
 import mongoosePaginate from "mongoose-paginate"
-const mongoose = requireFromRoot("components/database/mongodb.js")
+import mongoose from "app/components/database/mongodb.js"
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 const TunesPersonalSchema = new Schema({

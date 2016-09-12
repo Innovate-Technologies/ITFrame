@@ -1,8 +1,7 @@
-/* global requireFromRoot */
-let playerDatabase = requireFromRoot("components/player/database.js");
-import BadRequestError from "~/http/classes/BadRequestError";
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as playerDatabase from "app/components/player/database.js";
 
-module.exports = ({ app }) => {
+export default ({ app }) => {
     app.get("/player/:username", function (req, res, next) {
         if (!req.params.username) {
             return next(new BadRequestError("username is required"));

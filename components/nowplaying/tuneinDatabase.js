@@ -1,6 +1,5 @@
-let tuneinDatabase = {}
-let _ = require("underscore")
-let mongoose = requireFromRoot("components/database/mongodb.js")
+import _ from "underscore"
+import mongoose from "app/components/database/mongodb.js"
 let Schema = mongoose.Schema
 let tuneinSchema = new Schema({
     username: {
@@ -37,7 +36,7 @@ let moduleLogger = log.child({ component: "tunein/database" });
  * @param  {String}   username username
  * @param  {Function} callback Callback function (err, settings)
  */
-tuneinDatabase.getInfo = function (username, callback) {
+export const getInfo = function (username, callback) {
     TuneinModel.findOne({ username }, function (err, settings) {
         if (err) {
             return callback(err)
@@ -53,7 +52,7 @@ tuneinDatabase.getInfo = function (username, callback) {
  * Get TuneIn AIR integration settings for all users
  * @param  {Function} callback Callback function (err, arrayOfSettings)
  */
-tuneinDatabase.getAllUsers = function (callback) {
+export const getAllUsers = function (callback) {
     TuneinModel.find({}, callback);
 }
 
@@ -62,7 +61,7 @@ tuneinDatabase.getAllUsers = function (callback) {
  * @param  {String}   username Username
  * @param  {Function} callback Callback function (err)
  */
-tuneinDatabase.remove = (username, callback) => {
+export const remove = (username, callback) => {
     TuneinModel.findOneAndRemove({ username }, function (err, doc) {
         if (err) {
             err.message = "Could not remove TuneIn AIR settings: " + err.message;
@@ -80,7 +79,7 @@ tuneinDatabase.remove = (username, callback) => {
  * @param  {Object}   settings TuneIn AIR integration settings
  * @param  {Function} callback Callback function (err)
  */
-tuneinDatabase.addUser = (settings, callback) => {
+export const addUser = (settings, callback) => {
     new TuneinModel(settings).save(function (err) {
         if (err) {
             err.message = "Could not add TuneIn AIR settings: " + err.message;
@@ -96,7 +95,7 @@ tuneinDatabase.addUser = (settings, callback) => {
  * @param  {Object}   modifier TuneIn AIR integration settings modifier object
  * @param  {Function} callback Callback function (err)
  */
-tuneinDatabase.update = (username, modifier, callback) => {
+export const update = (username, modifier, callback) => {
     TuneinModel.findOne({ username }, function (err, doc) {
         if (err) {
             return callback(err);
@@ -123,7 +122,7 @@ tuneinDatabase.update = (username, modifier, callback) => {
  * @param  {Object}   settings TuneIn AIR integration settings
  * @param  {Function} callback Callback function (err)
  */
-tuneinDatabase.upsert = (username, settings, callback) => {
+export const upsert = (username, settings, callback) => {
     // XXX: As of August 2015, Mongoose still does not support running validators
     // for update() calls properly (despite claiming having support for it since
     // version 4.0), so we have to resort to first getting the document,
@@ -152,7 +151,7 @@ tuneinDatabase.upsert = (username, settings, callback) => {
  * @param  {String}   username Username
  * @param  {String}   reason   Reason for disabling the integration
  */
-tuneinDatabase.disable = (username, reason) => {
+export const disable = (username, reason) => {
     let logger = moduleLogger.child({ username, reason });
     TuneinModel.findOne({ username }, function (err, doc) {
         if (err) {
@@ -171,5 +170,3 @@ tuneinDatabase.disable = (username, reason) => {
         });
     });
 };
-
-module.exports = tuneinDatabase;

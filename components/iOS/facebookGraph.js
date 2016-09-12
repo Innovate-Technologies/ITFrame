@@ -1,5 +1,6 @@
-let rest = require("restler");
-let getPageInfo = function (username, callback) {
+import rest from "restler";
+
+export const getPageInfo = function (username, callback) {
     rest.get("https://graph.facebook.com/" + username)
         .on("complete", function (info) {
             if (info instanceof Error) {
@@ -11,5 +12,3 @@ let getPageInfo = function (username, callback) {
             callback(new Error("Request to Facebook's graph API timed out"))
         });
 }
-
-module.exports.getPageInfo = getPageInfo;

@@ -1,7 +1,8 @@
-var speakeasy = require("speakeasy")
-var database = require("./timetokenDatabase.js")
+import speakeasy from "speakeasy"
 
-module.exports.generateTokenForService = function (service, callback) {
+import * as database from "app/components/auth/timetokenDatabase.js"
+
+export const generateTokenForService = function (service, callback) {
     database.getAPIKey(service, function (err, res) {
         if (err) {
             callback(err)
@@ -14,7 +15,7 @@ module.exports.generateTokenForService = function (service, callback) {
     })
 }
 
-module.exports.validateTokenForService = function (service, token, offset, callback) {
+export const validateTokenForService = function (service, token, offset, callback) {
     if (typeof offset === "function") {
         callback = offset
         offset = 1

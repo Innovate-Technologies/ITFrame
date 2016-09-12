@@ -1,8 +1,7 @@
-/* global requireFromRoot */
-let buildinfoDatabase = requireFromRoot("components/buildinfo/database.js");
-import BadRequestError from "~/http/classes/BadRequestError";
+import * as buildinfoDatabase from "app/components/buildinfo/database.js";
+import * as BadRequestError from "app/http/classes/BadRequestError";
 
-module.exports = ({ app }) => {
+export default ({ app }) => {
     app.get("/buildinfo/:name", function (req, res, next) {
         if (!req.params.name) {
             return next(new BadRequestError("Name is required"));

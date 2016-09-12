@@ -1,11 +1,10 @@
 import fs from "fs";
 import wait from "wait.for";
-import _ from "underscore";
 
-import BadRequestError from "~/http/classes/BadRequestError";
+import BadRequestError from "app/http/classes/BadRequestError";
+import * as controlUser from "app/components/control/controlUser.js";
+import * as InvalidatedTokens from "app/components/control/invalidatedTokensDatabase.js";
 
-const InvalidatedTokens = requireFromRoot("components/control/invalidatedTokensDatabase.js");
-const controlUser = requireFromRoot("components/control/controlUser.js");
 const publicKey = fs.readFileSync(global.appRoot + "/keys/controlPublicKey.pem");
 const cert = fs.readFileSync(global.appRoot + "/keys/controlSigningKey.pem");
 

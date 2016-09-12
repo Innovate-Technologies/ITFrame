@@ -1,6 +1,6 @@
-let twitterDatabase = {};
-let _ = require("underscore");
-let mongoose = requireFromRoot("components/database/mongodb.js")
+import _ from "underscore";
+import mongoose from "app/components/database/mongodb.js";
+
 let Schema = mongoose.Schema;
 let twitterSchema = new Schema({
     username: {
@@ -58,7 +58,7 @@ let moduleLogger = log.child({ component: "twitter/database" });
  * @async
  * @return {Object}   #NP settings
  */
-twitterDatabase.getSettings = async (username) => {
+export const getSettings = async (username) => {
     let settings = await TwitterModel.findOne({ username }).exec();
     if (settings === null) {
         throw new Error("Username not in database");
@@ -72,7 +72,7 @@ twitterDatabase.getSettings = async (username) => {
  * @param  {Integer}  count    New count
  * @async
  */
-twitterDatabase.setCount = async (username, count) => {
+export const setCount = async (username, count) => {
     let logger = moduleLogger.child({ username, count });
     if (isNaN(count)) {
         count = 0;
@@ -89,7 +89,7 @@ twitterDatabase.setCount = async (username, count) => {
  * @param  {String}   username Username
  * @async
  */
-twitterDatabase.remove = async (username) => {
+export const remove = async (username) => {
     let settings = await TwitterModel.findOneAndRemove({ username }).exec();
     if (!settings) {
         throw new Error("Username not in database");
@@ -101,7 +101,7 @@ twitterDatabase.remove = async (username) => {
  * @param  {Object}   settings #NP tweet settings
  * @async
  */
-twitterDatabase.addUser = async (settings) => {
+export const addUser = async (settings) => {
     await new TwitterModel(settings).save();
 };
 
@@ -111,8 +111,8 @@ twitterDatabase.addUser = async (settings) => {
  * @param  {Object}   modifier #NP tweet settings modifier object
  * @async
  */
-twitterDatabase.update = async (username, modifier) => {
-    let settings = await twitterDatabase.getSettings(username);
+export const update = async (username, modifier) => {
+    let settings = await getSettings(username);
     let newSettings = _.extend(settings, modifier);
     await newSettings.save();
 };
@@ -125,7 +125,7 @@ twitterDatabase.update = async (username, modifier) => {
  * @param  {Object}   settings #NP tweet settings
  * @async
  */
-twitterDatabase.upsert = async (username, settings) => {
+export const upsert = async (username, settings) => {
     // XXX: As of August 2015, Mongoose still does not support running validators
     // for update() calls properly (despite claiming having support for it since
     // version 4.0), so we have to resort to first getting the document,
@@ -143,14 +143,12 @@ twitterDatabase.upsert = async (username, settings) => {
  * @param  {String}   reason   Reason for disabling the integration
  * @async
  */
-twitterDatabase.disable = async (username, reason) => {
+export const disable = async (username, reason) => {
     let logger = moduleLogger.child({ username, reason });
     try {
-        await twitterDatabase.update(username, { disableReason: reason, isEnabled: false });
+        await update(username, { disableReason: reason, isEnabled: false });
         logger.warn("Disabled integration");
     } catch (error) {
         logger.error(error, "Failed to disable integration");
     }
 };
-
-export default twitterDatabase;

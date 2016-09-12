@@ -1,13 +1,14 @@
-var etcd;
-var wait = require("wait.for");
+import NodeEtcd from "node-etcd"
+import wait from "wait.for"
 
-var connectEtcd = function () {
-    var NodeEtcd = require("node-etcd")
+var etcd;
+
+const realConnectEtcd = function () {
     console.log(config.etcdLinkUrl)
     etcd = new NodeEtcd([config.etcdLinkUrl])
 }
 
-var get = function (key, callback) {
+export const get = function (key, callback) {
     etcd.get(key, function (err, res) {
         if (err) {
             callback(err);
@@ -27,13 +28,10 @@ var get = function (key, callback) {
     })
 }
 
-var set = function (key, value) {
+export const set = function (key, value) {
     etcd.set(key, value)
 }
 
-module.exports.connectEtcd = function (discover) {
-    wait.launchFiber(connectEtcd, discover)
+export const connectEtcd = function (discover) {
+    wait.launchFiber(realConnectEtcd, discover)
 }
-
-module.exports.get = get
-module.exports.set = set
