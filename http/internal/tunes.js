@@ -82,20 +82,12 @@ let upload = multer({
 });
 
 module.exports = function ({ app, wrap }) {
-    app.get("/tunes/getSongForID/" + config.tunesKey, (req, res, next) => {
+    app.get("/tunes/getSongForID/" + config.tunesKey, wrap(async (req, res) => {
         if (!req.query.id) {
-            return next(new Error("No ID provided"));
+            throw new Error("No ID provided");
         }
-        db.getSongForID(req.query.id, (err, song) => {
-            if (err) {
-                return next(err);
-            }
-            if (song === null) {
-                return next(new Error("Song not found"));
-            }
-            res.json(song);
-        });
-    });
+        res.json(await db.getSongForID(req.query.id));
+    }));
 
 
     app.post("/tunes/upload/" + config.tunesKey, upload.single("song"), (req, res) => {
@@ -108,17 +100,13 @@ module.exports = function ({ app, wrap }) {
         });
     });
 
-    app.post("/tunes/updateInfo/" + config.tunesKey, (req, res, next) => {
+    app.post("/tunes/updateInfo/" + config.tunesKey, wrap(async (req, res) => {
         if (!req.body.username || !req.body._id) {
             throw new Error("Missing parameters");
         }
-        db.updateSong(req.body.username, req.body._id, req.body, (err) => {
-            if (err) {
-                return next(err);
-            }
-            res.json({ status: "ok" });
-        });
-    });
+        await db.updateSong(req.body.username, req.body._id, req.body);
+        res.json({ status: "ok" });
+    }));
 
     app.delete("/tunes/stopContainer/" + config.tunesKey, (req, res) => {
         if (!req.body.id) {
