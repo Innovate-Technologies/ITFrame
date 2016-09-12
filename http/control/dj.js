@@ -81,9 +81,9 @@ export default ({ app, wrap }) => {
     }))
 
     app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
-        await intervals.addNewIntervalForUsername(res.params.username, req.body)
+        const interval = await intervals.addNewIntervalForUsername(res.params.username, req.body)
         await dj.reloadClocks(req.params.username)
-        res.json({ status: "ok" })
+        res.json(interval)
     }))
 
 };
