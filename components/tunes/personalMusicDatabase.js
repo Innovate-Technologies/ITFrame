@@ -76,11 +76,11 @@ export const setSongTagForUserWithID = async (username, id, tags) => {
     return song.save()
 }
 
-export const updateSong = function (username, id, newInfo) {
-    let song = TunesPersonalModel.findOne({
+export const updateSong = async (username, id, newInfo) => {
+    let song = await TunesPersonalModel.findOne({
         username: username,
         _id: new ObjectId(id),
-    })
+    }).exec()
     if (!song) {
         return
     }
