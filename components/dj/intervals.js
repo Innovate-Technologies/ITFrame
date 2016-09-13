@@ -48,7 +48,7 @@ export const addNewIntervalForUsername = (username, interval) => {
     return new IntervalsModel(interval).save()
 }
 
-export const removeIntervalForUsername = (username) => {
+export const removeIntervalsForUsername = (username) => {
     return IntervalsModel.remove({ username }).exec()
 }
 

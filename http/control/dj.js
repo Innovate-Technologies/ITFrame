@@ -12,28 +12,22 @@ export default ({ app, wrap }) => {
     // General settings                                 //
     //////////////////////////////////////////////////////
 
-    app.post("/control/cast/dj/settings/:username", function (req, res, next) {
+    app.post("/control/cast/dj/settings/:username", wrap((req, res) => {
         if (!req.body.enabled) {
             throw new BadRequestError();
         }
-        if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.name) ) {
+        if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.name)) {
             throw new BadRequestError();
         }
         wait.launchFiber(function () {
-            try {
-                wait.for(cast.configureDJ, req.params.username, {
-                    fadeLength: req.body.fadeLength,
-                    name: req.body.name,
-                    genre: req.body.genre,
-                });
-                res.json({});
-            } catch (error) {
-                req.log.warn(error, "Failed to save the DJ settings");
-                error.message = "Failed to save the DJ settings: " + error.message;
-                return next(error);
-            }
+            wait.for(cast.configureDJ, req.params.username, {
+                fadeLength: req.body.fadeLength,
+                name: req.body.name,
+                genre: req.body.genre,
+            });
+            res.json({});
         });
-    });
+    }));
 
     //////////////////////////////////////////////////////
     // Dashboard                                        //
@@ -43,7 +37,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.post("/control/cast/dj/skip/:username", wrap(async (req, res) => {
-        dj.skipSong(req.params.username)
+        await dj.skipSong(req.params.username)
         res.json({ status: "ok" })
     }))
 
@@ -57,8 +51,8 @@ export default ({ app, wrap }) => {
 
     app.put("/control/cast/dj/clocks/:username", wrap(async (req, res) => {
         await clocks.replaceClocksForUsername(req.params.username, req.body)
-        await dj.reloadClocks(req.params.username)
-        res.json({status: "ok"})
+        // await dj.reloadClocks(req.params.username)
+        res.json({ status: "ok" })
     }))
     //////////////////////////////////////////////////////
     // Intervals                                        //
@@ -70,19 +64,19 @@ export default ({ app, wrap }) => {
 
     app.patch("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
         await intervals.updateIntervalWithUsernameAndID(req.params.username, req.body._id, req.body)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
     }))
 
     app.delete("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
         await intervals.removeIntervalForUsernameAndID(req.params.username, req.body._id)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
     }))
 
     app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
         const interval = await intervals.addNewIntervalForUsername(res.params.username, req.body)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json(interval)
     }))
 

@@ -67,13 +67,13 @@ function createConfigForNewUser(username, callback) {
                 "stream": "64kbps",
                 "password": randtoken.generate(10),
             }, {
-                "stream": "128kbps",
-                "password": randtoken.generate(10),
-                "primary": true,
-            }, {
-                "stream": "320kbps",
-                "password": randtoken.generate(10),
-            }],
+                    "stream": "128kbps",
+                    "password": randtoken.generate(10),
+                    "primary": true,
+                }, {
+                    "stream": "320kbps",
+                    "password": randtoken.generate(10),
+                }],
             "username": username,
         })
     })
@@ -92,99 +92,95 @@ function createFleetUnit(username, callback) {
                 section: "Unit",
                 value: "Cast",
             }, {
-                "name": "After",
-                "section": "Unit",
-                "value": "docker.service",
-            }, {
-                "name": "EnvironmentFile",
-                "section": "Service",
-                "value": "/etc/environment",
-            }, {
-                "name": "TimeoutStartSec",
-                "section": "Service",
-                "value": "1m",
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                "value": "-/bin/bash -c '/usr/bin/docker pull docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest'",
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                value: util.format('/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/A/\' \'[{\\"value\\":\\"\'$(curl myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                value: util.format('-/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/AAAA/\' \'[{\\"value\\":\\"\'$(curl -f v6.myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                "value": "-/usr/bin/docker kill " + username,
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                "value": "-/bin/bash -c \"docker kill `docker ps | grep 0.0.0.0:" + res.input.SHOUTcast.toString() + " | awk '{print $1}'`\"",
-            }, {
-                "name": "ExecStartPre",
-                "section": "Service",
-                "value": "-/usr/bin/docker rm " + username,
-            }, {
-                "name": "ExecStart",
-                "section": "Service",
-                value: `/bin/bash -c "/usr/bin/docker run -p ${res.input.SHOUTcast.toString()}:${(res.input.SHOUTcast).toString()} -p ${(res.input.SHOUTcast + 1).toString()}:${(res.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest"`,
-            }, {
-                "name": "ExecStartPost",
-                "section": "Service",
-                "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
-            }, {
-                "name": "ExecStartPost",
-                "section": "Service",
-                "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
-            }, {
-                "name": "ExecStop",
-                "section": "Service",
-                "value": "/usr/bin/docker kill " + username,
-            }, {
-                "name": "ExecStopPost",
-                "section": "Service",
-                "value": "/usr/bin/docker rm " + username,
-            }, {
-                "name": "Restart",
-                "section": "Service",
-                "value": "always",
-            }, {
-                "name": "RestartSec",
-                "section": "Service",
-                "value": "5",
-            }, {
-                "name": "WantedBy",
-                "section": "Install",
-                "value": "multi-user.target",
-            }, {
-                "name": "Conflicts",
-                "section": "X-Fleet",
-                "value": "*" + res.input.SHOUTcast.toString() + ".service",
-            }, {
-                "name": "MachineMetadata",
-                "section": "X-Fleet",
-                "value": "model=C2M",
-            }],
+                    "name": "After",
+                    "section": "Unit",
+                    "value": "docker.service",
+                }, {
+                    "name": "EnvironmentFile",
+                    "section": "Service",
+                    "value": "/etc/environment",
+                }, {
+                    "name": "TimeoutStartSec",
+                    "section": "Service",
+                    "value": "1m",
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    "value": "-/bin/bash -c '/usr/bin/docker pull docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest'",
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    value: util.format('/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/A/\' \'[{\\"value\\":\\"\'$(curl myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    value: util.format('-/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/AAAA/\' \'[{\\"value\\":\\"\'$(curl -f v6.myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    "value": "-/usr/bin/docker kill " + username,
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    "value": "-/bin/bash -c \"docker kill `docker ps | grep 0.0.0.0:" + res.input.SHOUTcast.toString() + " | awk '{print $1}'`\"",
+                }, {
+                    "name": "ExecStartPre",
+                    "section": "Service",
+                    "value": "-/usr/bin/docker rm " + username,
+                }, {
+                    "name": "ExecStart",
+                    "section": "Service",
+                    value: `/bin/bash -c "/usr/bin/docker run -p ${res.input.SHOUTcast.toString()}:${(res.input.SHOUTcast).toString()} -p ${(res.input.SHOUTcast + 1).toString()}:${(res.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest"`,
+                }, {
+                    "name": "ExecStartPost",
+                    "section": "Service",
+                    "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
+                }, {
+                    "name": "ExecStartPost",
+                    "section": "Service",
+                    "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
+                }, {
+                    "name": "ExecStop",
+                    "section": "Service",
+                    "value": "/usr/bin/docker kill " + username,
+                }, {
+                    "name": "ExecStopPost",
+                    "section": "Service",
+                    "value": "/usr/bin/docker rm " + username,
+                }, {
+                    "name": "Restart",
+                    "section": "Service",
+                    "value": "always",
+                }, {
+                    "name": "RestartSec",
+                    "section": "Service",
+                    "value": "5",
+                }, {
+                    "name": "WantedBy",
+                    "section": "Install",
+                    "value": "multi-user.target",
+                }, {
+                    "name": "Conflicts",
+                    "section": "X-Fleet",
+                    "value": "*" + res.input.SHOUTcast.toString() + ".service",
+                }, {
+                    "name": "MachineMetadata",
+                    "section": "X-Fleet",
+                    "value": "model=C2M",
+                }],
         })
     })
 }
 
 function createDJFleetUnit(username, callback) {
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            return callback(err)
-        }
-        callback(null, {
-            desiredState: "launched",
-            name: `dj-${username}-${res.input.SHOUTcast.toString()}.service`,
-            options: [{
-                name: "Description",
-                section: "Unit",
-                value: "DJ",
-            }, {
+    return {
+        desiredState: "launched",
+        name: `${username}-dj.service`,
+        options: [{
+            name: "Description",
+            section: "Unit",
+            value: "DJ",
+        }, {
                 "name": "After",
                 "section": "Unit",
                 "value": "docker.service",
@@ -199,7 +195,7 @@ function createDJFleetUnit(username, callback) {
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
-                "value": "-/usr/bin/docker pull docker.innovatete.ch/dj",
+                "value": "-/bin/bash -c '/usr/bin/docker pull docker.innovatete.ch/dj:$(dpkg --print-architecture)-latest'",
             }, {
                 "name": "ExecStartPre",
                 "section": "Service",
@@ -215,7 +211,7 @@ function createDJFleetUnit(username, callback) {
             }, {
                 "name": "ExecStart",
                 "section": "Service",
-                value: `/usr/bin/docker run -p ${res.input.SHOUTcast.toString()}:${(res.input.SHOUTcast).toString()} -p ${(res.input.SHOUTcast + 1).toString()}:${(res.input.SHOUTcast + 1).toString()} --name ${username}-dj -e username=${username} docker.innovatete.ch/dj`,
+                value: `/bin/bash -c "/usr/bin/docker run --name ${username}-dj -e username=${username} docker.innovatete.ch/dj:$(dpkg --print-architecture)-latest"`,
             }, {
                 "name": "ExecStartPost",
                 "section": "Service",
@@ -245,16 +241,11 @@ function createDJFleetUnit(username, callback) {
                 "section": "Install",
                 "value": "multi-user.target",
             }, {
-                "name": "Conflicts",
-                "section": "X-Fleet",
-                "value": "*" + res.input.SHOUTcast.toString() + ".service",
-            }, {
                 "name": "MachineMetadata",
                 "section": "X-Fleet",
                 "value": "model=C1",
             }],
-        })
-    })
+    }
 }
 
 module.exports.createConfigForNewUser = createConfigForNewUser
