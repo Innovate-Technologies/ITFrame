@@ -245,7 +245,7 @@ function createDJFleetUnit(username, callback) {
                 "section": "X-Fleet",
                 "value": "model=C1",
             }],
-    })
+    }
 }
 
 module.exports.createConfigForNewUser = createConfigForNewUser
