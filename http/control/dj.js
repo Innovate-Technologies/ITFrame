@@ -12,28 +12,22 @@ export default ({ app, wrap }) => {
     // General settings                                 //
     //////////////////////////////////////////////////////
 
-    app.post("/control/cast/dj/settings/:username", function (req, res, next) {
+    app.post("/control/cast/dj/settings/:username", wrap((req, res) => {
         if (!req.body.enabled) {
             throw new BadRequestError();
         }
-        if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.name) ) {
+        if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.name)) {
             throw new BadRequestError();
         }
         wait.launchFiber(function () {
-            try {
-                wait.for(cast.configureDJ, req.params.username, {
-                    fadeLength: req.body.fadeLength,
-                    name: req.body.name,
-                    genre: req.body.genre,
-                });
-                res.json({});
-            } catch (error) {
-                req.log.warn(error, "Failed to save the DJ settings");
-                error.message = "Failed to save the DJ settings: " + error.message;
-                return next(error);
-            }
+            wait.for(cast.configureDJ, req.params.username, {
+                fadeLength: req.body.fadeLength,
+                name: req.body.name,
+                genre: req.body.genre,
+            });
+            res.json({});
         });
-    });
+    }));
 
     //////////////////////////////////////////////////////
     // Dashboard                                        //
@@ -58,7 +52,7 @@ export default ({ app, wrap }) => {
     app.put("/control/cast/dj/clocks/:username", wrap(async (req, res) => {
         await clocks.replaceClocksForUsername(req.params.username, req.body)
         // await dj.reloadClocks(req.params.username)
-        res.json({status: "ok"})
+        res.json({ status: "ok" })
     }))
     //////////////////////////////////////////////////////
     // Intervals                                        //

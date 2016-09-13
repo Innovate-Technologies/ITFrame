@@ -1,6 +1,6 @@
 /* global log */
 /* global requireFromRoot */
-let cast = { }
+let cast = {}
 let castDB = require("./database.js")
 let configHelper = require("./configHelper.js")
 let wait = require("wait.for")
@@ -71,45 +71,19 @@ cast.stopNode = (username, callback) => {
 }
 
 cast.startDJ = (username, callback) => {
-    let logger = moduleLogger.child({ username });
-    logger.info("Starting DJ");
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err, "Failed to get information for user");
-            return callback(err);
-        }
-        fleet.startUnit(`dj-${username}-${res.input.SHOUTcast.toString()}.service`, callback);
-    });
+    fleet.startUnit(`${username}-dj.service`, callback);
 }
 
 cast.stopDJ = (username, callback) => {
-    let logger = moduleLogger.child({ username });
-    logger.info("Stopping DJ");
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err, "Failed to get information for user");
-            return callback(err)
-        }
-        fleet.stopUnit(`dj-${username}-${res.input.SHOUTcast.toString()}.service`, callback)
-    })
+    fleet.stopUnit(`${username}-dj.service`, callback)
 }
 
 cast.destroyDJUnit = (username, callback) => {
-    castDB.getInfoForUsername(username, (err, conf) => {
-        if (err) {
-            return callback(err)
+    fleet.destroyUnit(`${username}-dj.service`, (fleetErr) => {
+        if (fleetErr) {
+            return callback(fleetErr)
         }
-        cast.stopNode(username, (stopErr) => {
-            if (stopErr) {
-                return callback(stopErr)
-            }
-            fleet.destroyUnit("dj-" + username + "-" + conf.input.SHOUTcast.toString() + ".service", (fleetErr) => {
-                if (fleetErr) {
-                    return callback(fleetErr)
-                }
-                setTimeout(callback, 2000)
-            })
-        })
+        setTimeout(callback, 2000)
     })
 }
 
@@ -132,7 +106,7 @@ cast.destroyUnit = (username, callback) => {
     })
 }
 
-cast.hardRestartNode = (username, callback = () => {}) => {
+cast.hardRestartNode = (username, callback = () => { }) => {
     cast.stopNode(username, function (err) {
         if (err) {
             callback(err);
@@ -142,7 +116,7 @@ cast.hardRestartNode = (username, callback = () => {}) => {
     })
 }
 
-cast.hardRestartDJ = (username, callback = () => {}) => {
+cast.hardRestartDJ = (username, callback = () => { }) => {
     cast.stopDJ(username, function (err) {
         if (err) {
             callback(err);
@@ -152,7 +126,7 @@ cast.hardRestartDJ = (username, callback = () => {}) => {
     })
 }
 
-cast.softRestartNode = (username, callback = () => {}) => {
+cast.softRestartNode = (username, callback = () => { }) => {
     let logger = moduleLogger.child({ username });
     castDB.getInfoForUsername(username, function (err, res) {
         if (err) {
@@ -164,12 +138,12 @@ cast.softRestartNode = (username, callback = () => {}) => {
         }).on("complete", function () {
             callback(null, true);
         })
-        .on("timeout", function () {
-            cast.hardRestartNode(username, callback)
-        })
-        .on("error", function () {
-            cast.hardRestartNode(username, callback)
-        })
+            .on("timeout", function () {
+                cast.hardRestartNode(username, callback)
+            })
+            .on("error", function () {
+                cast.hardRestartNode(username, callback)
+            })
     });
 }
 
@@ -185,7 +159,7 @@ cast.terminateNode = (username, callback) => {
             wait.for(cast.stopNode, username)
             wait.for(cast.destroyUnit, username)
             wait.for(castDB.deleteUsername, username)
-            cast.destroyDJUnit(username, () => {}) // to do: also destroy tunes in background
+            cast.destroyDJUnit(username, () => { }) // to do: also destroy tunes in background
             logger.info("Terminated")
             return callback(null, true)
         } catch (err) {
@@ -228,7 +202,7 @@ cast.upgradeDJ = (username, callback) => {
                 wait.for(cast.destroyDJUnit, username)
                 logger.info("Deleted Unit")
                 logger.debug("Adding unit file")
-                let fleetUnit = wait.for(configHelper.createDJFleetUnit, username)
+                let fleetUnit = configHelper.createDJFleetUnit(username)
                 wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
                 logger.info("Created DJ")
             } else {
@@ -267,7 +241,7 @@ cast.suspendNode = (username, callback) => {
         try {
             wait.for(cast.stopNode, username)
             wait.for(cast.destroyUnit, username)
-            cast.destroyDJUnit(username, () => {})
+            cast.destroyDJUnit(username, () => { })
             logger.info("Deleted Unit")
             return callback(null, true)
         } catch (err) {
@@ -282,10 +256,10 @@ cast.supportedDirectories = [{
     url: "https://yp.shoutcast.com",
     type: "Icecast",
 }, {
-    name: "dir.xiph.org",
-    url: "http://dir.xiph.org/cgi-bin/yp-cgi",
-    type: "Icecast",
-}]
+        name: "dir.xiph.org",
+        url: "http://dir.xiph.org/cgi-bin/yp-cgi",
+        type: "Icecast",
+    }]
 
 cast.addToDirectory = (username, directory, callback) => {
     delete directory.isEnabled;
@@ -412,11 +386,6 @@ cast.configureDJ = (username, djConfig = {}, callback) => {
         config.name = djConfig.name
         config.genre = djConfig.genre
 
-        if (!config.internal.dj) {
-            config.internal.dj = {
-                key: randtoken.generate(30),
-            }
-        }
         castDB.updateConfig(username, config, function (error) {
             if (err) {
                 callback(error);
