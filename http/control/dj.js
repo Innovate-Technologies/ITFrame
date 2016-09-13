@@ -43,7 +43,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.post("/control/cast/dj/skip/:username", wrap(async (req, res) => {
-        dj.skipSong(req.params.username)
+        await dj.skipSong(req.params.username)
         res.json({ status: "ok" })
     }))
 
@@ -57,7 +57,7 @@ export default ({ app, wrap }) => {
 
     app.put("/control/cast/dj/clocks/:username", wrap(async (req, res) => {
         await clocks.replaceClocksForUsername(req.params.username, req.body)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json({status: "ok"})
     }))
     //////////////////////////////////////////////////////
@@ -70,19 +70,19 @@ export default ({ app, wrap }) => {
 
     app.patch("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
         await intervals.updateIntervalWithUsernameAndID(req.params.username, req.body._id, req.body)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
     }))
 
     app.delete("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
         await intervals.removeIntervalForUsernameAndID(req.params.username, req.body._id)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
     }))
 
     app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
         const interval = await intervals.addNewIntervalForUsername(res.params.username, req.body)
-        await dj.reloadClocks(req.params.username)
+        // await dj.reloadClocks(req.params.username)
         res.json(interval)
     }))
 
