@@ -1,455 +1,268 @@
-/* global log */
-/* global requireFromRoot */
-let cast = {}
-let castDB = require("./database.js")
-let configHelper = require("./configHelper.js")
-let wait = require("wait.for")
-let fleet = requireFromRoot("components/coreos/fleet.js")
-let _ = require("underscore")
-let moduleLogger = log.child({ component: "cast" })
-let rest = require("restler")
-let randtoken = require("rand-token");
+import * as castDB from "./database.js"
+import * as configHelper from "./configHelper.js"
+import _ from "underscore"
+import rest from "restler"
+const fleet = requireFromRoot("components/coreos/fleet.js")
+const moduleLogger = log.child({ component: "cast" })
 
-cast.createNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
-    wait.launchFiber(() => {
-        try {
-            logger.info("Making configuration")
-            let config = wait.for(configHelper.createConfigForNewUser, username)
-            logger.debug("Adding configuration to database")
-            wait.for(castDB.addConfigForUsername, username, config)
-            logger.debug("Adding unit file")
-            let fleetUnit = wait.for(configHelper.createFleetUnit, username)
-            wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
-            logger.info("Created node")
-            return callback(null, true)
-        } catch (error) {
-            logger.error(error)
-            return callback(error)
-        }
-    })
+
+export const createNode = async (username) => {
+    const logger = moduleLogger.child({ username });
+    logger.info("Making configuration")
+    const config = await configHelper.createConfigForNewUser(username)
+    logger.debug("Adding configuration to database")
+    await castDB.addConfigForUsername(username, config)
+    await createFleet(username)
 }
 
-cast.createFleet = (username, callback) => {
-    let logger = moduleLogger.child({ username });
-    wait.launchFiber(() => {
-        try {
-            logger.debug("Adding unit file")
-            let fleetUnit = wait.for(configHelper.createFleetUnit, username)
-            wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
-            logger.info("Created node")
-            return callback(null, true)
-        } catch (error) {
-            logger.error(error)
-            return callback(error)
-        }
-    })
+export const createFleet = async (username) => {
+    const logger = moduleLogger.child({ username });
+    logger.debug("Adding unit file")
+    const fleetUnit = configHelper.createFleetUnit(username)
+    await fleet.newUnit(fleetUnit.name, fleetUnit)
+    logger.info("Created node")
 }
 
-cast.startNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
+export const startNode = async (username) => {
+    const logger = moduleLogger.child({ username });
     logger.info("Starting node");
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err, "Failed to get information for user");
-            return callback(err);
-        }
-        fleet.startUnit(`${username}-${res.input.SHOUTcast.toString()}.service`, callback);
-    });
+    const config = await castDB.getInfoForUsername(username)
+    return fleet.startUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
 }
 
-cast.stopNode = (username, callback) => {
+export const stopNode = async (username) => {
     let logger = moduleLogger.child({ username });
     logger.info("Stopping node");
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err, "Failed to get information for user");
-            return callback(err)
-        }
-        fleet.stopUnit(`${username}-${res.input.SHOUTcast.toString()}.service`, callback)
+    const config = await castDB.getInfoForUsername(username)
+    return fleet.stopUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
+}
+
+export const startDJ = (username) => {
+    return fleet.startUnit(`${username}-dj.service`);
+}
+
+export const stopDJ = (username) => {
+    return fleet.stopUnit(`${username}-dj.service`)
+}
+
+export const destroyDJUnit = (username) => {
+    fleet.destroyUnit(`${username}-dj.service`)
+}
+
+export const destroyUnit = async (username) => {
+    const config = await castDB.getInfoForUsername(username)
+    return fleet.destroyUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
+}
+
+export const hardRestartNode = async (username) => {
+    await stopNode(username)
+    await startNode(username)
+}
+
+export const hardRestartDJ = async (username) => {
+    await stopDJ(username)
+    await startDJ(username)
+}
+
+export const softRestartNode = (username) => new Promise(async (resolve) => {
+    const config = await castDB.getInfoForUsername(username)
+    rest.get(config.hostname + "/itframe/restart/?key=" + config.apikey, {
+        timeout: 10000,
+    }).on("complete", () => {
+        resolve()
+    }).on("timeout", async () => {
+        await hardRestartNode(username)
+        resolve()
+    }).on("error", async () => {
+        await hardRestartNode(username)
+        resolve()
     })
-}
+})
 
-cast.startDJ = (username, callback) => {
-    fleet.startUnit(`${username}-dj.service`, callback);
-}
+export const softRestartDJ = hardRestartDJ // not supported in beta
 
-cast.stopDJ = (username, callback) => {
-    fleet.stopUnit(`${username}-dj.service`, callback)
-}
+export const restartNode = softRestartNode
 
-cast.destroyDJUnit = (username, callback) => {
-    fleet.destroyUnit(`${username}-dj.service`, (fleetErr) => {
-        if (fleetErr) {
-            return callback(fleetErr)
-        }
-        setTimeout(callback, 2000)
-    })
-}
-
-cast.destroyUnit = (username, callback) => {
-    castDB.getInfoForUsername(username, (err, conf) => {
-        if (err) {
-            return callback(err)
-        }
-        cast.stopNode(username, (stopErr) => {
-            if (stopErr) {
-                return callback(stopErr)
-            }
-            fleet.destroyUnit(username + "-" + conf.input.SHOUTcast.toString() + ".service", (fleetErr) => {
-                if (fleetErr) {
-                    return callback(fleetErr)
-                }
-                setTimeout(callback, 2000)
-            })
-        })
-    })
-}
-
-cast.hardRestartNode = (username, callback = () => { }) => {
-    cast.stopNode(username, function (err) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        setTimeout(() => cast.startNode(username, callback), 2000);
-    })
-}
-
-cast.hardRestartDJ = (username, callback = () => { }) => {
-    cast.stopDJ(username, function (err) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        setTimeout(() => cast.startDJ(username, callback), 2000);
-    })
-}
-
-cast.softRestartNode = (username, callback = () => { }) => {
-    let logger = moduleLogger.child({ username });
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err, "Failed to get information for user");
-            return callback(err);
-        }
-        rest.get(res.hostname + "/itframe/restart/?key=" + res.apikey, {
-            timeout: 10000,
-        }).on("complete", function () {
-            callback(null, true);
-        })
-            .on("timeout", function () {
-                cast.hardRestartNode(username, callback)
-            })
-            .on("error", function () {
-                cast.hardRestartNode(username, callback)
-            })
-    });
-}
-
-cast.softRestartDJ = cast.hardRestartDJ // not supported in beta
-
-cast.restartNode = cast.softRestartNode
-
-cast.terminateNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
+export const terminateNode = async (username) => {
+    const logger = moduleLogger.child({ username });
     logger.info("Terminating node");
-    wait.launchFiber(() => {
-        try {
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
-            wait.for(castDB.deleteUsername, username)
-            cast.destroyDJUnit(username, () => { }) // to do: also destroy tunes in background
-            logger.info("Terminated")
-            return callback(null, true)
-        } catch (err) {
-            logger.error(err)
-            return callback(err)
-        }
-    });
+    try {
+        await stopDJ(username)
+        await destroyDJUnit(username)
+    } catch (error) {
+        logger.info(error)
+    }
+    await stopNode(username)
+    await destroyUnit(username)
+    logger.info("Terminated")
 }
 
-cast.upgradeNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
+export const upgradeNode = async (username) => {
+    const logger = moduleLogger.child({ username })
     logger.info("updating node");
-    wait.launchFiber(() => {
-        try {
-            wait.for(castDB.updateVersion, username)
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
-            logger.info("Deleted Unit")
-            logger.debug("Adding unit file")
-            let fleetUnit = wait.for(configHelper.createFleetUnit, username)
-            wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
-            logger.info("Created node")
-            return callback(null, true)
-        } catch (err) {
-            logger.error(err)
-            return callback(err)
-        }
-    });
+    await castDB.updateVersion(username)
+    await stopNode(username)
+    await destroyUnit(username)
+    logger.info("Deleted Unit")
+    await createFleet(username)
+    logger.info("Created node")
 }
 
-cast.upgradeDJ = (username, callback) => {
-    let logger = moduleLogger.child({ username });
+export const upgradeDJ = async (username) => {
+    const logger = moduleLogger.child({ username });
     logger.info("updating DJ");
-    wait.launchFiber(() => {
+    await castDB.updateDJVersion(username)
+    const config = await castDB.getInfoForUsername(username)
+    if (config.DJ.enabled) {
+        await stopDJ(username)
+        await destroyDJUnit(username)
+        const fleetUnit = configHelper.createDJFleetUnit(username)
+        await fleet.newUnit(fleetUnit.name, fleetUnit)
+        logger.info("Created DJ")
+    } else {
         try {
-            let config = wait.for(castDB.getInfoForUsername, username)
-            if (config.DJ.enabled) {
-                wait.for(castDB.updateDJVersion, username)
-                wait.for(cast.stopDJ, username)
-                wait.for(cast.destroyDJUnit, username)
-                logger.info("Deleted Unit")
-                logger.debug("Adding unit file")
-                let fleetUnit = configHelper.createDJFleetUnit(username)
-                wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
-                logger.info("Created DJ")
-            } else {
-                wait.for(castDB.updateDJVersion, username)
-                wait.for(cast.destroyDJUnit, username)
-            }
-            return callback(null, true)
-        } catch (err) {
-            logger.error(err)
-            return callback(err)
+            await destroyDJUnit(username)
+        } catch (error) {
+            logger.info(error)
         }
-    });
+    }
 }
 
-cast.unsuspendNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
-    logger.info("unsuspending node");
-    wait.launchFiber(() => {
-        try {
-            logger.debug("Adding unit file")
-            let fleetUnit = wait.for(configHelper.createFleetUnit, username)
-            wait.for(fleet.newUnit, fleetUnit.name, fleetUnit)
-            logger.info("Created node")
-            return callback(null, true)
-        } catch (err) {
-            logger.error(err)
-            return callback(err)
-        }
-    });
+export const unsuspendNode = async (username) => {
+    const logger = moduleLogger.child({ username })
+    logger.info("unsuspending node")
+    await createFleet(username)
+    logger.info("Created node")
 };
 
-cast.suspendNode = (username, callback) => {
-    let logger = moduleLogger.child({ username });
+export const suspendNode = async (username) => {
+    const logger = moduleLogger.child({ username });
     logger.info("suspending node");
-    wait.launchFiber(() => {
-        try {
-            wait.for(cast.stopNode, username)
-            wait.for(cast.destroyUnit, username)
-            cast.destroyDJUnit(username, () => { })
-            logger.info("Deleted Unit")
-            return callback(null, true)
-        } catch (err) {
-            logger.error(err)
-            return callback(err)
-        }
-    });
+    await stopNode(username)
+    await destroyDJUnit(username)
+    try {
+        destroyDJUnit(username)
+    } catch (error) {
+        logger.info(error)
+    }
+    logger.info("Deleted Unit")
 };
 
-cast.supportedDirectories = [{
+export const supportedDirectories = [{
     name: "SHOUTcast.com",
     url: "https://yp.shoutcast.com",
     type: "Icecast",
 }, {
-        name: "dir.xiph.org",
-        url: "http://dir.xiph.org/cgi-bin/yp-cgi",
-        type: "Icecast",
-    }]
+    name: "dir.xiph.org",
+    url: "http://dir.xiph.org/cgi-bin/yp-cgi",
+    type: "Icecast",
+}]
 
-cast.addToDirectory = (username, directory, callback) => {
+export const addToDirectory = async (username, directory) => {
     delete directory.isEnabled;
-    let logger = moduleLogger.child({ username, directory });
-    if (!_.findWhere(cast.supportedDirectories, directory)) {
+    const logger = moduleLogger.child({ username, directory });
+    if (!_.findWhere(supportedDirectories, directory)) {
         logger.warn("Unknown directory, refusing to continue");
-        callback(new Error("Unknown directory."));
-        return
+        throw new Error("Unknown directory.");
     }
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err) {
-            logger.error(err);
-            callback(err);
-            return;
-        }
-        if (typeof res.directories[directory.type] === "undefined") {
-            res.directories[directory.type] = [];
-        }
-        res.directories[directory.type].push(directory.url);
-        logger.info("Updating config");
-        castDB.updateConfig(username, res, function (error) {
-            if (error) {
-                logger.error(error);
-                callback(error);
-                return;
-            }
-            logger.info("Restarting node");
-            cast.restartNode(username, callback);
-        });
-    });
+    const config = await castDB.getInfoForUsername(username)
+    if (!config.directories[directory.type]) {
+        config.directories[directory.type] = [];
+    }
+    if (config.directories[directory.type].indexOf(directory.url) === -1) {
+        config.directories[directory.type].push(directory.url);
+    }
+    logger.info("Updating config");
+    await castDB.updateConfig(username, config)
+    logger.info("Restarting node");
+    await softRestartNode(username)
 }
 
-cast.removeFromDirectory = (username, directory, callback) => {
+export const removeFromDirectory = async (username, directory) => {
     delete directory.isEnabled;
-    let logger = moduleLogger.child({ username, directory });
-    if (!_.findWhere(cast.supportedDirectories, directory)) {
+    const logger = moduleLogger.child({ username, directory });
+    if (!_.findWhere(supportedDirectories, directory)) {
         logger.warn("Unknown directory, refusing to continue");
-        callback(new Error("Unknown directory."));
-        return
+        throw new Error("Unknown directory.");
     }
-    castDB.getConfig(username, function (err, config) {
-        if (err) {
-            logger.error(err);
-            callback(err);
-            return;
-        }
-        if (typeof config.directories[directory.type] === "undefined") {
-            config.directories[directory.type] = [];
-        }
-        let directories = config.directories[directory.type];
-        directories = _.without(directories, directory);
-        castDB.updateConfig(username, config, function (error) {
-            if (error) {
-                logger.error(error);
-                callback(error);
-                return;
-            }
-            logger.info("Restarting node");
-            cast.restartNode(username, callback);
-        });
-    });
+    const config = await castDB.getConfig(username)
+    if (!config.directories[directory.type]) {
+        config.directories[directory.type] = [];
+    }
+    config.directories[directory.type] = _.without(config.directories[directory.type], directory);
+    await castDB.updateConfig(username, config)
+    await softRestartNode(username)
 }
 
-cast.configureStreams = (username, streams = [], callback) => {
-    let logger = moduleLogger.child({ username, castStreams: streams });
-    logger.info("Validating and configuring streams");
+export const configureStreams = async (username, streams = []) => {
+    const logger = moduleLogger.child({ username, castStreams: streams })
+    logger.info("Validating and configuring streams")
     let hasPrimary = false
     if (!streams.length) {
-        return callback(new Error("You must have at least one stream."));
+        throw new Error("You must have at least one stream.")
     }
     if (streams.length > 3) {
-        return callback(new Error("You can only have 3 streams for now."));
+        throw new Error("You can only have 3 streams for now.")
     }
     for (let stream of streams) {
-        if (typeof stream.stream === "undefined" || typeof stream.password === "undefined") {
-            callback(new Error("How dare you send incomplete data?"));
-            return
+        if (!stream.stream || !stream.password) {
+            throw new Error("How dare you send incomplete data?")
         }
         if (!stream.stream.includes("kbps")) {
-            callback(new Error("Invalid stream name."));
-            return
+            throw new Error("Invalid stream name.")
         }
         if (stream.primary && hasPrimary) {
-            callback(new Error("Only one stream can be primary."));
-            return
+            throw new Error("Only one stream can be primary.")
         } else if (typeof stream.primary !== "undefined" && stream.primary) {
             hasPrimary = true
         }
     }
     if (!hasPrimary) {
-        callback(new Error("One of your streams must be primary."));
-        return
+        throw new Error("One of your streams must be primary.");
     }
 
     logger.info("Updating config");
 
-    castDB.getInfoForUsername(username, function (err, config) {
-        if (err) {
-            logger.error(err);
-            callback(err);
-            return;
-        }
-        config.streams = streams
-        castDB.updateConfig(username, config, function (error) {
-            if (err) {
-                logger.error(error);
-                callback(error);
-                return;
-            }
-            cast.restartNode(username, callback);
-        });
-    })
+    const config = await castDB.getInfoForUsername(username)
+    config.streams = streams
+    await castDB.updateConfig(username, config)
+    await softRestartNode(username)
 }
 
 
-cast.configureDJ = (username, djConfig = {}, callback) => {
-    castDB.getInfoForUsername(username, function (err, config) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        config.DJ.enabled = djConfig.enabled
-        config.DJ.fadeLength = djConfig.fadeLength
-        config.name = djConfig.name
-        config.genre = djConfig.genre
+export const configureDJ = async (username, djConfig = {}) => {
+    const config = await castDB.getInfoForUsername(username)
+    config.DJ.enabled = djConfig.enabled
+    config.DJ.fadeLength = djConfig.fadeLength
+    config.name = djConfig.name
+    config.genre = djConfig.genre
 
-        castDB.updateConfig(username, config, function (error) {
-            if (err) {
-                callback(error);
-                return;
-            }
-            cast.upgradeDJ(username, callback)
-        });
-    })
+    await castDB.updateConfig(username, config)
+    await upgradeDJ(username)
 }
 
-cast.getCastStreamUrl = (username, callback) => {
-    castDB.getStreamUrl(username, callback);
+export const getCastStreamUrl = castDB.getStreamUrl
+
+export const setGeoLock = async (username, geolockConfig) => {
+    const logger = moduleLogger.child({ username, geolockConfig })
+    const config = await castDB.getInfoForUsername(username)
+    config.geolock = geolockConfig;
+    logger.info("Updating config");
+    await castDB.updateConfig(username, config)
+    await softRestartNode(username)
 }
 
-cast.setGeoLock = (username, geolockConfig, callback) => {
-    let logger = moduleLogger.child({ username, geolockConfig });
-    castDB.getInfoForUsername(username, (err, res) => {
-        if (err) {
-            logger.error(err);
-            callback(err);
-            return;
-        }
-        res.geolock = geolockConfig;
-        logger.info("Updating config");
-        castDB.updateConfig(username, res, function (error) {
-            if (error) {
-                logger.error(error);
-                callback(error);
-                return;
-            }
-            logger.info("Restarting node");
-            cast.restartNode(username, callback);
-        });
-    });
+export const setAntiStreamRipper = async (username, isEnabled) => {
+    const config = await castDB.getInfoForUsername(username)
+    config.antiStreamRipper = isEnabled;
+    await castDB.updateConfig(username, config)
+    await softRestartNode(username)
 }
 
-cast.setAntiStreamRipper = (username, isEnabled, callback) => {
-    castDB.getInfoForUsername(username, (err, res) => {
-        if (err) {
-            return callback(err);
-        }
-        res.antiStreamRipper = isEnabled;
-        castDB.updateConfig(username, res, function (error) {
-            if (error) {
-                return callback(error);
-            }
-            cast.restartNode(username, callback);
-        });
-    });
+export const setHideListenerCount = async (username, isEnabled) => {
+    const config = await castDB.getInfoForUsername(username)
+    config.hideListenerCount = isEnabled;
+    await castDB.updateConfig(username, config)
+    await softRestartNode(username)
 }
 
-cast.setHideListenerCount = (username, isEnabled, callback) => {
-    castDB.getInfoForUsername(username, (err, res) => {
-        if (err) {
-            return callback(err);
-        }
-        res.hideListenerCount = isEnabled;
-        castDB.updateConfig(username, res, function (error) {
-            if (error) {
-                return callback(error);
-            }
-            cast.restartNode(username, callback);
-        });
-    });
-}
-
-module.exports = cast;
