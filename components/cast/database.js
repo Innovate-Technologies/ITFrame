@@ -2,7 +2,6 @@ import randtoken from "rand-token"
 import _ from "underscore"
 const buildinfo = requireFromRoot("components/buildinfo/database.js")
 const mongoose = requireFromRoot("components/database/mongodb.js")
-const castDatabase = {}
 const Schema = mongoose.Schema
 const castSchema = new Schema({
     name: {
@@ -91,123 +90,76 @@ const castSchema = new Schema({
 }, { collection: "cast" })
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
-castDatabase.getInfoForUsername = castDatabase.getConfig = (username, callback) => {
-    CastModel.findOne({ username: username }, function (err, res) {
-        if (err) {
-            return callback(err);
-        }
-        if (res === null) {
-            return callback(new Error("No such username"));
-        }
-        return callback(null, res);
-    });
+export const getInfoForUsername = async (username) => {
+    const config = await CastModel.findOne({ username: username }).exec()
+    if (config === null) {
+        throw new Error("No such username")
+    }
+    return config
 }
+export const getConfig = getInfoForUsername
 
 
-castDatabase.addConfigForUsername = (username, conf, callback) => {
+export const addConfigForUsername = async (username, conf) => {
     conf.username = username;
-    buildinfo.buildInfoForName("Cast", function (err, build) {
-        if (err) {
-            return callback(err)
-        }
-        if (typeof conf.version !== "object") {
-            conf.version = { Cast: 0, DJ: 0 }
-        }
-        conf.version.Cast = build.version
-        new CastModel(conf).save(callback);
-    })
+    const build = await buildinfo.buildInfoForName("Cast");
+    if (typeof conf.version !== "object") {
+        conf.version = { Cast: 0, DJ: 0 }
+    }
+    conf.version.Cast = build.version
+    return new CastModel(conf).save();
 }
 
-castDatabase.updateVersion = (username, callback) => {
-    buildinfo.buildInfoForName("Cast", function (buildErr, build) {
-        if (buildErr) {
-            return callback(buildErr)
-        }
-        CastModel.findOne({ username: username }).lean().exec((err, castInfo) => {
-            if (err) {
-                return callback(err)
-            }
-            if (!castInfo) {
-                return callback(new Error("username not found"))
-            }
-            CastModel.remove({ username }, (rerr) => {
-                if (rerr) {
-                    return callback(err)
-                }
-                delete castInfo._id
-                if (!castInfo.version) {
-                    castInfo.version = {}
-                }
-                castInfo.version.Cast = build.version
-                new CastModel(castInfo).save(callback)
-            })
-        })
-
-    })
+export const updateVersion = async (username) => {
+    const build = await buildinfo.buildInfoForName("Cast");
+    const castInfo = await CastModel.findOne({ username: username }).lean().exec()
+    if (!castInfo) {
+        throw new Error("username not found")
+    }
+    await CastModel.remove({ username }).exec()
+    delete castInfo._id
+    castInfo.version.Cast = build.version
+    return new CastModel(castInfo).save()
 }
 
-castDatabase.updateDJVersion = (username, callback) => {
-    CastModel.findOne({ username: username }, (err, conf) => {
-        if (err) {
-            return callback(err)
-        }
-        if (conf === null) {
-            return callback(new Error("No such username"))
-        }
-        buildinfo.buildInfoForName("DJ", function (buildErr, build) {
-            if (buildErr) {
-                return callback(buildErr)
-            }
-            if (typeof conf.version !== "object") {
-                conf.version = { Cast: 0, DJ: 0 }
-            }
-            conf.version.DJ = build.version
-            conf.save(callback)
-        })
-    })
+export const updateDJVersion = async (username) => {
+    const build = await buildinfo.buildInfoForName("DJ");
+    const castInfo = await CastModel.findOne({ username: username }).lean().exec()
+    if (!castInfo) {
+        throw new Error("username not found")
+    }
+    await CastModel.remove({ username }).exec()
+    delete castInfo._id
+    castInfo.version.DJ = build.version
+    return new CastModel(castInfo).save()
 }
 
-castDatabase.deleteUsername = (username, callback) => {
-    CastModel.remove({ username }, callback);
+export const deleteUsername = (username) => {
+    return CastModel.remove({ username }).exec()
 }
 
-castDatabase.updateConfig = (username, conf, callback) => {
-    CastModel.update({ username }, conf, { overwrite: true }, function (error) {
-        if (error) {
-            return callback(error);
-        }
-        return callback();
-    });
+export const updateConfig = (username, conf) => {
+    return CastModel.update({ username }, conf, { overwrite: true }).exec()
 }
 
-castDatabase.getStreamUrl = (username, callback) => {
-    CastModel.findOne({ username }, function (err, account) {
-        if (err) {
-            return callback(err);
-        }
-        if (account === null) {
-            return callback(new Error("No such username"));
-        }
-        let primaryStream = _.findWhere(account.streams, {
-            primary: true,
-        });
-        let streamUrl = account.hostname + "/streams/" + primaryStream.stream;
-        return callback(null, streamUrl);
-    });
+export const getStreamUrl = async (username) => {
+    const account = await CastModel.findOne({ username }).exec()
+    if (account === null) {
+        throw new Error("No such username");
+    }
+    const primaryStream = _.findWhere(account.streams, { primary: true });
+    return `${account.hostname}/streams/${primaryStream.stream}`
 }
 
-castDatabase.checkStatsKey = async (username, key) => {
+export const checkStatsKey = async (username, key) => {
     const accountInfo = await CastModel.findOne({ username }).exec()
-
     if (!accountInfo || !accountInfo.internal || !accountInfo.internal.statistics) {
         return false
     }
-
     return accountInfo.internal.statistics.key === key
 }
 
-castDatabase.getAll = (callback) => {
-    CastModel.find({}, callback)
+export const getAll = () => {
+    return CastModel.find({}).exec()
 }
 
-module.exports = castDatabase;
