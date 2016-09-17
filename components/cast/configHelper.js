@@ -79,7 +79,7 @@ function createConfigForNewUser(username, callback) {
     })
 }
 
-function createFleetUnit(username, callback) {
+export const createFleetUnit = (username) => {
     castDB.getInfoForUsername(username, function (err, res) {
         if (err) {
             return callback(err)
@@ -172,7 +172,7 @@ function createFleetUnit(username, callback) {
     })
 }
 
-function createDJFleetUnit(username, callback) {
+export const createDJFleetUnit = (username) => {
     return {
         desiredState: "launched",
         name: `${username}-dj.service`,
@@ -247,7 +247,3 @@ function createDJFleetUnit(username, callback) {
             }],
     }
 }
-
-module.exports.createConfigForNewUser = createConfigForNewUser
-module.exports.createFleetUnit = createFleetUnit
-module.exports.createDJFleetUnit = createDJFleetUnit
