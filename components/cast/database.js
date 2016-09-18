@@ -91,7 +91,7 @@ const castSchema = new Schema({
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
 export const getInfoForUsername = async (username) => {
-    const config = await CastModel.findOne({ username: username }).exec()
+    const config = await CastModel.findOne({ username }).exec()
     if (config === null) {
         throw new Error("No such username")
     }
@@ -112,7 +112,7 @@ export const addConfigForUsername = async (username, conf) => {
 
 export const updateVersion = async (username) => {
     const build = await buildinfo.buildInfoForName("Cast");
-    const castInfo = await CastModel.findOne({ username: username }).lean().exec()
+    const castInfo = await CastModel.findOne({ username }).lean().exec()
     if (!castInfo) {
         throw new Error("username not found")
     }
@@ -124,7 +124,7 @@ export const updateVersion = async (username) => {
 
 export const updateDJVersion = async (username) => {
     const build = await buildinfo.buildInfoForName("DJ");
-    const castInfo = await CastModel.findOne({ username: username }).lean().exec()
+    const castInfo = await CastModel.findOne({ username }).lean().exec()
     if (!castInfo) {
         throw new Error("username not found")
     }

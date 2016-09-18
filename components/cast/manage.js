@@ -1,7 +1,7 @@
-import * as castDB from "./database.js"
-import * as configHelper from "./configHelper.js"
 import _ from "underscore"
 import rest from "restler"
+import * as castDB from "./database.js"
+import * as configHelper from "./configHelper.js"
 const fleet = requireFromRoot("components/coreos/fleet.js")
 const moduleLogger = log.child({ component: "cast" })
 
@@ -46,7 +46,7 @@ export const stopDJ = (username) => {
 }
 
 export const destroyDJUnit = (username) => {
-    fleet.destroyUnit(`${username}-dj.service`)
+    return fleet.destroyUnit(`${username}-dj.service`)
 }
 
 export const destroyUnit = async (username) => {
@@ -68,9 +68,8 @@ export const softRestartNode = (username) => new Promise(async (resolve) => {
     const config = await castDB.getInfoForUsername(username)
     rest.get(config.hostname + "/itframe/restart/?key=" + config.apikey, {
         timeout: 10000,
-    }).on("complete", () => {
-        resolve()
-    }).on("timeout", async () => {
+    }).on("complete", resolve)
+    .on("timeout", async () => {
         await hardRestartNode(username)
         resolve()
     }).on("error", async () => {
@@ -114,8 +113,12 @@ export const upgradeDJ = async (username) => {
     await castDB.updateDJVersion(username)
     const config = await castDB.getInfoForUsername(username)
     if (config.DJ.enabled) {
-        await stopDJ(username)
-        await destroyDJUnit(username)
+        try {
+            await stopDJ(username)
+            await destroyDJUnit(username)
+        } catch (error) {
+            logger.info(error)
+        }
         const fleetUnit = configHelper.createDJFleetUnit(username)
         await fleet.newUnit(fleetUnit.name, fleetUnit)
         logger.info("Created DJ")
@@ -265,4 +268,3 @@ export const setHideListenerCount = async (username, isEnabled) => {
     await castDB.updateConfig(username, config)
     await softRestartNode(username)
 }
-
