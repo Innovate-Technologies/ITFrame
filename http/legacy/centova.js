@@ -22,22 +22,17 @@ export default ({ app, wrap }) => {
 
     }))
 
-    app.post("/connect/addDNS/", function (req, res) {
+    app.post("/connect/addDNS/", wrap(async (req, res) => {
         if (!req.body.token) {
             throw new BadRequestError("No token found in the request");
         }
-        timetoken.validateTokenForService("legacy-centova", req.body.token, 10, function (err, valid) {
-            if (err) {
-                res.status(500).json({ error: err })
-                return
-            }
-            if (!valid) {
-                res.status(400).json({ error: "invalid token" })
-                return
-            }
-            dns.setRecord(req.body.name, req.body.type, req.body.value, req.body.ttl)
-            res.json({ status: "ok" })
-        })
-    })
+        const valid = await timetoken.validateTokenForService("legacy-centova", req.body.token, 10)
+        if (!valid) {
+            return res.status(400).json({ error: "invalid token" })
+        }
+        dns.setRecord(req.body.name, req.body.type, req.body.value, req.body.ttl)
+        res.json({ status: "ok" })
+
+    }))
 
 }
