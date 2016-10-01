@@ -1,47 +1,33 @@
 import rest from "restler"
 const castDatabase = requireFromRoot("components/cast/database.js")
 
-export const reloadClocks = (username) => new Promise((resolve, reject) => {
-    castDatabase.getConfig(username, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        rest.post(`https://${res.username}-dj.radioca.st/private/${res.internal.dj.key}/clocks/reload`, {timeout: 10000})
-        .on("complete", (body) => {
-            resolve(body)
-        })
+export const reloadClocks = (username) => new Promise(async (resolve, reject) => {
+    const config = await castDatabase.getConfig(username)
+    rest.post(`https://${config.username}-dj.radioca.st/private/${config.internal.dj.key}/clocks/reload`, { timeout: 10000 })
+        .on("complete", resolve)
         .on("timeout", () => {
             reject(new Error("timeout"))
         })
-    })
 })
 
-export const skipSong = (username) => new Promise((resolve, reject) => {
-    castDatabase.getConfig(username, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        rest.post(`https://${res.username}-dj.radioca.st/private/${res.internal.dj.key}/song/skip`, {timeout: 10000})
+export const skipSong = (username) => new Promise(async (resolve, reject) => {
+    const config = await castDatabase.getConfig(username)
+    rest.post(`https://${config.username}-dj.radioca.st/private/${config.internal.dj.key}/song/skip`, { timeout: 10000 })
         .on("complete", (body) => {
             resolve(body)
         })
         .on("timeout", () => {
             reject(new Error("timeout"))
         })
-    })
 })
 
-export const getQueue = (username) => new Promise((resolve, reject) => {
-    castDatabase.getConfig(username, (err, res) => {
-        if (err) {
-            return reject(err)
-        }
-        rest.get(`https://${res.username}-dj.radioca.st/private/${res.internal.dj.key}/queue`, {timeout: 10000})
+export const getQueue = (username) => new Promise(async (resolve, reject) => {
+    const config = await castDatabase.getConfig(username)
+    rest.get(`https://${config.username}-dj.radioca.st/private/${config.internal.dj.key}/queue`, { timeout: 10000 })
         .on("complete", (body) => {
             resolve(body)
         })
         .on("timeout", () => {
             reject(new Error("timeout"))
         })
-    })
 })

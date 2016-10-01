@@ -3,8 +3,8 @@ var usersDB = require(global.appRoot + "/components/legacy/usersDatabase.js")
 var _ = require("underscore")
 
 module.exports.getPlsForUsername = function (username, callback) {
-    castDB.getInfoForUsername(username, function (err, res) {
-        if (err || typeof res === "undefined") {
+    castDB.getInfoForUsername(username).then(function (res) {
+        if (!res) {
             // This might a Centova Cast account
             usersDB.getInfoForUsername(username, function (udbErr, udbRes) {
                 if (udbErr) {
