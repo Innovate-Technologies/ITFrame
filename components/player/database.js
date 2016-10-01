@@ -84,7 +84,7 @@ let playerDatabase = {
      * @return {Promise}
      */
     getPlayer(username, callback) {
-        return nodeify(new Promise(((resolve, reject) => {
+        return nodeify(new Promise((resolve, reject) => {
             wait.launchFiber(async function () {
                 try {
                     let config = wait.for(playerDatabase.getConfig, username);
