@@ -152,7 +152,7 @@ export const createFleetUnit = async (username) => {
         }, {
             "name": "Conflicts",
             "section": "X-Fleet",
-            "value": "*" + config.input.SHOUTcast.toString() + ".service",
+            "value": "*-" + config.input.SHOUTcast.toString() + ".service",
         }, {
             "name": "MachineMetadata",
             "section": "X-Fleet",
