@@ -162,7 +162,7 @@ function createFleetUnit(username, callback) {
                 }, {
                     "name": "Conflicts",
                     "section": "X-Fleet",
-                    "value": "*" + res.input.SHOUTcast.toString() + ".service",
+                    "value": "*-" + res.input.SHOUTcast.toString() + ".service",
                 }, {
                     "name": "MachineMetadata",
                     "section": "X-Fleet",
