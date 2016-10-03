@@ -1,44 +1,30 @@
-var cast = requireFromRoot("components/cast/manage.js")
-var mayaSupport = requireFromRoot("components/maya/support.js")
+const cast = requireFromRoot("components/cast/manage.js")
+const mayaSupport = requireFromRoot("components/maya/support.js")
 
-module.exports = function (parm) {
-    parm.app.post("/whmcs/create", function (req, res) {
+export default ({ app, wrap }) => {
+    app.post("/whmcs/create", wrap(async (req, res) => {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
             return res.status(400).json({
                 result: "error",
                 error: "Missing input",
             })
         }
-        cast.createNode(req.body.username, function (err) {
-            if (err) {
-                return res.status(500).json({
-                    result: "error",
-                    error: err,
-                })
-            }
-            res.json({ result: "okay" })
-        })
-    })
+        await cast.createNode(req.body.username)
+        res.json({ result: "okay" })
+    }))
 
-    parm.app.post("/whmcs/suspend", function (req, res) {
+    app.post("/whmcs/suspend", wrap(async (req, res) => {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
             return res.status(400).json({
                 result: "error",
                 error: "Missing input",
             })
         }
-        cast.suspendNode(req.body.username, function (err) {
-            if (err) {
-                return res.status(500).json({
-                    result: "error",
-                    error: err,
-                })
-            }
-            res.json({ result: "okay" })
-        })
-    })
+        await cast.suspendNode(req.body.username)
+        res.json({ result: "okay" })
+    }))
 
-    parm.app.post("/whmcs/unsuspend", function (req, res) {
+    app.post("/whmcs/unsuspend", wrap(async (req, res) => {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
             return res.status(400).json({
                 result: "error",
@@ -46,36 +32,22 @@ module.exports = function (parm) {
             })
 
         }
-        cast.unsuspendNode(req.body.username, function (err) {
-            if (err) {
-                return res.status(500).json({
-                    result: "error",
-                    error: err,
-                })
-            }
-            res.json({ result: "okay" })
-        })
-    })
+        await cast.unsuspendNode(req.body.username)
+        res.json({ result: "okay" })
+    }))
 
-    parm.app.post("/whmcs/terminate", function (req, res) {
+    app.post("/whmcs/terminate", wrap(async (req, res) => {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
             return res.status(400).json({
                 result: "error",
                 error: "Missing input",
             })
         }
-        cast.terminateNode(req.body.username, function (err) {
-            if (err) {
-                return res.status(500).json({
-                    result: "error",
-                    error: err,
-                })
-            }
-            res.json({ result: "okay" })
-        })
-    })
+        await cast.terminateNode(req.body.username)
+        res.json({ result: "okay" })
+    }))
 
-    parm.app.post("/whmcs/support", function (req, res) {
+    app.post("/whmcs/support", function (req, res) {
         if (req.body.key !== config.whmcsCastKey || !req.body.content) {
             return res.status(400).json({
                 result: "error",
@@ -85,7 +57,7 @@ module.exports = function (parm) {
         mayaSupport.answerClient({
             content: req.body.content,
             firstname: req.body.firstname,
-            id: req.body.id
+            id: req.body.id,
         })
         res.json({ result: "okay" })
     })

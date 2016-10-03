@@ -85,14 +85,14 @@ let playerDatabase = {
      */
     getPlayer(username, callback) {
         return nodeify(new Promise((resolve, reject) => {
-            wait.launchFiber(function () {
+            wait.launchFiber(async function () {
                 try {
                     let config = wait.for(playerDatabase.getConfig, username);
                     if (config.alternativeStreamUrl) {
                         return resolve(_.extend(config, { streamUrl: config.alternativeStreamUrl }));
                     }
                     try {
-                        let streamUrl = wait.for(castDatabase.getStreamUrl, username);
+                        const streamUrl = await castDatabase.getStreamUrl(username);
                         resolve(_.extend(config, { streamUrl }));
                     } catch (e) {
                         users.getStreamUrl(username, (err, streamUrl) => {

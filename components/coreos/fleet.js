@@ -1,1 +1,1 @@
-module.exports = require("node-fleet-api")(config.fleetUrl)
+export default require("node-fleet-api")(config.fleetUrl)

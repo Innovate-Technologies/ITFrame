@@ -1,18 +1,14 @@
-let buildInfo = requireFromRoot("components/buildinfo/database.js")
+const buildInfo = requireFromRoot("components/buildinfo/database.js")
 
-module.exports = function ({ app }) {
-    app.post("/intern/gitlab/:name/build/" + config.gitLabKey, function (req, res, next) {
+export default ({ app, wrap }) => {
+    app.post("/intern/gitlab/:name/build/" + config.gitLabKey, wrap(async (req, res) => {
         if (!req.body.sha) {
-            return next(new Error("No sha found"))
+            throw new Error("No sha found")
         }
         if (req.body.build_status !== "success" || req.body.ref !== "master" || req.body.build_stage !== "deploy") {
-            return next(new Error("We won't deploy this build"))
+            throw new Error("We won't deploy this build")
         }
-        buildInfo.updateVersionForName(req.params.name, req.body.sha, (err) => {
-            if (err) {
-                return next(err);
-            }
-            res.json({result: "success"})
-        })
-    })
+        await buildInfo.updateVersionForName(req.params.name, req.body.sha)
+        res.json({result: "success"})
+    }))
 }

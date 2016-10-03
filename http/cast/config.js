@@ -1,36 +1,22 @@
-let timetoken = requireFromRoot("components/auth/timetoken.js");
-let castDB = requireFromRoot("components/cast/database.js");
-let wait = require("wait.for");
+const timetoken = requireFromRoot("components/auth/timetoken.js");
+const castDB = requireFromRoot("components/cast/database.js");
 
 import BadRequestError from "~/http/classes/BadRequestError";
 import AccessDeniedError from "~/http/classes/AccessDeniedError";
 
-module.exports = function ({ app }) {
-    app.all("/cast/config", function checkToken(req, res, next) {
-        wait.launchFiber(() => {
-            if (!req.body.token) {
-                return next(new BadRequestError("No token found in the request body."));
-            }
-            try {
-                let tokenIsValid = wait.for(timetoken.validateTokenForService, "cast", req.body.token);
-                if (!tokenIsValid) {
-                    return next(new AccessDeniedError("Access denied: invalid token."));
-                }
-                // Everything is fine with the token -- allow the request to continue.
-                return next();
-            } catch (error) {
-                error.message = "Failed to validate token: " + error.message;
-                return next(error);
-            }
-        });
-    });
+export default ({ app, wrap }) => {
+    app.all("/cast/config", wrap(async (req, res, next) => {
+        if (!req.body.token) {
+            throw new BadRequestError("No token found in the request body.");
+        }
+        if (!(await timetoken.validateTokenForService, "cast", req.body.token)) {
+            throw new AccessDeniedError("Access denied: invalid token.");
+        }
+        // Everything is fine with the token -- allow the request to continue.
+        return next();
+    }))
 
-    app.post("/cast/config", function (req, res, next) {
-        castDB.getInfoForUsername(req.body.username, function (error, config) {
-            if (error) {
-                return next(error);
-            }
-            res.json(config);
-        });
-    });
+    app.post("/cast/config", wrap(async (req, res) => {
+        res.json(await castDB.getInfoForUsername(req.body.username))
+    }))
 }

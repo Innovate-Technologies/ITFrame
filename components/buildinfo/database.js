@@ -1,26 +1,21 @@
-/* global requireFromRoot */
-let mongoose = requireFromRoot("components/database/mongodb.js");
-let Schema = mongoose.Schema;
-let buildinfoSchema = new Schema({
-    "name": String,
-	"version": String,
+const mongoose = requireFromRoot("components/database/mongodb.js");
+const Schema = mongoose.Schema;
+const buildinfoSchema = new Schema({
+    name: String,
+    version: String,
 }, { collection: "build_info" });
-let buildinfoModel = mongoose.model("build_info", buildinfoSchema, "build_info");
+const buildinfoModel = mongoose.model("build_info", buildinfoSchema, "build_info");
 
-module.exports.buildInfoForName = function (name, callback) {
-	buildinfoModel.findOne({
-		name: name,
-	}, callback)
+export const buildInfoForName = (name) => {
+    return buildinfoModel.findOne({
+        name,
+    }).exec()
 }
-module.exports.updateVersionForName = function (name, version, callback) {
-	buildinfoModel.findOne({name: name}, function (err, res) {
-		if (err) {
-			return callback(err)
-		}
-		if (res === null) {
-			return callback(new Error("Name not found"))
-		}
-		res.version = version
-		res.save(callback)
-	})
+export const pdateVersionForName = async (name, version) => {
+    const info = await buildinfoModel.findOne({ name }).exec()
+    if (info === null) {
+        throw new Error("Name not found")
+    }
+    info.version = version
+    return info.save()
 }

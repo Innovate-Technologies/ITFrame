@@ -47,21 +47,20 @@ export default ({ app, wrap }) => {
         res.json({});
     }));
 
-    app.get("/internal/apps/get-stream-url/:username", function (req, res, next) {
+    app.get("/internal/apps/get-stream-url/:username", wrap(async (req, res, next) => {
         let username = req.params.username;
         if (!username) {
             throw new BadRequestError("Missing username");
         }
-
-        castDatabase.getStreamUrl(username, function (err, streamUrl) {
-            if (err) {
-                return tryCentovaCastMethod();
-            }
+        try {
+            const streamUrl = await castDatabase.getStreamUrl(username)
             return res.json({
                 username: req.params.username,
                 streamUrl: encodeURI(streamUrl),
             });
-        });
+        } catch (error) {
+            tryCentovaCastMethod()
+        }
 
         let tryCentovaCastMethod = () => {
             users.getStreamUrl(req.params.username, (err, streamUrl) => {
@@ -75,7 +74,7 @@ export default ({ app, wrap }) => {
                 });
             });
         };
-    });
+    }));
 
     app.get("/internal/apps/get-now-playing/:username", wrap(async function (req, res) {
         let username = req.params.username;
