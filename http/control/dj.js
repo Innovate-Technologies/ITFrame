@@ -23,6 +23,7 @@ export default ({ app, wrap }) => {
             genre: req.body.genre,
         })
         res.json({})
+
     }));
 
     //////////////////////////////////////////////////////
