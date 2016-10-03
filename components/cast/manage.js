@@ -2,7 +2,7 @@ import _ from "underscore"
 import rest from "restler"
 import * as castDB from "./database.js"
 import * as configHelper from "./configHelper.js"
-const fleet = requireFromRoot("components/coreos/fleet.js")
+import fleet from "../coreos/fleet.js"
 const moduleLogger = log.child({ component: "cast" })
 
 

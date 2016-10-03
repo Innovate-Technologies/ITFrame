@@ -1,7 +1,8 @@
 import randtoken from "rand-token"
 import _ from "underscore"
-const buildinfo = requireFromRoot("components/buildinfo/database.js")
+import * as buildinfo from "../buildinfo/database.js"
 const mongoose = requireFromRoot("components/database/mongodb.js")
+
 const Schema = mongoose.Schema
 const castSchema = new Schema({
     name: {
@@ -102,12 +103,12 @@ export const getConfig = getInfoForUsername
 
 export const addConfigForUsername = async (username, conf) => {
     conf.username = username;
-    const build = await buildinfo.buildInfoForName("Cast");
+    const build = await buildinfo.buildInfoForName("Cast")
     if (typeof conf.version !== "object") {
         conf.version = { Cast: 0, DJ: 0 }
     }
     conf.version.Cast = build.version
-    return new CastModel(conf).save();
+    return new CastModel(conf).save()
 }
 
 export const updateVersion = async (username) => {

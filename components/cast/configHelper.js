@@ -1,6 +1,6 @@
-import * as castDB from "./database.js"
 import util from "util"
 import randtoken from "rand-token"
+import * as castDB from "./database.js"
 const fleet = requireFromRoot("components/coreos/fleet.js")
 
 
