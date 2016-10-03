@@ -1,5 +1,3 @@
-/* global requireFromRoot */
-import wait from "wait.for"
 const cast = requireFromRoot("components/cast/manage.js");
 import * as clocks from "../../components/dj/clocks.js"
 import * as intervals from "../../components/dj/intervals.js"
@@ -12,21 +10,19 @@ export default ({ app, wrap }) => {
     // General settings                                 //
     //////////////////////////////////////////////////////
 
-    app.post("/control/cast/dj/settings/:username", wrap((req, res) => {
+    app.post("/control/cast/dj/settings/:username", wrap(async (req, res) => {
         if (!req.body.enabled) {
             throw new BadRequestError();
         }
         if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.name)) {
             throw new BadRequestError();
         }
-        wait.launchFiber(function () {
-            wait.for(cast.configureDJ, req.params.username, {
+        await cast.configureDJ(req.params.username, {
                 fadeLength: req.body.fadeLength,
                 name: req.body.name,
                 genre: req.body.genre,
-            });
-            res.json({});
-        });
+            })
+        res.json({});
     }));
 
     //////////////////////////////////////////////////////
