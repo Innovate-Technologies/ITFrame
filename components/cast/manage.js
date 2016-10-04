@@ -19,6 +19,7 @@ export const createFleet = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.debug("Adding unit file")
     const fleetUnit = configHelper.createFleetUnit(username)
+    logger.debug("Ceeated unit file", fleetUnit)
     await fleet.newUnit(fleetUnit.name, fleetUnit)
     logger.info("Created node")
 }
