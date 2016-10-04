@@ -42,7 +42,7 @@
     "mongoose-paginate": "^5.0.0",
     "multer": "^1.1.0",
     "node-etcd": "5.0.0",
-    "node-fleet-api": "^1.0.1",
+    "node-fleet-api": "^1.0.2",
     "nodeify": "^1.0.0",
     "pkgcloud": "~1.2.0-alpha.0",
     "pls": "^0.1.3",
