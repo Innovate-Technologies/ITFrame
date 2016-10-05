@@ -3,21 +3,22 @@ const castDatabase = requireFromRoot("components/cast/database.js");
 const legacyUsersDatabase = requireFromRoot("components/legacy/usersDatabase.js");
 const profiler = requireFromRoot("profiler.js");
 
+
+const tryCentovaCastMethod = (username) => new Promise((resolve, reject) => {
+    legacyUsersDatabase.getStreamUrl(username, (err, streamUrl) => {
+        if (err) {
+            return reject(err);
+        }
+        resolve(streamUrl);
+    });
+});
+
 const getStreamUrl = (username) => new Promise(async (resolve, reject) => {
     try {
         resolve(await castDatabase.getStreamUrl(username))
     } catch (error) {
-        tryCentovaCastMethod()
+        tryCentovaCastMethod(username).then(resolve).catch(reject)
     }
-
-    const tryCentovaCastMethod = () => {
-        legacyUsersDatabase.getStreamUrl(username, (err, streamUrl) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(streamUrl);
-        });
-    };
 });
 
 export default function ({ app, wrap }) {
