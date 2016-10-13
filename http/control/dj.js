@@ -1,6 +1,7 @@
 const cast = requireFromRoot("components/cast/manage.js");
 import * as clocks from "../../components/dj/clocks.js"
 import * as intervals from "../../components/dj/intervals.js"
+import * as tags from "../../components/dj/tags.js"
 import * as dj from "../../components/dj/manage.js"
 import BadRequestError from "~/http/classes/BadRequestError";
 
@@ -75,6 +76,28 @@ export default ({ app, wrap }) => {
         const interval = await intervals.addNewIntervalForUsername(res.params.username, req.body)
         // await dj.reloadClocks(req.params.username)
         res.json(interval)
+    }))
+
+    //////////////////////////////////////////////////////
+    // Tags                                             //
+    //////////////////////////////////////////////////////
+
+    app.get("/control/cast/dj/tags/:username", wrap(async (req, res) => {
+        res.json(await tags.tagsForUsername(req.params.username))
+    }))
+
+    app.patch("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
+        await tags.updateTagWithUsernameAndID(req.params.username, req.body._id, req.body)
+        res.json({ status: "ok" })
+    }))
+
+    app.delete("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
+        await tags.removeTagForUsernameAndID(req.params.username, req.body._id)
+        res.json({ status: "ok" })
+    }))
+
+    app.put("/control/cast/dj/tags/:username", wrap(async (req, res) => {
+        res.json(await tags.addNewTagForUsername(res.params.username, req.body))
     }))
 
 };
