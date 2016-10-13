@@ -18,10 +18,10 @@ export default ({ app, wrap }) => {
             throw new BadRequestError();
         }
         await cast.configureDJ(req.params.username, {
-                fadeLength: req.body.fadeLength,
-                name: req.body.name,
-                genre: req.body.genre,
-            })
+            fadeLength: req.body.fadeLength,
+            name: req.body.name,
+            genre: req.body.genre,
+        })
         res.json({});
     }));
 
