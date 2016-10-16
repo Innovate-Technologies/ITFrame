@@ -115,7 +115,7 @@ export const getAllSongsForUser = (username) => {
     return TunesPersonalModel.find({ username }).exec()
 }
 
-export const getSongsPagesForUser = async (username, itemsPerPage, page = 0, sortBy) => {
+export const getNumberOfSongPages = async (username, itemsPerPage, page = 0, sortBy) => {
     const result = await TunesPersonalModel.paginate({ username }, { page, limit: itemsPerPage, sort: sortBy })
     return Math.ceil(result.total / itemsPerPage)
 }

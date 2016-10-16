@@ -14,7 +14,7 @@ TagsSchema.index({
 const TagsModel = mongoose.model("dj_tags", TagsSchema, "dj_tags")
 
 export const tagsForUsername = (username) => {
-    return TagsModel.find({ username: username }).exec()
+    return TagsModel.find({ username }).exec()
 }
 
 export const addNewTagForUsername = (username, tag) => {
@@ -36,7 +36,7 @@ export const removeTagForUsernameAndID = (username, id) => {
 export const updateTagWithUsernameAndID = async (username, id, tag) => {
     let oldTag = await TagsModel.findOne({
         _id: new ObjectId(id),
-        username: username,
+        username,
     })
     if (!oldTag) {
         throw new Error("No matching entry found")

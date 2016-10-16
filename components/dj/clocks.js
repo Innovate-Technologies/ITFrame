@@ -4,6 +4,7 @@ const ObjectId = mongoose.Types.ObjectId
 const ClocksSchema = new Schema({
     username: String,
     name: String,
+    color: String,
     tags: [{
         percent: Number,
         tag: String,
