@@ -86,12 +86,12 @@ export default ({ app, wrap }) => {
     }))
 
     app.patch("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
-        await tags.updateTagWithUsernameAndID(req.params.username, req.body._id, req.body)
+        await tags.updateTagWithUsernameAndID(req.params.username, req.params.id, req.body)
         res.json({ status: "ok" })
     }))
 
     app.delete("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
-        await tags.removeTagForUsernameAndID(req.params.username, req.body._id)
+        await tags.removeTagForUsernameAndID(req.params.username, req.params.id)
         res.json({ status: "ok" })
     }))
 

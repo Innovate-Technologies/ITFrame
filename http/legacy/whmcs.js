@@ -50,10 +50,7 @@ export default ({ app, wrap }) => {
 
     app.post("/whmcs/get-space-used", wrap(async (req, res) => {
         if (req.body.key !== config.whmcsCastKey || !req.body.username) {
-            return res.status(400).json({
-                result: "error",
-                error: "Missing input",
-            })
+            throw new Error("Missing input")
         }
         res.json({ used: await tunesDatabase.calculateUsedSpace(req.body.username) })
     }))
