@@ -1,3 +1,4 @@
+import tunesDatabase from "../../components/tunes/personalMusicDatabase.js"
 const cast = requireFromRoot("components/cast/manage.js")
 const mayaSupport = requireFromRoot("components/maya/support.js")
 
@@ -45,6 +46,13 @@ export default ({ app, wrap }) => {
         }
         await cast.terminateNode(req.body.username)
         res.json({ result: "okay" })
+    }))
+
+    app.post("/whmcs/get-space-used", wrap(async (req, res) => {
+        if (req.body.key !== config.whmcsCastKey || !req.body.username) {
+            throw new Error("Missing input")
+        }
+        res.json({ used: await tunesDatabase.calculateUsedSpace(req.body.username) })
     }))
 
     app.post("/whmcs/support", function (req, res) {
