@@ -98,11 +98,11 @@ module.exports = function ({ app, wrap }) {
         })
     }))
 
-    app.get("/control/cast/tunes/get-songs-pages", wrap(async (req, res) => {
-        res.json(await tunesDB.getNumberOfSongPages(req.body.username, 100, 1, req.body.sortBy))
+    app.get("/control/cast/tunes/get-songs-pages/:username", wrap(async (req, res) => {
+        res.json(await tunesDB.getNumberOfSongPages(req.params.username, 100, 1))
     }))
-    app.get("/control/cast/tunes/get-songs/:page", wrap(async (req, res) => {
-        let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page, req.body.sortBy)
+    app.get("/control/cast/tunes/get-songs/:username/:sortby/:page", wrap(async (req, res) => {
+        let songs = await tunesDB.getSongsForUser(req.params.username, 100, req.params.page, req.params.sortby)
         for (let song of songs) {
             delete song.internalURL
             delete song.processedURLS
