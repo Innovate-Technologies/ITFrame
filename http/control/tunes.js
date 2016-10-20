@@ -99,10 +99,10 @@ module.exports = function ({ app, wrap }) {
     }))
 
     app.get("/control/cast/tunes/get-songs-pages", wrap(async (req, res) => {
-        res.json(await tunesDB.getNumberOfSongPages(req.body.username, 100, 0, req.body.sortBy))
+        res.json(await tunesDB.getNumberOfSongPages(req.body.username, 100, 1, req.body.sortBy))
     }))
     app.get("/control/cast/tunes/get-songs/:page", wrap(async (req, res) => {
-        let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page || 0, req.body.sortBy)
+        let songs = await tunesDB.getSongsForUser(req.body.username, 100, req.params.page, req.body.sortBy)
         for (let song of songs) {
             delete song.internalURL
             delete song.processedURLS
