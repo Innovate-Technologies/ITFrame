@@ -103,9 +103,11 @@ module.exports = function ({ app, wrap }) {
     }))
     app.get("/control/cast/tunes/get-songs/:username/:sortby/:page", wrap(async (req, res) => {
         let songs = await tunesDB.getSongsForUser(req.params.username, 100, req.params.page, req.params.sortby)
-        for (let song of songs) {
-            delete song.internalURL
-            delete song.processedURLS
+        for (let id in songs) {
+            if (songs.hasOwnProperty(id)) {
+                delete songs[id].internalURL
+                delete songs[id].processedURLS
+            }
         }
         res.json(songs)
     }))
