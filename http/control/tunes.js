@@ -117,8 +117,8 @@ module.exports = function ({ app, wrap }) {
         res.json({})
     }))
 
-    app.delete("/control/cast/tunes/delete/:song", wrap(async (req, res) => {
-        await tunesDB.removeSong(req.body.username, req.params.song)
+    app.delete("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
+        await tunesDB.removeSong(req.params.username, req.params.song)
         res.json({})
     }))
 
