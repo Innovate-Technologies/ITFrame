@@ -61,7 +61,8 @@
     "unirest": "0.5.1",
     "util": "~0.10.3",
     "wait.for": "~0.6.6",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.17",
+    "heapdump": "^0.3.7"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
@@ -75,8 +76,7 @@
     "eslint-config-import": "^0.13.0",
     "eslint-import-resolver-node": "^0.2.0",
     "eslint-plugin-import": "^1.13.0",
-    "eslint_d": "^4.0.1",
-    "heapdump": "^0.3.7"
+    "eslint_d": "^4.0.1"
   },
   "scripts": {
     "test": "snyk test",
