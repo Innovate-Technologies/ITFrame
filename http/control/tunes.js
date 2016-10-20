@@ -117,6 +117,18 @@ module.exports = function ({ app, wrap }) {
         res.json({})
     }))
 
+    app.get("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
+        const song = await tunesDB.getSongForUserWithID(req.params.username, req.params.song)
+        delete song.processedURLS
+        delete song.internalURL
+        res.json(song)
+    }))
+
+    app.post("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
+        await tunesDB.updateSong(req.params.username, req.params.song, req.body)
+        res.json({})
+    }))
+
     app.delete("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
         await tunesDB.removeSong(req.params.username, req.params.song)
         res.json({})
