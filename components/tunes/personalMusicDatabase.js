@@ -162,7 +162,11 @@ export const calculateUsedSpace = async (username) => {
     const songs = await TunesPersonalModel.find({
         username: username,
     }).exec()
-    return songs.reduce((prev, cur) => prev.size + cur.size, 0);
+    let used = 0
+    for (let song of songs) {
+        used += song.size || 0
+    }
+    return used
 }
 
 export const isLinkInUse = async (link) => {
