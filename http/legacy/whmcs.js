@@ -1,4 +1,4 @@
-import tunesDatabase from "../../components/tunes/personalMusicDatabase.js"
+import * as tunesDatabase from "../../components/tunes/personalMusicDatabase.js"
 const cast = requireFromRoot("components/cast/manage.js")
 const mayaSupport = requireFromRoot("components/maya/support.js")
 
