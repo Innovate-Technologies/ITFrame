@@ -96,7 +96,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.put("/control/cast/dj/tags/:username", wrap(async (req, res) => {
-        res.json(await tags.addNewTagForUsername(res.params.username, req.body))
+        res.json(await tags.addNewTagForUsername(req.params.username, req.body))
     }))
 
 };
