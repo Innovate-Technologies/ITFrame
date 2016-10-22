@@ -63,7 +63,7 @@ let uploadImage = multer({
 });
 
 module.exports = function ({ app, wrap }) {
-    app.post("/control/cast/tunes/upload", upload.single("song"), wrap(async (req, res, next) => {
+    app.post("/control/cast/tunes/upload", upload.single("song"), wrap(async (req, res) => {
         if (!req.file) {
             throw new Error("Failed to upload the song.");
         }
