@@ -68,34 +68,30 @@ module.exports = function ({ app, wrap }) {
             throw new Error("Failed to upload the song.");
         }
         req.log.info({ link: req.file.link }, "Uploaded file");
-        castDatabase.getInfoForUsername(req.body.username, async (castErr, cast) => {
-            if (castErr) {
-                return next(castErr);
-            }
-            let processedURLS = {}
-            for (var stream of cast.streams) {
-                processedURLS[stream.stream.replace("kbps", "")] = ""
-            }
-            const entry = await tunesDB.addSong(req.body.username, {
-                type: "song",
-                song: "",
-                artist: "",
-                album: "",
-                externalURL: {},
-                artwork: "",
-                genre: "",
-                internalURL: req.file.link,
-                processedURLS: processedURLS,
-                tags: req.body.tags || [],
-                length: 0,
-                size: 0,
-                available: false,
-            })
-            processingWorker.processSong({
-                id: entry._id,
-            })
-            res.json({ id: entry._id });
+        const castInfo = await castDatabase.getInfoForUsername(req.body.username)
+        let processedURLS = {}
+        for (var stream of castInfo.streams) {
+            processedURLS[stream.stream.replace("kbps", "")] = ""
+        }
+        const entry = await tunesDB.addSong(req.body.username, {
+            type: "song",
+            song: "",
+            artist: "",
+            album: "",
+            externalURL: {},
+            artwork: "",
+            genre: "",
+            internalURL: req.file.link,
+            processedURLS: processedURLS,
+            tags: req.body.tags || [],
+            length: 0,
+            size: 0,
+            available: false,
         })
+        processingWorker.processSong({
+            id: entry._id,
+        })
+        res.json({ id: entry._id });
     }))
 
     app.get("/control/cast/tunes/get-songs-pages/:username", wrap(async (req, res) => {
