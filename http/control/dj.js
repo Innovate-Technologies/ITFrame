@@ -59,7 +59,7 @@ export default ({ app, wrap }) => {
         res.json(await intervals.intervalsForUsername(req.params.username))
     }))
 
-    app.patch("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
+    app.post("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
         await intervals.updateIntervalWithUsernameAndID(req.params.username, req.body._id, req.body)
         // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
@@ -72,7 +72,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.put("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
-        const interval = await intervals.addNewIntervalForUsername(res.params.username, req.body)
+        const interval = await intervals.addNewIntervalForUsername(req.params.username, req.body)
         // await dj.reloadClocks(req.params.username)
         res.json(interval)
     }))
@@ -85,7 +85,7 @@ export default ({ app, wrap }) => {
         res.json(await tags.tagsForUsername(req.params.username))
     }))
 
-    app.patch("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
+    app.post("/control/cast/dj/tags/:username/:id", wrap(async (req, res) => {
         await tags.updateTagWithUsernameAndID(req.params.username, req.params.id, req.body)
         res.json({ status: "ok" })
     }))
@@ -96,7 +96,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.put("/control/cast/dj/tags/:username", wrap(async (req, res) => {
-        res.json(await tags.addNewTagForUsername(res.params.username, req.body))
+        res.json(await tags.addNewTagForUsername(req.params.username, req.body))
     }))
 
 };
