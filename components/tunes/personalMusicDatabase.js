@@ -19,7 +19,10 @@ const TunesPersonalSchema = new Schema({
     genre: String,
     internalURL: String,
     processedURLS: Object,
-    tags: Object,
+    tags: [{
+        type: Schema.Types.ObjectId,
+        ref: "dj_tags",
+    }],
     duration: Number, // in seconds
     available: Boolean, // false if being progressed
     size: Number, // in bytes
