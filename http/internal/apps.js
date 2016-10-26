@@ -11,6 +11,7 @@ const legacyNowPlaying = promisify(requireFromRoot("components/nowplaying/legacy
     undefined, true);
 const AppsService = requireFromRoot("components/apps/api.js");
 const profiler = requireFromRoot("profiler");
+const cache = require("apicache").middleware;
 
 const moduleLogger = log.child({ component: "internal/apps" });
 
@@ -77,7 +78,7 @@ export default ({ app, wrap }) => {
         }
     }));
 
-    app.get("/internal/apps/get-now-playing/:username", wrap(async function (req, res) {
+    app.get("/internal/apps/get-now-playing/:username", cache("15 minutes"), wrap(async function (req, res) {
         let username = req.params.username;
         if (!username) {
             throw new BadRequestError("Missing username");

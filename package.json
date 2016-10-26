@@ -10,6 +10,7 @@
   },
   "homepage": "https://github.com/Innovate-Technologies/ITFrame",
   "dependencies": {
+    "apicache": "^0.3.4",
     "asteroid": "^0.6.1",
     "babel-plugin-add-module-exports": "^0.1.2",
     "babel-plugin-syntax-class-properties": "^6.8.0",
