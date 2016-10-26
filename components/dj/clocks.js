@@ -7,7 +7,10 @@ const ClocksSchema = new Schema({
     color: String,
     tags: [{
         percent: Number,
-        tag: String,
+        tag: {
+            type: Schema.Types.ObjectId,
+            ref: "dj_tags",
+        },
     }],
     start: {
         dayOfWeek: Number, // monday==1
