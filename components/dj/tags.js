@@ -42,6 +42,7 @@ export const updateTagWithUsernameAndID = async (username, id, tag) => {
         throw new Error("No matching entry found")
     }
     oldTag = _.extend(oldTag, tag)
+    oldTag._id = new ObjectId(id) // force the same id
     oldTag.username = username
     return oldTag.save()
 }
