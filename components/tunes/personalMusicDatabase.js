@@ -190,3 +190,13 @@ export const isLinkInUse = async (link) => {
     return processedUrls.length !== 0
 }
 
+export const deleteTagOutOfRecords = async (username, id) => {
+    const songs = await TunesPersonalModel.find({
+        username,
+        tags: id,
+    }).exec()
+    for (let song of songs) {
+        song.tags = _.without(song.tags, id)
+        await song.save()
+    }
+}

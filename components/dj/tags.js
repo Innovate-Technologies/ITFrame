@@ -1,5 +1,5 @@
 import _ from "lodash"
-
+import * as tunes from "../tunes/personalMusicDatabase.js";
 const mongoose = requireFromRoot("components/database/mongodb.js")
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
@@ -22,18 +22,20 @@ export const addNewTagForUsername = (username, tag) => {
     return new TagsModel(tag).save()
 }
 
-export const removeTagsForUsername = (username) => {
+export const removeTagsForUsername = async (username) => {
+    await tunes.deleteTagOutOfRecords(new ObjectId(id))
     return TagsModel.remove({ username }).exec()
 }
 
-export const removeTagForUsernameAndID = (username, id) => {
+export const removeTagForUsernameAndID = async (username, id) => {
+
     return TagsModel.remove({
         username,
         _id: id,
     }).exec()
 }
 
-export const updateTagWithUsernameAndID = async (username, id, tag) => {
+export const updateTagWithUsernameAndID = (username, id, tag) => {
     let oldTag = await TagsModel.findOne({
         _id: new ObjectId(id),
         username,
