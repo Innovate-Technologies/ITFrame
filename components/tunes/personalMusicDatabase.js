@@ -71,7 +71,7 @@ export const setSongTagForUserWithID = async (username, id, tags) => {
     const song = await TunesPersonalModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }).exec()
+    }).populate("tags").exec()
     if (!song) {
         throw new Error("No song found")
     }
@@ -118,7 +118,7 @@ export const setDefaultForUsername = async (username, info) => {
 }
 
 export const getAllSongsForUser = (username) => {
-    return TunesPersonalModel.find({ username }).exec()
+    return TunesPersonalModel.find({ username }).populate("tags").exec()
 }
 
 export const getNumberOfSongPages = async (username, itemsPerPage, page = 1, sortBy) => {
@@ -127,7 +127,7 @@ export const getNumberOfSongPages = async (username, itemsPerPage, page = 1, sor
 }
 
 export const getSongsForUser = async (username, itemsPerPage, page = 1, sortBy) => {
-    const result = await TunesPersonalModel.paginate({ username }, { page, limit: itemsPerPage, sort: sortBy })
+    const result = await TunesPersonalModel.paginate({ username }, { page, limit: itemsPerPage, sort: sortBy, populate: "tags" })
     return result.docs
 }
 
@@ -136,7 +136,7 @@ export const getSongsForUserWithTag = (username, tag) => {
         username: username,
         tags: tag,
         available: true,
-    })
+    }).populate("tags").exec()
 }
 
 export const addSong = (username, song) => {
