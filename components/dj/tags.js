@@ -35,7 +35,7 @@ export const removeTagForUsernameAndID = async (username, id) => {
     }).exec()
 }
 
-export const updateTagWithUsernameAndID = (username, id, tag) => {
+export const updateTagWithUsernameAndID = async (username, id, tag) => {
     let oldTag = await TagsModel.findOne({
         _id: new ObjectId(id),
         username,
