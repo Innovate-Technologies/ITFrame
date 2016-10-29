@@ -6,7 +6,10 @@ const ObjectId = mongoose.Types.ObjectId
 const IntervalsSchema = new Schema({
     username: String,
     name: String,
-    songs: [],
+    songs: [{
+        type: Schema.Types.ObjectId,
+        ref: "TunesPersonal",
+    }],
     intervalType: {
         type: String,
         enum: ["random", "ordered", "all"],
@@ -27,24 +30,29 @@ IntervalsSchema.index({
 const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
 export const intervalsForUsername = (username) => {
-    return IntervalsModel.find({ username: username }).exec()
+    return IntervalsModel.find({ username: username }).populate("songs").exec()
 }
 
 export const intervalForID = (id) => {
     return IntervalsModel.findOne({
         _id: new ObjectId(id),
-    }).exec()
+    }).populate("songs").exec()
 }
 
 export const intervalForUserAndID = (id, username) => {
     return IntervalsModel.findOne({
         _id: new ObjectId(id),
         username: username,
-    }).exec()
+    }).populate("songs").exec()
 }
 
 export const addNewIntervalForUsername = (username, interval) => {
     interval.username = username
+    const songs = []
+    for (let songId of interval.songs) {
+        songs.push(new ObjectId(songId))
+    }
+    interval.songs = songs
     return new IntervalsModel(interval).save()
 }
 
@@ -69,5 +77,10 @@ export const updateIntervalWithUsernameAndID = async (username, id, interval) =>
     }
     oldInterval = _.extend(oldInterval, interval)
     oldInterval.username = username
+    const songs = []
+    for (let songId of oldInterval.songs) {
+        songs.push(new ObjectId(songId))
+    }
+    interval.songs = songs
     return oldInterval.save()
 }
