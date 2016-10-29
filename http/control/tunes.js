@@ -108,8 +108,8 @@ module.exports = function ({ app, wrap }) {
         res.json(songs)
     }))
 
-    app.post("/control/cast/tunes/set-tags/:song", wrap(async (req, res) => {
-        await tunesDB.setSongTagForUserWithID(req.body.username, req.params.song, req.body.tags)
+    app.post("/control/cast/tunes/set-tags/:username/:song", wrap(async (req, res) => {
+        await tunesDB.setSongTagForUserWithID(req.params.username, req.params.song, req.body)
         res.json({})
     }))
 

@@ -73,9 +73,12 @@ export const setSongTagForUserWithID = async (username, id, tags) => {
         username: username,
     }).exec()
     if (!song) {
-        return
+        throw new Error("No song found")
     }
-    song.tags = tags
+    song.tags = []
+    for (let tag of tags) {
+        song.tags.push(new ObjectId(tag))
+    }
     return song.save()
 }
 
