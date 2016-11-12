@@ -61,7 +61,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.delete("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
-        await intervals.removeIntervalForUsernameAndID(req.params.username, req.body._id)
+        await intervals.removeIntervalForUsernameAndID(req.params.username, req.params.id)
         // await dj.reloadClocks(req.params.username)
         res.json({ status: "ok" })
     }))
