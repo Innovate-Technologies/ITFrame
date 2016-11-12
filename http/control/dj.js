@@ -12,14 +12,11 @@ export default ({ app, wrap }) => {
     //////////////////////////////////////////////////////
 
     app.post("/control/cast/dj/settings/:username", wrap(async (req, res) => {
-        if (req.body.enabled && (!req.body.fadeLength || !req.body.name || !req.body.genre)) {
-            throw new BadRequestError();
-        }
         await cast.configureDJ(req.params.username, {
             enabled: req.body.enabled || false,
-            fadeLength: req.body.fadeLength,
-            name: req.body.name,
-            genre: req.body.genre,
+            fadeLength: req.body.fadeLength || 0,
+            name: req.body.name || "Unknown",
+            genre: req.body.genre || "Misc",
         })
         res.json({})
     }));
