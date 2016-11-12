@@ -120,7 +120,7 @@ export const createFleetUnit = async (username) => {
         }, {
             "name": "ExecStart",
             "section": "Service",
-            value: `/bin/bash -c "/usr/bin/docker run -p ${config.input.SHOUTcast.toString()}:${(config.input.SHOUTcast).toString()} -p ${(config.input.SHOUTcast + 1).toString()}:${(config.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} --privileged docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest"`,
+            value: `/bin/bash -c "/usr/bin/docker run -p ${config.input.SHOUTcast.toString()}:${(config.input.SHOUTcast).toString()} -p ${(config.input.SHOUTcast + 1).toString()}:${(config.input.SHOUTcast + 1).toString()} --name ${username} -e username=${username} docker.innovatete.ch/cast:$(dpkg --print-architecture)-latest"`,
         }, {
             "name": "ExecStartPost",
             "section": "Service",
@@ -200,7 +200,7 @@ export const createDJFleetUnit = (username) => {
         }, {
             "name": "ExecStart",
             "section": "Service",
-            value: `/bin/bash -c "/usr/bin/docker run --name ${username}-dj -e username=${username} docker.innovatete.ch/dj:$(dpkg --print-architecture)-latest"`,
+            value: `/bin/bash -c "/usr/bin/docker run --name ${username}-dj -e username=${username} --privileged docker.innovatete.ch/dj:$(dpkg --print-architecture)-latest"`,
         }, {
             "name": "ExecStartPost",
             "section": "Service",
