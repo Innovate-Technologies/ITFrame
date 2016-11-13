@@ -232,7 +232,7 @@ export const createDJFleetUnit = (username) => {
         }, {
             "name": "MachineMetadata",
             "section": "X-Fleet",
-            "value": "model=C1",
+            "value": "model=C2S,zone=par1",
         }],
     }
 }
