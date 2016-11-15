@@ -13,6 +13,7 @@ const castSchema = new Schema({
         type: String,
         default: "Misc",
     },
+    timezone: String,
     username: String,
     httpPort: Number,
     httpsPort: Number,

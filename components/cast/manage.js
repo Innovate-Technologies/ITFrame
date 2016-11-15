@@ -244,6 +244,7 @@ export const configureDJ = async (username, djConfig = {}) => {
     config.DJ.fadeLength = djConfig.fadeLength
     config.name = djConfig.name
     config.genre = djConfig.genre
+    config.timezone = djConfig.timezone
 
     await castDB.updateConfig(username, config)
     await upgradeDJ(username)
