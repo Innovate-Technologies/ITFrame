@@ -101,8 +101,8 @@ module.exports = function ({ app, wrap }) {
         let songs = await tunesDB.getSongsForUser(req.params.username, 100, req.params.page, req.params.sortby)
         for (let id in songs) {
             if (songs.hasOwnProperty(id)) {
-                delete songs[id].internalURL
-                delete songs[id].processedURLS
+                songs[id].internalURL = null
+                songs[id].processedURLS = null
             }
         }
         res.json(songs)
@@ -115,8 +115,8 @@ module.exports = function ({ app, wrap }) {
 
     app.get("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
         const song = await tunesDB.getSongForUserWithID(req.params.username, req.params.song)
-        delete song.processedURLS
-        delete song.internalURL
+        song.processedURLS = null
+        song.internalURL = null
         res.json(song)
     }))
 
@@ -124,8 +124,8 @@ module.exports = function ({ app, wrap }) {
         let songs = await tunesDB.getSongsForSearch(req.params.username, req.query.term)
         for (let id in songs) {
             if (songs.hasOwnProperty(id)) {
-                delete songs[id].internalURL
-                delete songs[id].processedURLS
+                songs[id].internalURL = null
+                songs[id].processedURLS = null
             }
         }
         res.json(songs)
