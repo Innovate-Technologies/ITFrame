@@ -30,8 +30,9 @@ const TunesPersonalSchema = new Schema({
 }, { collection: "tunes_personal" })
 TunesPersonalSchema.index({
     username: 1,
-    song: 1,
-    artist: 1,
+    song: "text",
+    artist: "text",
+    album: "text",
     internalURL: 1,
     type: 1,
     "processedURLS.32": 1,
@@ -137,6 +138,17 @@ export const getSongsForUserWithTag = (username, tag) => {
         tags: tag,
         available: true,
     }).populate("tags").exec()
+}
+
+export const getSongsForSearch = (username, term) => {
+    return TunesPersonalModel.find({
+        username: username,
+        type: "song",
+        available: true,
+        $text: { $search: term },
+    }, {
+        score: { $meta: "textScore" },
+    }).sort({ score: { $meta: "textScore" } }).populate("tags").exec()
 }
 
 export const addSong = (username, song) => {

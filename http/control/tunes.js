@@ -120,6 +120,17 @@ module.exports = function ({ app, wrap }) {
         res.json(song)
     }))
 
+    app.get("/control/cast/tunes/search/:username/", wrap(async (req, res) => {
+        let songs = await tunesDB.getSongsForSearch(req.params.username, req.query.term)
+        for (let id in songs) {
+            if (songs.hasOwnProperty(id)) {
+                delete songs[id].internalURL
+                delete songs[id].processedURLS
+            }
+        }
+        res.json(songs)
+    }))
+
     app.post("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
         await tunesDB.updateSong(req.params.username, req.params.song, req.body)
         res.json({})
