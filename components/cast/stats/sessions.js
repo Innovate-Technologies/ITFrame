@@ -43,7 +43,7 @@ export const getAllSessionsForUsernameSince = (username, since) => {
     return SessionsModel.find({
         username,
         $or: [
-            { startTime: { $gt: since } },
+            { endTime: { $lt: since } },
             { endTime: null },
         ],
     }).populate("listenerId").exec()
