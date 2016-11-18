@@ -30,7 +30,7 @@ export default ({ app, wrap }) => {
         if (!listenerProfile) {
             listenerProfile = await listeners.addListenerProfile(req.params.user, req.body)
         }
-        const session = await sessions.startSession(req.params.user, listenerProfile._id)
+        const session = await sessions.startSession(req.params.user, listenerProfile._id, req.body.stream)
         res.json({ uid: session._id })
     }))
 

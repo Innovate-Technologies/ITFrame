@@ -17,6 +17,7 @@ const SessionsSchema = new Schema({
         default: null,
     },
     isReturningListener: Boolean,
+    stream: String,
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
     username: 1,
@@ -24,11 +25,12 @@ SessionsSchema.index({
 });
 const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
 
-export const startSession = (username, listenerId) => {
+export const startSession = (username, listenerId, stream) => {
     const session = new SessionsModel({
         username,
         listenerId,
         startTime: new Date(),
+        stream,
     })
     return session.save()
 }
@@ -41,13 +43,17 @@ export const getAllSessionsForUsernameSince = (username, since) => {
     return SessionsModel.find({ username }).where("startTime").gt(since).populate("listenerId").exec()
 }
 
+export const getAllOpenSessionsForUsername = (username) => {
+    return SessionsModel.find({ username, endTime: null }).populate("listenerId").exec()
+}
+
 export const closeAllSessionsForUsername = async (username) => {
     return SessionsModel.update({
         username,
         endTime: null,
     }, {
         endTime: new Date(),
-    }, { 
+    }, {
         multi: true,
     }).exec()
 }
