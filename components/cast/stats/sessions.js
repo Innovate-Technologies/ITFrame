@@ -39,11 +39,22 @@ export const endSession = (username, id) => {
     return SessionsModel.update({ _id: new ObjectId(id) }, {endTime: new Date()}).exec()
 }
 
-export const getAllSessionsForUsernameSince = (username, since) => {
+export const getAllSessionsForUsernameStartedSince = (username, since) => {
     return SessionsModel.find({
         username,
         $or: [
-            { endTime: { $lt: since } },
+            { startTime: { $gt: since } },
+            { endTime: null },
+        ],
+    }).populate("listenerId").exec()
+}
+
+export const getAllSessionsForUsernameInPeriod = (username, start, end) => {
+    return SessionsModel.find({
+        username,
+        $or: [
+            { startTime: { $gt: start, $lt: end } },
+            { endTime: { $gt: start, $lt: end } },
             { endTime: null },
         ],
     }).populate("listenerId").exec()
