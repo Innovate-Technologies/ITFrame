@@ -51,6 +51,10 @@ export default ({ app, wrap }) => {
         res.json(await sessions.getAllSessionsForUsernameSince(req.params.user, new Date(req.params.since)))
     }))
 
+    app.get("/cast/statistics/:user/:key/get-all-open-sessions/", wrap(async (req, res) => {
+        res.json(await sessions.getAllOpenSessionsForUsername(req.params.user))
+    }))
+
     app.get("/cast/statistics/:user/:key/get-calculated-info/:since/:resolution", wrap(async (req, res) => {
         res.json(await calculated.getDataForUsername(req.params.user, req.params.resolution, new Date(req.params.since)))
     }))
