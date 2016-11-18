@@ -40,7 +40,13 @@ export const endSession = (username, id) => {
 }
 
 export const getAllSessionsForUsernameSince = (username, since) => {
-    return SessionsModel.find({ username }).where("startTime").gt(since).populate("listenerId").exec()
+    return SessionsModel.find({
+        username,
+        $or: [
+            { startTime: { $gt: since } },
+            { endTime: null },
+        ],
+    }).populate("listenerId").exec()
 }
 
 export const getAllOpenSessionsForUsername = (username) => {
