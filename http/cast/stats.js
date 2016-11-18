@@ -47,8 +47,12 @@ export default ({ app, wrap }) => {
         res.status(204).send()
     }))
 
-    app.get("/cast/statistics/:user/:key/get-all-sessions-since/:since", wrap(async (req, res) => {
-        res.json(await sessions.getAllSessionsForUsernameSince(req.params.user, new Date(req.params.since)))
+    app.get("/cast/statistics/:user/:key/get-all-sessions-started-since/:since", wrap(async (req, res) => {
+        res.json(await sessions.getAllSessionsForUsernameStartedSince(req.params.user, new Date(req.params.since)))
+    }))
+
+    app.get("/cast/statistics/:user/:key/get-all-sessions-for-period/:start/:end", wrap(async (req, res) => {
+        res.json(await sessions.getAllSessionsForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end)))
     }))
 
     app.get("/cast/statistics/:user/:key/get-all-open-sessions/", wrap(async (req, res) => {
