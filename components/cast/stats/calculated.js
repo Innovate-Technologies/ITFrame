@@ -8,6 +8,7 @@ const CalculatedSchema = new Schema({
         enum: ["minute", "hour", "day"],
     },
     totalSessions: Number,
+    uniqueListeners: Number,
     averageListeners: Number,
     tlh: Number,
     clientSpread: [{client: String, percentage: Number}],
