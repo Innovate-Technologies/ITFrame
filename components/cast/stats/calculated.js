@@ -52,5 +52,6 @@ export const getDataForUsername = async (username, resolution, since) => {
     return await CalculatedModel.find({
         username,
         resolution,
-    }).where("dateAdded").gt(since).exec()
+        dateAdded: { $gt: since },
+    }).exec()
 }
