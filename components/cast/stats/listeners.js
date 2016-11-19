@@ -9,6 +9,7 @@ const ListenersSchema = new Schema({
         country: String,
         latitude: Number,
         longitude: Number,
+        countryCode: String,
     },
     lastSeen: {
         type: Date,
