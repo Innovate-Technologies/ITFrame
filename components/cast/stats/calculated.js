@@ -1,6 +1,5 @@
 const mongoose = requireFromRoot("components/database/mongodb.js")
 const Schema = mongoose.Schema
-const ObjectId = mongoose.Types.ObjectId
 const CalculatedSchema = new Schema({
     username: String,
     resulution: {
@@ -25,6 +24,9 @@ const CalculatedSchema = new Schema({
 }, { collection: "cast_calculated" })
 CalculatedSchema.index({
     username: 1,
+    expiresAt: 1,
+    dateAdded: 1,
+    resulution: 1,
 });
 const CalculatedModel = mongoose.model("cast_calculated", CalculatedSchema, "cast_calculated")
 
