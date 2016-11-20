@@ -10,6 +10,7 @@ const CalculatedSchema = new Schema({
     uniqueListeners: Number,
     averageListeners: Number,
     tlh: Number,
+    averageSessionTime: Number,
     clientSpread: [{client: String, percentage: Number}],
     geoSpread: [{country: String, percentage: Number}],
     returningListeners: Number,
