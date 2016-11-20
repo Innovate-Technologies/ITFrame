@@ -32,22 +32,21 @@ CalculatedSchema.index({
 const CalculatedModel = mongoose.model("cast_calculated", CalculatedSchema, "cast_calculated")
 
 
-const ONE_MILLISECOND = 1000
-const ONE_SECOND = 60
+const ONE_SECOND = 1000
 const ONE_MINUTE = 60
 const ONE_HOUR = 60
 const ONE_DAY = 24
 const ONE_YEAR = 365
 
 const delayForResolution = {
-    minute: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
-    hour: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
-    day: 10 * ONE_YEAR * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND * ONE_MILLISECOND,
+    minute: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND,
+    hour: 90 * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND,
+    day: 10 * ONE_YEAR * ONE_DAY * ONE_HOUR * ONE_MINUTE * ONE_SECOND,
 }
 
 export const insertDataForUsername = async (username, info) => {
     info.username = username
-    info.expiresAt = new Date((new Date()).getTime() + delayForResolution[info.resolution])
+    info.expiresAt = new Date((new Date()).getTime() + delayForResolution[info.resulution])
     return await new CalculatedModel(info).save()
 }
 
