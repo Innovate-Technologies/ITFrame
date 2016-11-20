@@ -28,10 +28,12 @@ export default ({ app, wrap }) => {
         req.body.geo.countryCode = req.body.countrycountryCode
         req.body.geo.country = req.body.country
         let listenerProfile = await listeners.getListenerForInfo(req.params.user, req.body.ip, req.body.client)
+        let isReturningListener = true
         if (!listenerProfile) {
             listenerProfile = await listeners.addListenerProfile(req.params.user, req.body)
+            isReturningListener = false
         }
-        const session = await sessions.startSession(req.params.user, listenerProfile._id, req.body.stream)
+        const session = await sessions.startSession(req.params.user, listenerProfile._id, req.body.stream, isReturningListener)
         res.json({ uid: session._id })
     }))
 

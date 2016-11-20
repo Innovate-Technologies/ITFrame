@@ -16,7 +16,10 @@ const SessionsSchema = new Schema({
         type: Date,
         default: null,
     },
-    isReturningListener: Boolean,
+    isReturningListener: {
+        type: Boolean,
+        default: false,
+    },
     stream: String,
 }, { collection: "cast_sessions" })
 SessionsSchema.index({
@@ -25,12 +28,13 @@ SessionsSchema.index({
 });
 const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
 
-export const startSession = (username, listenerId, stream) => {
+export const startSession = (username, listenerId, stream, isReturningListener) => {
     const session = new SessionsModel({
         username,
         listenerId,
         startTime: new Date(),
         stream,
+        isReturningListener,
     })
     return session.save()
 }
