@@ -50,10 +50,18 @@ export const insertDataForUsername = async (username, info) => {
     return await new CalculatedModel(info).save()
 }
 
+export const getDataInPeriodForUsername = async (username, resolution, start, end) => {
+    return await CalculatedModel.find({
+        username,
+        resolution,
+        dateAdded: { $gte: start, $lte: end },
+    }).exec()
+}
+
 export const getDataForUsername = async (username, resolution, since) => {
     return await CalculatedModel.find({
         username,
         resolution,
-        dateAdded: { $gt: since },
+        dateAdded: { $gte: since },
     }).exec()
 }

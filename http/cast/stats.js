@@ -66,6 +66,10 @@ export default ({ app, wrap }) => {
         res.json(await calculated.getDataForUsername(req.params.user, req.params.resolution, new Date(req.params.since)))
     }))
 
+    app.get("/cast/statistics/:user/:key/get-calculated-info-for-period/:start/:end/:resolution", wrap(async (req, res) => {
+        res.json(await calculated.getDataInPeriodForUsername(req.params.user, req.params.resolution, new Date(req.params.start), new Date(req.params.end)))
+    }))
+
     app.post("/cast/statistics/:user/:key/store-calculated-info/", wrap(async (req, res) => {
         await calculated.insertDataForUsername(req.params.user, req.body)
         res.status(204).send()
