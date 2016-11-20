@@ -46,7 +46,7 @@ const delayForResolution = {
 
 export const insertDataForUsername = async (username, info) => {
     info.username = username
-    info.expiresAt = new Date((new Date()).getTime() + delayForResolution(info.resolution))
+    info.expiresAt = new Date((new Date()).getTime() + delayForResolution[info.resolution])
     return await new CalculatedModel(info).save()
 }
 
