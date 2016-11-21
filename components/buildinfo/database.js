@@ -11,7 +11,7 @@ export const buildInfoForName = (name) => {
         name,
     }).exec()
 }
-export const pdateVersionForName = async (name, version) => {
+export const updateVersionForName = async (name, version) => {
     const info = await buildinfoModel.findOne({ name }).exec()
     if (info === null) {
         throw new Error("Name not found")
