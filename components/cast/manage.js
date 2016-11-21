@@ -2,6 +2,7 @@ import _ from "underscore"
 import rest from "restler"
 import * as castDB from "./database.js"
 import * as configHelper from "./configHelper.js"
+import * as tunesDB from "../tunes/personalMusicDatabase.js"
 import fleet from "../coreos/fleet.js"
 const moduleLogger = log.child({ component: "cast" })
 
@@ -94,6 +95,7 @@ export const terminateNode = async (username) => {
     }
     await stopNode(username)
     await destroyUnit(username)
+    await tunesDB.removeUser(username)
     logger.info("Terminated")
 }
 
