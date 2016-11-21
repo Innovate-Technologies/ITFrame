@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 const ObjectId = mongoose.Types.ObjectId
 const TunesPersonalSchema = new Schema({
     type: {
+        type: String,
         enum: ["song", "legacy", "default", "error", "invalid"],
         default: "legacy", // legacy means that the song is imported by Connect-Centova
     },
