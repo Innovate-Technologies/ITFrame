@@ -188,7 +188,7 @@ export const calculateUsedSpace = async (username) => {
 }
 
 export const isLinkInUse = async (link) => {
-    const internalURLs = await TunesPersonalModel.find({ internalURL: link })
+    const internalURLs = await TunesPersonalModel.find({ type: "song", internalURL: link })
     if (internalURLs.length !== 0) {
         return true
     }
@@ -198,7 +198,7 @@ export const isLinkInUse = async (link) => {
         selector[`processedURLS.${bitrate}`] = link
         findArray.push(selector)
     }
-    const processedUrls = await TunesPersonalModel.find({ $or: findArray })
+    const processedUrls = await TunesPersonalModel.find({ type: "song", $or: findArray })
     return processedUrls.length !== 0
 }
 
