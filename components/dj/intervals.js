@@ -30,7 +30,10 @@ IntervalsSchema.index({
 const IntervalsModel = mongoose.model("dj_intervals", IntervalsSchema, "dj_intervals")
 
 export const intervalsForUsername = (username) => {
-    return IntervalsModel.find({ username: username }).populate("songs").exec()
+    return IntervalsModel.find({ username: username }).populate({
+        path: "songs",
+        populate: { path: "tags" },
+    }).exec()
 }
 
 export const intervalForID = (id) => {
