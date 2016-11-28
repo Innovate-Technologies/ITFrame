@@ -95,10 +95,10 @@ module.exports = function ({ app, wrap }) {
     }))
 
     app.get("/control/cast/tunes/get-songs-pages/:username", wrap(async (req, res) => {
-        res.json(await tunesDB.getNumberOfSongPages(req.params.username, 100, 1))
+        res.json(await tunesDB.getNumberOfSongPages(req.params.username, req.query.limit ? req.query.limit : 100, 1))
     }))
     app.get("/control/cast/tunes/get-songs/:username/:sortby/:page", wrap(async (req, res) => {
-        let songs = await tunesDB.getSongsForUser(req.params.username, 100, req.params.page, req.params.sortby)
+        let songs = await tunesDB.getSongsForUser(req.params.username, req.query.limit ? req.query.limit : 100, req.params.page, req.params.sortby)
         for (let id in songs) {
             if (songs.hasOwnProperty(id)) {
                 songs[id].internalURL = null
