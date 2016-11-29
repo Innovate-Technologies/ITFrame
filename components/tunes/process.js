@@ -70,6 +70,10 @@ const createUnit = (randomNumber, id) => new Promise((resolve, reject) => {
             "section": "X-Fleet",
             "value": "model=C2S",
         }, {
+            "name": "MachineMetadata",
+            "section": "X-Fleet",
+            "value": "zone=ams1",
+        }, {
             "name": "Conflicts",
             "section": "X-Fleet",
             "value": `tunes-worker-${randomNumber}*`,
