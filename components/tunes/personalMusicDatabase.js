@@ -28,6 +28,10 @@ const TunesPersonalSchema = new Schema({
     available: Boolean, // false if being progressed
     size: Number, // in bytes
     bpm: Number,
+    dateAdded: {
+        type: Date,
+        default: Date.now,
+    },
 }, { collection: "tunes_personal" })
 TunesPersonalSchema.index({
     username: 1,
