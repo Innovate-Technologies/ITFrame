@@ -1,4 +1,4 @@
-import rest from "restler"
+import unirest from "unirest"
 
 /**
  * Set a DNS record in etcd
@@ -8,13 +8,7 @@ import rest from "restler"
  * @param {Integer} ttl   DNS record TTL (time-to-live)
  */
 export const setRecord = (name, type, value, ttl) => {
-    rest.post(`https://${config.etcdLinkUrl}/v2/keys/DNS/${name}/${type}`,
-        {
-            data: {
-                value: JSON.stringify([{
-                    "value": value,
-                    "ttl": ttl,
-                }]),
-            },
-        })
+    unirest.put(`https://${config.etcdLinkUrl}/v2/keys/DNS/${name}/${type}/`)
+        .send(`value=[{"value":"${value}","ttl":${ttl}}]`)
+        .end(function () {});
 }
