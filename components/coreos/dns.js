@@ -1,4 +1,4 @@
-let etcd = requireFromRoot("runners/etcd/etcd");
+import rest from "restler"
 
 /**
  * Set a DNS record in etcd
@@ -7,11 +7,14 @@ let etcd = requireFromRoot("runners/etcd/etcd");
  * @param {String}  value DNS record value
  * @param {Integer} ttl   DNS record TTL (time-to-live)
  */
-let setRecord = function (name, type, value, ttl) {
-    etcd.set(`/DNS/${name}/${type}/`, JSON.stringify([{
-        "value": value,
-        "ttl": ttl,
-    }]))
+export const setRecord = (name, type, value, ttl) => {
+    rest.post(`https://${config.etcdLinkUrl}/v2/keys/DNS/${name}/${type}`,
+        {
+            data: {
+                value: JSON.stringify([{
+                    "value": value,
+                    "ttl": ttl,
+                }]),
+            },
+        })
 }
-
-module.exports.setRecord = setRecord;
