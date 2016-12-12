@@ -51,7 +51,18 @@ export default ({ app, wrap }) => {
     //////////////////////////////////////////////////////
 
     app.get("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
-        res.json(await intervals.intervalsForUsername(req.params.username))
+        const intervalsForUser = await intervals.intervalsForUsername(req.params.username)
+        for (let id in intervalsForUser) {
+            if (intervalsForUser.hasOwnPropery(intervals)) {
+                for (let songid in intervalsForUser[id].songs) {
+                    if (intervalsForUser[id].songs.hasOwnPropery(songid)) {
+                        intervalsForUser[id].songs[songid].internalURL = null
+                        intervalsForUser[id].songs[songid].processedURLS = null
+                    }
+                }
+            }
+        }
+        res.json(intervalsForUser)
     }))
 
     app.post("/control/cast/dj/intervals/:username/:id", wrap(async (req, res) => {
