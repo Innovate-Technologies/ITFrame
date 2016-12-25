@@ -132,6 +132,8 @@ module.exports = function ({ app, wrap }) {
     }))
 
     app.post("/control/cast/tunes/song/:username/:song", wrap(async (req, res) => {
+        delete req.body.internalURL
+        delete req.body.processedURLS
         await tunesDB.updateSong(req.params.username, req.params.song, req.body)
         res.json({})
     }))
