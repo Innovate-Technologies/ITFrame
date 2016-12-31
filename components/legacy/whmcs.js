@@ -132,6 +132,7 @@ export const getProductsForEmail = async (email) => {
                 server: product.servername,
                 status: product.status,
                 username: product.username,
+                password: product.password,
                 price: product.recurringamount,
             };
         });
