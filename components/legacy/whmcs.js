@@ -42,13 +42,16 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
             return reject(info);
         }
         try {
-            if (format === "json") {
-                info = JSON.parse(info);
-            } else if (format === "xml") {
-                info = (await parseXml(info)).whmcsapi;
-            } else {
-                throw new Error("Unexpected format");
+            if (typeof info === "string") {
+                if (format === "json") {
+                    info = JSON.parse(info);
+                } else if (format === "xml") {
+                    info = (await parseXml(info)).whmcsapi;
+                } else {
+                    throw new Error("Unexpected format");
+                }
             }
+            
         } catch (error) {
             logger.error({ info }, "Failed to parse WHMCS API reply");
             return reject(new Error("Failed to parse WHMCS API reply."));
