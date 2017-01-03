@@ -126,12 +126,12 @@ export const getProductsForEmail = async (email) => {
         const eligibleProducts = products.filter((product) => {
             const group = product.groupname.toLowerCase();
             return product.status === "Active"
-                && !product.name.toLowerCase().includes("free")
+                && !(product.name || product.translated_name).toLowerCase().includes("free")
                 && (group.includes("servers") || group.includes("nodes"));
         }).map((product) => {
             return {
                 id: product.id,
-                name: product.name,
+                name: product.name || product.translated_name,
                 group: product.groupname,
                 server: product.servername,
                 status: product.status,
