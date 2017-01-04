@@ -1,5 +1,5 @@
 import crypto from "crypto";
-
+import bcrypt from "bcrypt";
 import rest from "restler";
 import xml2js from "xml2js";
 import moment from "moment-timezone";
@@ -76,8 +76,9 @@ export const checkLogin = async (email, password) => {
     try {
         const [correctHash, salt] =
             (await sendRequest("getclientpassword", { email })).password.split(":");
-        const hash = crypto.createHash("md5").update(salt + password).digest("hex");
-        return hash === correctHash;
+        const oldHash = crypto.createHash("md5").update(salt + password).digest("hex");
+        const bcryptCorrect = await bcrypt.compare(password, correctHash)
+        return oldHash === correctHash || bcryptCorrect;
     } catch (error) {
         if (error instanceof WHMCSError) {
             // WHMCS returned an error explicitely, which means the login failed
