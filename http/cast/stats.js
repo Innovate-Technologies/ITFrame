@@ -3,6 +3,7 @@ import AccessDeniedError from "../classes/AccessDeniedError";
 import * as listeners from "../../components/cast/stats/listeners.js"
 import * as sessions from "../../components/cast/stats/sessions.js"
 import * as calculated from "../../components/cast/stats/calculated.js"
+import * as status from "../../components/cast/stats/status.js"
 
 const cast = requireFromRoot("components/cast/database.js")
 
@@ -73,5 +74,14 @@ export default ({ app, wrap }) => {
     app.post("/cast/statistics/:user/:key/store-calculated-info/", wrap(async (req, res) => {
         await calculated.insertDataForUsername(req.params.user, req.body)
         res.status(204).send()
+    }))
+
+    app.post("/cast/statistics/:user/:key/store-status/", wrap(async (req, res) => {
+        await status.addStatusForUsername(req.params.user, req.body)
+        res.status(204).send()
+    }))
+
+    app.get("/cast/statistics/:user/:key/get-statuses-for-period/:start/:end/:resolution", wrap(async (req, res) => {
+        res.json(await status.getAllStatusesForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end)))
     }))
 }
