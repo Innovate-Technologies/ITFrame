@@ -14,6 +14,7 @@ const CalculatedSchema = new Schema({
     clientSpread: [{client: String, percentage: Number}],
     geoSpread: [{country: String, percentage: Number}],
     returningListeners: Number,
+    usefulSessions: Number,
     dateAdded: {
         type: Date,
         default: Date.now,
