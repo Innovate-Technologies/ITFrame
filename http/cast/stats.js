@@ -76,7 +76,7 @@ export default ({ app, wrap }) => {
         res.status(204).send()
     }))
 
-    app.post("/cast/statistics/:user/:key/store-status/", wrap(async (req, res) => {
+    app.post("/cast/statistics/:user/:key/store-status", wrap(async (req, res) => {
         await status.addStatusForUsername(req.params.user, req.body)
         res.status(204).send()
     }))
