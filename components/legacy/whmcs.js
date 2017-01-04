@@ -77,7 +77,7 @@ export const checkLogin = async (email, password) => {
         const [correctHash, salt] =
             (await sendRequest("getclientpassword", { email })).password.split(":");
         const oldHash = crypto.createHash("md5").update(salt + password).digest("hex");
-        const bcryptCorrect = await bcrypt.compare(password, correctHash)
+        const bcryptCorrect = await bcrypt.compare(password, correctHash.replace(/^\$2y(.+)$/i, "\$2a$1"))
         return oldHash === correctHash || bcryptCorrect;
     } catch (error) {
         if (error instanceof WHMCSError) {
