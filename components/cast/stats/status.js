@@ -6,7 +6,7 @@ const StatusSchema = new Schema({
     stream: String,
     time: {
         type: Date,
-        expires: "5y",
+        expires: "2y",
         default: Date.now,
     },
 }, { collection: "cast_status" })
