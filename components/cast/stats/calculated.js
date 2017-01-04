@@ -2,7 +2,7 @@ const mongoose = requireFromRoot("components/database/mongodb.js")
 const Schema = mongoose.Schema
 const CalculatedSchema = new Schema({
     username: String,
-    resulution: {
+    resolution: {
         type: String,
         enum: ["minute", "hour", "day"],
     },
@@ -27,7 +27,7 @@ CalculatedSchema.index({
     username: 1,
     expiresAt: 1,
     dateAdded: 1,
-    resulution: 1,
+    resolution: 1,
 });
 const CalculatedModel = mongoose.model("cast_calculated", CalculatedSchema, "cast_calculated")
 
@@ -46,7 +46,7 @@ const delayForResolution = {
 
 export const insertDataForUsername = async (username, info) => {
     info.username = username
-    info.expiresAt = new Date((new Date()).getTime() + delayForResolution[info.resulution])
+    info.expiresAt = new Date((new Date()).getTime() + delayForResolution[info.resolution])
     return await new CalculatedModel(info).save()
 }
 
