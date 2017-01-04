@@ -25,6 +25,8 @@ const SessionsSchema = new Schema({
 SessionsSchema.index({
     username: 1,
     listenerId: 1,
+    startTime: 1,
+    endTime: 1,
 });
 const SessionsModel = mongoose.model("cast_sessions", SessionsSchema, "cast_sessions")
 
