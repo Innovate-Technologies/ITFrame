@@ -41,7 +41,7 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
             logger.error(info, "Request to WHMCS failed");
             return reject(info);
         }
-        logger.error({ content: info }, "Got data from WHMCS");
+        logger.info({ content: info }, "Got data from WHMCS");
         try {
             if (typeof info === "string") {
                 if (format === "json") {
