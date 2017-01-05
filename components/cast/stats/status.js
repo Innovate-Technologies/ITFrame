@@ -20,7 +20,7 @@ const StatusModel = mongoose.model("cast_status", StatusSchema, "cast_status")
 export const getAllStatusesForUsernameInPeriod = (username, start, end) => {
     return StatusModel.find({
         username,
-        time: { $gte: start, $lte: end }
+        time: { $gte: start, $lte: end },
     }).exec()
 }
 
