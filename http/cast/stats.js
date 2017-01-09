@@ -81,7 +81,7 @@ export default ({ app, wrap }) => {
         res.status(204).send()
     }))
 
-    app.get("/cast/statistics/:user/:key/get-statuses-for-period/:start/:end/:resolution", wrap(async (req, res) => {
+    app.get("/cast/statistics/:user/:key/get-statuses-for-period/:start/:end", wrap(async (req, res) => {
         res.json(await status.getAllStatusesForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end)))
     }))
 }
