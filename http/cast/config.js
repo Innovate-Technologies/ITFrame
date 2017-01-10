@@ -16,6 +16,14 @@ export default ({ app, wrap }) => {
         return next();
     }))
 
+    app.get("/cast/is-valid-domain/:domain", wrap(async (req, res) => {
+        const info = await castDB.getDomain(req.body.domain)
+        if (info === null) {
+            return res.status(404).send()
+        }
+        res.status(200).send()
+    }))
+
     app.post("/cast/config", wrap(async (req, res) => {
         res.json(await castDB.getInfoForUsername(req.body.username))
     }))

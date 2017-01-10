@@ -101,6 +101,10 @@ export const getInfoForUsername = async (username) => {
 }
 export const getConfig = getInfoForUsername
 
+export const getDomain = (hostname) => {
+    return CastModel.findOne({ hostname }).exec()
+}
+
 
 export const addConfigForUsername = async (username, conf) => {
     conf.username = username;
