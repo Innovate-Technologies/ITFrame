@@ -17,7 +17,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.get("/cast/is-valid-domain/:domain", wrap(async (req, res) => {
-        const info = await castDB.getDomain("https://" + req.param.domain)
+        const info = await castDB.getDomain("https://" + req.params.domain)
         if (info === null) {
             return res.status(404).send()
         }
