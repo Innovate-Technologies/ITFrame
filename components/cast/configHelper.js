@@ -124,11 +124,11 @@ export const createFleetUnit = async (username) => {
         }, {
             "name": "ExecStartPost",
             "section": "Service",
-            "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
+            "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s.radioca.st.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
         }, {
             "name": "ExecStartPost",
             "section": "Service",
-            "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
+            "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s.radioca.st.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
         }, {
             "name": "ExecStop",
             "section": "Service",
@@ -204,11 +204,11 @@ export const createDJFleetUnit = (username) => {
         }, {
             "name": "ExecStartPost",
             "section": "Service",
-            "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s-dj-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s-dj)\'\\",\\"ttl\\":10}]\'"', username, username),
+            "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s-dj.radioca.st.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s-dj)\'\\",\\"ttl\\":10}]\'"', username, username),
         }, {
             "name": "ExecStartPost",
             "section": "Service",
-            "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s-dj-int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s-dj)\'\\",\\"ttl\\":10}]\'"', username, username),
+            "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s-dj.radioca.st.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s-dj)\'\\",\\"ttl\\":10}]\'"', username, username),
         }, {
             "name": "ExecStop",
             "section": "Service",
