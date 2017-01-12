@@ -276,3 +276,10 @@ export const setHideListenerCount = async (username, isEnabled) => {
     await castDB.updateConfig(username, config)
     await softRestartNode(username)
 }
+
+export const setCustomDomain = async (username, domain) => {
+    const config = await castDB.getInfoForUsername(username)
+    config.hostname = `https://${domain}`;
+    await castDB.updateConfig(username, config)
+    return upgradeNode(username)
+}
