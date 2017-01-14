@@ -100,6 +100,14 @@ export const createFleetUnit = async (username) => {
         }, {
             "name": "ExecStartPre",
             "section": "Service",
+            value: util.format('/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s/A/\' \'[{\\"value\\":\\"\'$(curl myip.ninja)\'\\",\\"ttl\\":10}]\'"', config.hostname.replace("https://", "")),
+        }, {
+            "name": "ExecStartPre",
+            "section": "Service",
+            value: util.format('-/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s/AAAA/\' \'[{\\"value\\":\\"\'$(curl -f v6.myip.ninja)\'\\",\\"ttl\\":10}]\'"', config.hostname.replace("https://", "")),
+        }, {
+            "name": "ExecStartPre",
+            "section": "Service",
             value: util.format('/bin/bash -c "/usr/bin/etcdctl set \'/DNS/%s.radioca.st/A/\' \'[{\\"value\\":\\"\'$(curl myip.ninja)\'\\",\\"ttl\\":10}]\'"', username),
         }, {
             "name": "ExecStartPre",
@@ -124,7 +132,15 @@ export const createFleetUnit = async (username) => {
         }, {
             "name": "ExecStartPost",
             "section": "Service",
+            "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', config.hostname.replace("https://", ""), username),
+        }, {
+            "name": "ExecStartPost",
+            "section": "Service",
             "value": util.format('/bin/bash -c "sleep 2 && /usr/bin/etcdctl set \'/DNS/%s.radioca.st.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', username, username),
+        }, {
+            "name": "ExecStartPost",
+            "section": "Service",
+            "value": util.format('/bin/bash -c "sleep 10 && /usr/bin/etcdctl set \'/DNS/%s.int.radioca.st/A/\' \'[{\\"value\\":\\"\'$(docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' %s)\'\\",\\"ttl\\":10}]\'"', config.hostname.replace("https://", ""), username),
         }, {
             "name": "ExecStartPost",
             "section": "Service",

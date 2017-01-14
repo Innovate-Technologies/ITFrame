@@ -1,7 +1,20 @@
+import dns from "dns"
 import * as cast from "../../components/cast/manage.js"
 import * as castDatabase from "../../components/cast/database.js"
 import NotFoundError from "~/http/classes/NotFoundError";
 import BadRequestError from "~/http/classes/BadRequestError";
+
+const getCname = (hostname) => new Promise((resolve, reject) => {
+    dns.resolveCname(hostname, (err, res) => {
+        if (err) {
+            return reject(err)
+        }
+        if (res.length === 0) {
+            return reject(new Error("No CNAME records found"))
+        }
+        resolve(res[0])
+    })
+})
 
 module.exports = ({ app, wrap }) => {
 
@@ -75,6 +88,15 @@ module.exports = ({ app, wrap }) => {
 
     app.put("/control/cast/hide-listener-count/:username", wrap(async (req, res) => {
         await cast.setHideListenerCount(req.params.username, req.body.isEnabled)
+        res.json({})
+    }));
+
+    app.put("/control/cast/custom-domain/:username", wrap(async (req, res) => {
+        const cname = await getCname(req.body.domain)
+        if (cname !== `${req.params.username}.radioca.st`) {
+            throw new Error(`${cname} doesn't match ${req.params.username}.radioca.st`)
+        }
+        await cast.setCustomDomain(req.params.username, req.body.domain)
         res.json({})
     }));
 
