@@ -100,4 +100,9 @@ module.exports = ({ app, wrap }) => {
         res.json({})
     }));
 
+    app.delete("/control/cast/custom-domain/:username", wrap(async (req, res) => {
+        await cast.setCustomDomain(req.params.username, `${req.params.username}.radioca.st`)
+        res.json({})
+    }));
+
 };
