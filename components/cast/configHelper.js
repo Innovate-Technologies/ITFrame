@@ -1,11 +1,10 @@
 import util from "util"
 import randtoken from "rand-token"
 import * as castDB from "./database.js"
-const fleet = requireFromRoot("components/coreos/fleet.js")
 
 
 export const getLeastUsedPort = async () => {
-    const units = (await fleet.getAllUnits()).units
+    const services = await castDB.getAll()
     const castPorts = {
         "6000": 0,
         "8000": 0,
@@ -22,11 +21,10 @@ export const getLeastUsedPort = async () => {
         "19000": 0,
         "20000": 0,
     }
-    for (let unit of units) {
-        if (unit.name.split("-").length > 1) {
-            const port = unit.name.split("-")[1].split(".service")[0]
-            if (typeof castPorts[port] !== "undefined") {
-                castPorts[port] = castPorts[port] + 1
+    for (let service of services) {
+        if (service.input && service.input.SHOUTcast) {
+            if (castPorts[service.input.SHOUTcast.toString()]) {
+                castPorts[service.input.SHOUTcast.toString()] = castPorts[service.input.SHOUTcast.toString()] + 1
             }
         }
     }
