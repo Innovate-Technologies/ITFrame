@@ -95,6 +95,7 @@ export const terminateNode = async (username) => {
     }
     await stopNode(username)
     await destroyUnit(username)
+    await castDB.deleteUsername(username)
     await tunesDB.removeUser(username)
     logger.info("Terminated")
 }
