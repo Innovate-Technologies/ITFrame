@@ -166,6 +166,6 @@ export const checkStatsKey = async (username, key) => {
 }
 
 export const getAll = () => {
-    return CastModel.find({}).exec()
+    return CastModel.find().exec()
 }
 
