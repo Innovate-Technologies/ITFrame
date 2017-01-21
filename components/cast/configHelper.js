@@ -21,11 +21,11 @@ export const getLeastUsedPort = async () => {
         "19000": 0,
         "20000": 0,
     }
-    moduleLogger.debug({ services });
+
     for (let service of services) {
-        moduleLogger.debug({ service }, "checking service for port");
         if (service.input && service.input.SHOUTcast) {
             if (castPorts[service.input.SHOUTcast.toString()]) {
+                moduleLogger.debug(castPorts[service.input.SHOUTcast.toString()], "add port");
                 castPorts[service.input.SHOUTcast.toString()] = castPorts[service.input.SHOUTcast.toString()] + 1
             }
         }
