@@ -1,7 +1,7 @@
 import util from "util"
 import randtoken from "rand-token"
 import * as castDB from "./database.js"
-
+const moduleLogger = log.child({ component: "cast-config" })
 
 export const getLeastUsedPort = async () => {
     const services = await castDB.getAll()
@@ -21,7 +21,9 @@ export const getLeastUsedPort = async () => {
         "19000": 0,
         "20000": 0,
     }
+    moduleLogger.debug({ services });
     for (let service of services) {
+        moduleLogger.debug({ service }, "checking service for port");
         if (service.input && service.input.SHOUTcast) {
             if (castPorts[service.input.SHOUTcast.toString()]) {
                 castPorts[service.input.SHOUTcast.toString()] = castPorts[service.input.SHOUTcast.toString()] + 1
