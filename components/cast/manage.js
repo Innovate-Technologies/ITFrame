@@ -150,6 +150,7 @@ export const suspendNode = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("suspending node");
     await stopNode(username)
+    await destroyUnit(username)
     await destroyDJUnit(username)
     try {
         destroyDJUnit(username)
