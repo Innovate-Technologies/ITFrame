@@ -111,9 +111,14 @@ export const upgradeNode = async (username) => {
         logger.error(error)
     }
     logger.info("Deleted Unit")
+    await sleep(2000) // make sure unit has been deleted
     await createFleet(username)
     logger.info("Created node")
 }
+
+const sleep = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time)
+})
 
 export const upgradeDJ = async (username) => {
     const logger = moduleLogger.child({ username });
