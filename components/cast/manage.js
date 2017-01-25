@@ -103,7 +103,6 @@ export const terminateNode = async (username) => {
 export const upgradeNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("updating node");
-    await castDB.updateVersion(username)
     try { // to fix missing unit file
         await stopNode(username)
         await destroyUnit(username)
@@ -112,6 +111,7 @@ export const upgradeNode = async (username) => {
     }
     logger.info("Deleted Unit")
     await sleep(2000) // make sure unit has been deleted
+    await castDB.updateVersion(username)
     await createFleet(username)
     logger.info("Created node")
 }
