@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const buildinfoSchema = new Schema({
     name: String,
     version: String,
-}, { collection: "build_info" });
+}, { collection: "build_info", read: "nearest" });
 const buildinfoModel = mongoose.model("build_info", buildinfoSchema, "build_info");
 
 export const buildInfoForName = (name) => {

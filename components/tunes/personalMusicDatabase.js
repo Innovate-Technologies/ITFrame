@@ -32,7 +32,7 @@ const TunesPersonalSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-}, { collection: "tunes_personal" })
+}, { collection: "tunes_personal", read: "nearest" })
 TunesPersonalSchema.index({
     username: 1,
     song: "text",
