@@ -1,8 +1,11 @@
+sudo: resuired
 language: node_js
 node_js:
-- '5'
+- '6'
 env:
 - CXX=g++-4.8
+services:
+- docker
 addons:
   apt:
     sources:
@@ -14,4 +17,13 @@ os:
 
 script:
 - npm -g install babel-cli
-- babel ./ -d bin --minified --ignore 'node_modules/'
+- babel ./src -d /tmp/bin --minified --ignore 'node_modules/'
+- docker build -t innovate/itframe:latest .
+
+deploy:
+  provider: script
+  script: ./deploy.sh
+  on:
+    repo: innovate-technologies/itframe
+    tags: true
+    branch: master
