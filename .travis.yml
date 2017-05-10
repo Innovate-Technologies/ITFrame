@@ -16,7 +16,7 @@ os:
 - linux
 
 script:
-- npm -g install babel-cli
+- npm -g install babel-cli babel-plugin-add-module-exports babel-plugin-syntax-class-properties babel-plugin-transform-class-properties babel-polyfill babel-preset-es2015 babel-preset-stage-2 babel-register babel-root-import
 - babel ./src -d /tmp/bin --minified --ignore 'node_modules/'
 - docker build -t innovate/itframe:latest .
 
