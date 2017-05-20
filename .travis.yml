@@ -14,15 +14,18 @@ addons:
     - g++-4.8
 os:
 - linux
-
 script:
-- npm -g install babel-cli babel-plugin-add-module-exports babel-plugin-syntax-class-properties babel-plugin-transform-class-properties babel-polyfill babel-preset-es2015 babel-preset-stage-2 babel-register babel-root-import
+- npm -g install babel-cli babel-plugin-add-module-exports babel-plugin-syntax-class-properties
+  babel-plugin-transform-class-properties babel-polyfill babel-preset-es2015 babel-preset-stage-2
+  babel-register babel-root-import
 - babel ./src -d /tmp/bin --minified --ignore 'node_modules/'
 - docker build -t innovate/itframe:latest .
-
 deploy:
   provider: script
-  script: ./deploy.sh
+  script: "./deploy.sh"
   on:
     repo: innovate-technologies/itframe
     branch: master
+notifications:
+  slack:
+    secure: lvR2AIxb6xgdoET0H0Ko/3GHO7IVNTpPsFfeImR25OPv2cLqJXjeaFY+zN0DtRqr9ge048trt/cRXsrIEhtNZV83wikj/EFhAY5fumexL//Vut0aRFauYs1LcCb2gEGx4+/UGHo3gkF+jn5wxvwpWfTmdTthfFcVxrhXnTPUgbT84uUC2PAJ7RNObxHhHz81gVN2TZ3rgS5RhNFazzm/jYcD8onsJZFj8GjbWJ8WN65DJzVLsA69U4/E0Aw4eQsBt031gXVc7XpNgIFiDk/o4t/o0u0lw9CIah1v06LqNIg33zXHZk7nkJypYbqo2aaagwLWl8sUFg/sbKedRIocxE7ihSrjuTOHk503jRdSDznVu03/4CiqS/LWPDcriu4YQGGUQ0GS3z7uaproSpuMj0Qc6Stg5EMlj2GSPM/pWLJ8z0PKtZxvIKrd2pIG+QPZbd5xIU35evcoH7+7RLynF2u3rSO9/c4aAKGQpbue8YH+obNwKRIhiJprtTOynWmf4F0sFktMXLZXQOWA8GAhZRCqtaTOz0epGCPrtS264aQ+fnFJtyplKOp+hzR1OEW7BmxsbgGXkM/yh6ZNSbOaOXKYQZd64HACbWa/+DwueqZr5KbWToUNr3DYQ4zKet3+HzHX1Ox3IoZ3tMkwbTTYSJ5pRC53QlgDEP/P3Zr1+uE=
