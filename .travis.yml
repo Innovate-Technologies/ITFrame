@@ -25,5 +25,4 @@ deploy:
   script: ./deploy.sh
   on:
     repo: innovate-technologies/itframe
-    tags: true
     branch: master
