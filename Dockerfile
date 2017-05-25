@@ -1,7 +1,14 @@
 FROM node:6
+MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
 COPY ./src /opt/itframe/source 
 
-RUN cd /opt/itframe/source && npm install
+WORKDIR /opt/itframe/source
 
-CMD cd /opt/itframe/source && node app.js
+RUN npm install
+RUN mkdir keys
+
+CMD ln -s /run/secrets/itframe-conf config.json &&\
+    ln -s /run/secrets/controlPublicKey.pem keys/controlPublicKey.pem &&\
+    ln -s /run/secrets/controlSigningKey.pem keys/controlSigningKey.pem &&\
+    node app.js
