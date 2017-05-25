@@ -1,10 +1,10 @@
 #!/bin/bash
 
 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-if [[ "$TRAVIS_BRANCH" == "master" ]] then
+if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker push innovate/itframe:latest
 fi
-if [[ "$TRAVIS_BRANCH" == "staging" ]] then
+if [[ "$TRAVIS_BRANCH" == "staging" ]]; then
     docker push innovate/itframe:staging
 fi
 if [ ! -z "$TRAVIS_TAG" ]; then 
