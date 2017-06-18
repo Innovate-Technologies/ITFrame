@@ -172,6 +172,10 @@ export const supportedDirectories = [{
     name: "dir.xiph.org",
     url: "http://dir.xiph.org/cgi-bin/yp-cgi",
     type: "Icecast",
+}, {
+    name: "internet-radio.com",
+    url: "http://icecast-yp.internet-radio.com",
+    type: "Icecast",
 }]
 
 export const addToDirectory = async (username, directory) => {
