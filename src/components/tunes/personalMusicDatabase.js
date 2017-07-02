@@ -19,7 +19,10 @@ const TunesPersonalSchema = new Schema({
     artwork: String,
     genre: String,
     internalURL: String,
-    processedURLS: Object,
+    processedURLS: [{
+        bitrate: Number,
+        url: String,
+    }],
     tags: [{
         type: Schema.Types.ObjectId,
         ref: "dj_tags",
@@ -40,13 +43,7 @@ TunesPersonalSchema.index({
     album: "text",
     internalURL: 1,
     type: 1,
-    "processedURLS.32": 1,
-    "processedURLS.64": 1,
-    "processedURLS.96": 1,
-    "processedURLS.128": 1,
-    "processedURLS.192": 1,
-    "processedURLS.265": 1,
-    "processedURLS.320": 1,
+    processedURLS: 1
 });
 
 TunesPersonalSchema.plugin(mongoosePaginate)
@@ -198,13 +195,7 @@ export const isLinkInUse = async (link) => {
     if (internalURLs.length !== 0) {
         return true
     }
-    const findArray = []
-    for (let bitrate of [32, 64, 96, 128, 192, 265, 320]) {
-        const selector = {}
-        selector[`processedURLS.${bitrate}`] = link
-        findArray.push(selector)
-    }
-    const processedUrls = await TunesPersonalModel.find({ type: "song", $or: findArray })
+    const processedUrls = await TunesPersonalModel.find({ type: "song", "processedURLS.url": link })
     return processedUrls.length !== 0
 }
 
