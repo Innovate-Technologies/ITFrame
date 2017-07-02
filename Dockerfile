@@ -2,6 +2,7 @@ FROM node:6
 MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
 COPY ./src /opt/itframe/source 
+COPY ./.git /opt/itframe/source/.git
 
 WORKDIR /opt/itframe/source
 
