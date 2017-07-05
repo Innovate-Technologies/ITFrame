@@ -4,7 +4,7 @@ const logger = log.child({ component: "Dispatch" });
 let URL = ""
 
 export const setURL = (url) => {
-    this.url = url
+    this.URL = url
 }
 
 export const newFromTemplate = (template, name, vars = {}) => new Promise((resolve, reject) => {
