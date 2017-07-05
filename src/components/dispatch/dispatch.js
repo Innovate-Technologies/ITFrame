@@ -31,6 +31,6 @@ export const destroy = (name) => new Promise((resolve, reject) => {
         resolve(returnData);
     }).on("timeout", function () {
         logger.error("Timeout");
-        reject(new Error("Time-out"))
+        reject(new Error("Timeout"))
     })
 })
