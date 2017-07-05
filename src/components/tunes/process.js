@@ -4,7 +4,7 @@ dispatch.setURL(config.tunesLinkURL)
 
 export const processSong = async ({ id }) => {
     try {
-        await dispatch.newFromTempate("tunes-worker-*", id, { id })
+        await dispatch.newFromTemplate("tunes-worker-*", id, { id })
     } catch (error) {
         processSong({ id })
     }

@@ -7,7 +7,7 @@ export const setURL = (url) => {
     this.url = url
 }
 
-export const newFromTempate = (template, name, vars = {}) => new Promise((resolve, reject) => {
+export const newFromTemplate = (template, name, vars = {}) => new Promise((resolve, reject) => {
     rest.post(`${URL}/unit/from-template/${template}`, {
         timeout: 10000,
         data: {
