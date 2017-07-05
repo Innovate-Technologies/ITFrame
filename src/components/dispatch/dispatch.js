@@ -19,7 +19,7 @@ export const newFromTemplate = (template, name, vars = {}) => new Promise((resol
         resolve(returnData);
     }).on("timeout", function () {
         logger.error("Timeout");
-        reject(new Error("Time-out"))
+        reject(new Error("Timeout"))
     })
 })
 
