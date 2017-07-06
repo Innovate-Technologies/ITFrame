@@ -1,6 +1,6 @@
-import * as dispatch from "../dispatch/dispatch.js"
+import { Dispatch } from "../dispatch/dispatch.js"
 
-dispatch.setURL(config.tunesLinkURL)
+const dispatch = new Dispatch(config.tunesLinkURL)
 
 export const processSong = async ({ id }) => {
     try {
