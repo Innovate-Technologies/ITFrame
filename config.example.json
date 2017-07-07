@@ -17,6 +17,7 @@
     "whmcsKey": "",
     "whmcsURL": "",
     "fleetUrl":"",
+    "tunesLinkURL": "",
     "keystoneURL": "https://keystone.innovatete.ch",
     "swiftUsername": "",
     "swiftPassword": "",
