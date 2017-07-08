@@ -8,7 +8,7 @@ export class Dispatch {
     }
 
     newFromTemplate = (template, name, vars = {}) => new Promise((resolve, reject) => {
-        rest.post(`${URL}/unit/from-template/${template}`, {
+        rest.post(`${this.URL}/unit/from-template/${template}`, {
             timeout: 10000,
             data: {
                 name,
@@ -24,7 +24,7 @@ export class Dispatch {
     })
 
     destroy = (name) => new Promise((resolve, reject) => {
-        rest.del(`${URL}/unit/${name}`, {
+        rest.del(`${this.URL}/unit/${name}`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
             logger.debug("Destroy succeeded");
