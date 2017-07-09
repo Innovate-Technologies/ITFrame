@@ -15,7 +15,7 @@ export class Dispatch {
                 vars,
             },
         }).on("complete", function (returnData) {
-            logger.debug("Create succeeded");
+            logger.debug("Create succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
             logger.error("Timeout");
@@ -27,7 +27,7 @@ export class Dispatch {
         rest.del(`${this.URL}/unit/${name}`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            logger.debug("Destroy succeeded");
+            logger.debug("Destroy succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
             logger.error("Timeout");
