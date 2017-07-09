@@ -2,7 +2,6 @@
 var fs = require("fs");
 let moduleLogger = log.child({ component: "mongodb" });
 var mongoose = require("mongoose");
-require("mongoose-function")(mongoose);
 mongoose.set("debug", false);
 var options = {
     db: {
