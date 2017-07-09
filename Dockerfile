@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:8
 MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
 COPY ./src /opt/itframe/source 
