@@ -51,6 +51,7 @@
     "pls": "^0.1.3",
     "promisify-node": "^0.3.0",
     "rand-token": "^0.2.1",
+    "redis": "^2.7.1",
     "restler": "^3.3.0",
     "shelljs": "^0.5.3",
     "simple-bufferstream": "~1.0.0",
