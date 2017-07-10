@@ -15,22 +15,6 @@ async function invalidateCacheForEmail(email) {
     await redisClient.delAsync("user_products:" + email);
 }
 
-async function getProductsForEmail(email) {
-    // This is very slow as it involves querying WHMCS, so we cache the product data
-    // and invalidate it on a session change or on expiration.
-    const cacheKey = "user_products:" + email;
-    const cacheData = await redisClient.getAsync(cacheKey);
-    logger.debug("Redis lookup", cacheKey, cacheData)
-    if (typeof cacheData === "string") {
-        return JSON.parse(cacheData);
-    }
-
-    const products = await controlUser.getProductsForEmail(email);
-    const ONE_DAY = 60 * 60 * 24;
-    await redisClient.setAsync(cacheKey, JSON.stringify(products), "EX", ONE_DAY);
-    return products;
-}
-
 export default function ({ app, expressJwt, jwt, wrap }) {
     app.use("/control", expressJwt({
         secret: publicKey,
@@ -87,7 +71,7 @@ export default function ({ app, expressJwt, jwt, wrap }) {
         }
 
         const usernameToCheck = req.query.username || req.body.username;
-        const products = await getProductsForEmail(req.user.email);
+        const products = await controlUser.getProductsForEmail(req.user.email);
         const product = products.find(p => p.username === usernameToCheck);
         if (!product) {
             throw new BadRequestError("The service mentioned in the request isn't valid.");
@@ -114,7 +98,7 @@ export default function ({ app, expressJwt, jwt, wrap }) {
             throw new BadRequestError("Only one username was expected.");
         }
 
-        const products = await getProductsForEmail(req.user.email);
+        const products = await controlUser.getProductsForEmail(req.user.email);
         const product = products.find(p => p.username === username);
         if (!product) {
             throw new BadRequestError("The service mentioned in the request isn't valid.");
