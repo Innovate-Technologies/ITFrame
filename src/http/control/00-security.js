@@ -1,6 +1,7 @@
 import fs from "fs";
 import wait from "wait.for";
 import _ from "underscore";
+const logger = log.child({ component: "Security" });
 
 import BadRequestError from "~/http/classes/BadRequestError";
 import redisClient from "~/components/redisClient";
@@ -19,7 +20,8 @@ async function getProductsForEmail(email) {
     // and invalidate it on a session change or on expiration.
     const cacheKey = "user_products:" + email;
     const cacheData = await redisClient.get(cacheKey);
-    if (cacheData) {
+    logger.debug("Redis lookup", cacheKey, cacheData)
+    if (typeof cacheData === "string") {
         return JSON.parse(cacheData);
     }
 
