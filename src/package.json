@@ -21,6 +21,7 @@
     "babel-register": "^6.6.0",
     "babel-root-import": "^3.2.2",
     "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.15.2",
     "bunyan": "^1.5.1",
     "cld": "~2.4.4",

@@ -12,14 +12,14 @@ const publicKey = fs.readFileSync(global.appRoot + "/keys/controlPublicKey.pem")
 const cert = fs.readFileSync(global.appRoot + "/keys/controlSigningKey.pem");
 
 async function invalidateCacheForEmail(email) {
-    await redisClient.del("user_products:" + email);
+    await redisClient.delAsync("user_products:" + email);
 }
 
 async function getProductsForEmail(email) {
     // This is very slow as it involves querying WHMCS, so we cache the product data
     // and invalidate it on a session change or on expiration.
     const cacheKey = "user_products:" + email;
-    const cacheData = await redisClient.get(cacheKey);
+    const cacheData = await redisClient.getAsync(cacheKey);
     logger.debug("Redis lookup", cacheKey, cacheData)
     if (typeof cacheData === "string") {
         return JSON.parse(cacheData);
@@ -27,7 +27,7 @@ async function getProductsForEmail(email) {
 
     const products = await controlUser.getProductsForEmail(email);
     const ONE_DAY = 60 * 60 * 24;
-    await redisClient.set(cacheKey, JSON.stringify(products), "EX", ONE_DAY);
+    await redisClient.setAsync(cacheKey, JSON.stringify(products), "EX", ONE_DAY);
     return products;
 }
 
