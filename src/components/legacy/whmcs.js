@@ -4,6 +4,7 @@ import rest from "restler";
 import xml2js from "xml2js";
 import moment from "moment-timezone";
 
+import redisClient from "~/components/redisClient";
 import WHMCSError from "./WHMCSError.js";
 import phpSerialize from "./phpSerialize.js";
 import { Cache, ONE_SECOND } from "~/components/cache.js";
@@ -52,7 +53,7 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
                     throw new Error("Unexpected format");
                 }
             }
-            
+
         } catch (error) {
             logger.error({ info }, "Failed to parse WHMCS API reply");
             return reject(new Error("Failed to parse WHMCS API reply."));
@@ -119,7 +120,7 @@ ${data.city}`,
     }
 };
 
-export const getProductsForEmail = async (email) => {
+const getProductsForEmailUncached = async (email) => {
     try {
         const user = await getInfoForEmail(email);
         const products = (await sendRequest("getclientsproducts", { clientid: user.id }))
@@ -147,6 +148,21 @@ export const getProductsForEmail = async (email) => {
         throw error;
     }
 };
+
+export const getProductsForEmail = async (email) => {
+    // This is very slow as it involves querying WHMCS, so we cache the product data here
+    // and invalidate it on a session change or on expiration.
+    const cacheKey = "user_products:" + email;
+    const cacheData = await redisClient.getAsync(cacheKey);
+    if (typeof cacheData === "string") {
+        return JSON.parse(cacheData);
+    }
+
+    const products = await getProductsForEmailUncached(email);
+    const ONE_DAY = 60 * 60 * 24;
+    await redisClient.setAsync(cacheKey, JSON.stringify(products), "EX", ONE_DAY);
+    return products;
+}
 
 export const getTicket = async (unused, ticketId, withReplies = false) => {
     const response = await sendRequest("getticket", { ticketid: ticketId }, "xml");
