@@ -9,9 +9,10 @@ export default ({ app, wrap }) => {
         if (!req.body.token || req.body.token !== config.connectKey) {
             throw new BadRequestError("No token found in the request");
         }
+
         const data = {
             username: req.body.username,
-            title: req.body.song,
+            title: req.body.song.replace(/ \[....\]/, ""),
             artist: req.body.artist,
         }
         if (process.env.DEBUG) {
