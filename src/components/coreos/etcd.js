@@ -31,12 +31,10 @@ const client = new Etcd3({
     },
 });
 
-// Returns a Promise
-export function get(key) {
-    return client.get(key);
+export async function get(key) {
+    return await client.get(key);
 }
 
-// Returns a Promise
-export function set(key, value) {
-    return client.put(key).value(value);
+export async function set(key, value) {
+    return await client.put(key).value(value);
 }

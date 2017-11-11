@@ -8,6 +8,6 @@ import * as etcd from "~/components/coreos/etcd.js";
  * @param {String}  value DNS record value
  * @param {Integer} ttl   DNS record TTL (time-to-live)
  */
-export const setRecord = (name, type, value, ttl) => {
-    return etcd.set(`/DNS/${name}/${type}`, JSON.stringify([{ value, ttl }]))
+export const setRecord = async (name, type, value, ttl) => {
+    await etcd.set(`/DNS/${name}/${type}`, JSON.stringify([{ value, ttl }]))
 }

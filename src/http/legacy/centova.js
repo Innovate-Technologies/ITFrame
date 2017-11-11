@@ -35,7 +35,7 @@ export default ({ app, wrap }) => {
         if (!/([A-Za-z0-9_]+)\.radioca\.st/.test(req.body.name)) {
             throw new AccessDeniedError("Invalid DNS name");
         }
-        dns.setRecord(req.body.name, req.body.type, req.body.value, req.body.ttl)
+        await dns.setRecord(req.body.name, req.body.type, req.body.value, req.body.ttl)
         res.json({ status: "ok" })
 
     }))
