@@ -23,7 +23,7 @@ lSwuZce/GpatJxkLPaQDiH32
 const client = new Etcd3({
     hosts: config.etcdUrl,
     credentials: {
-        rootCertificate: ROOT_CERTIFICATE,
+        rootCertificate: new Buffer(ROOT_CERTIFICATE),
     },
     auth: {
         username: config.etcdUsername,
