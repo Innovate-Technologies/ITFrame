@@ -16,7 +16,7 @@ export const createNode = async (username) => {
     const config = await configHelper.createConfigForNewUser(username)
     logger.debug("Adding configuration to database")
     await castDB.addConfigForUsername(username, config)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
 }
 
 export const startNode = async (username) => {
@@ -99,7 +99,7 @@ export const upgradeNode = async (username) => {
     await sleep(2000) // make sure unit has been deleted
     await castDB.updateVersion(username)
     const config = await castDB.getInfoForUsername(username)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 }
 
@@ -133,7 +133,7 @@ export const unsuspendNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("unsuspending node")
     const config = await castDB.getInfoForUsername(username)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 };
 
