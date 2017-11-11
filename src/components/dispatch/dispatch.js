@@ -8,13 +8,12 @@ export class Dispatch {
     }
 
     newFromTemplate = (template, name, vars = {}, ports = []) => new Promise((resolve, reject) => {
-        rest.post(`${this.URL}/unit/from-template/${template}`, {
+        rest.postJson(`${this.URL}/unit/from-template/${template}`, {
+            name,
+            vars,
+            ports,
+        }, {
             timeout: 10000,
-            data: {
-                name,
-                vars,
-                ports,
-            },
         }).on("complete", function (returnData) {
             logger.debug("Create succeeded", returnData);
             resolve(returnData);
