@@ -1,39 +1,23 @@
-var etcd;
-var wait = require("wait.for");
+import { Etcd3 } from "etcd3";
 
-var connectEtcd = function () {
-    var NodeEtcd = require("node-etcd")
-    console.log(config.etcdLinkUrl)
-    etcd = new NodeEtcd([config.etcdLinkUrl])
+let client;
+
+// Initialise etcd (static instance)
+// Must be called prior to using any of the other methods
+export function init() {
+    if (client) {
+        return;
+    }
+    console.log(config.etcdLinkUrl);
+    client = new Etcd3({ hosts: config.etcdLinkUrl });
 }
 
-var get = function (key, callback) {
-    etcd.get(key, function (err, res) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        var data;
-        try {
-            // XXX: JSON.parse() on large JSON might block the event loop
-            data = JSON.parse(res.node.value);
-            if (!data || typeof data !== "object") {
-                data = res.node.value;
-            }
-        } catch (e) {
-            data = res.node.value;
-        }
-        callback(null, data);
-    })
+// Returns a Promise
+export function get(key) {
+    return client.get(key);
 }
 
-var set = function (key, value) {
-    etcd.set(key, value)
+// Returns a Promise
+export function set(key, value) {
+    return client.put(key).value(value);
 }
-
-module.exports.connectEtcd = function (discover) {
-    wait.launchFiber(connectEtcd, discover)
-}
-
-module.exports.get = get
-module.exports.set = set
