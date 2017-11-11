@@ -4,6 +4,9 @@ import * as castDB from "./database.js"
 import * as configHelper from "./configHelper.js"
 import * as tunesDB from "../tunes/personalMusicDatabase.js"
 import fleet from "../coreos/fleet.js"
+import { Dispatch } from "../dispatch/dispatch.js"
+
+const dispatchDJ = new Dispatch(config.djLinkURL)
 const moduleLogger = log.child({ component: "cast" })
 
 
@@ -40,15 +43,11 @@ export const stopNode = async (username) => {
 }
 
 export const startDJ = (username) => {
-    return fleet.startUnit(`${username}-dj.service`);
+    return dispatchDJ.newFromTemplate("dj-*.service", username, {});
 }
 
-export const stopDJ = (username) => {
-    return fleet.stopUnit(`${username}-dj.service`)
-}
-
-export const destroyDJUnit = (username) => {
-    return fleet.destroyUnit(`${username}-dj.service`)
+export const destroyDJ = (username) => {
+    return dispatchDJ.destroy(`dj-${username}`)
 }
 
 export const destroyUnit = async (username) => {
@@ -62,7 +61,7 @@ export const hardRestartNode = async (username) => {
 }
 
 export const hardRestartDJ = async (username) => {
-    await stopDJ(username)
+    await destroyDJ(username)
     await startDJ(username)
 }
 
@@ -88,8 +87,7 @@ export const terminateNode = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("Terminating node");
     try {
-        await stopDJ(username)
-        await destroyDJUnit(username)
+        await destroyDJ(username)
     } catch (error) {
         logger.info(error)
     }
@@ -127,17 +125,15 @@ export const upgradeDJ = async (username) => {
     const config = await castDB.getInfoForUsername(username)
     if (config.DJ.enabled) {
         try {
-            await stopDJ(username)
-            await destroyDJUnit(username)
+            await destroyDJ(username)
         } catch (error) {
             logger.info(error)
         }
-        const fleetUnit = configHelper.createDJFleetUnit(username)
-        await fleet.newUnit(fleetUnit.name, fleetUnit)
+        await startDJ(username)
         logger.info("Created DJ")
     } else {
         try {
-            await destroyDJUnit(username)
+            await destroyDJ(username)
         } catch (error) {
             logger.info(error)
         }
@@ -157,7 +153,7 @@ export const suspendNode = async (username) => {
     await stopNode(username)
     await destroyUnit(username)
     try {
-        destroyDJUnit(username)
+        destroyDJ(username)
     } catch (error) {
         logger.info(error)
     }
