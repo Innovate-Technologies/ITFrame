@@ -20,25 +20,16 @@ dzrriYPXONAK3ULzSMR4q3A2MHFdwgLBAe5CQJ0cf2GdE/OubCIh1/9w+TqfZxG2
 lSwuZce/GpatJxkLPaQDiH32
 -----END CERTIFICATE-----`;
 
-let client;
-
-// Initialise etcd (static instance)
-// Must be called prior to using any of the other methods
-export function init() {
-    if (client) {
-        return;
-    }
-    client = new Etcd3({
-        hosts: config.etcdUrl,
-        credentials: {
-            rootCertificate: ROOT_CERTIFICATE,
-        },
-        auth: {
-            username: config.etcdUsername,
-            password: config.etcdPassword,
-        },
-    });
-}
+const client = new Etcd3({
+    hosts: config.etcdUrl,
+    credentials: {
+        rootCertificate: ROOT_CERTIFICATE,
+    },
+    auth: {
+        username: config.etcdUsername,
+        password: config.etcdPassword,
+    },
+});
 
 // Returns a Promise
 export function get(key) {
