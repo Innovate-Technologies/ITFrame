@@ -16,7 +16,7 @@ export const createNode = async (username) => {
     const config = await configHelper.createConfigForNewUser(username)
     logger.debug("Adding configuration to database")
     await castDB.addConfigForUsername(username, config)
-    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
 }
 
 export const startNode = async (username) => {
@@ -98,7 +98,8 @@ export const upgradeNode = async (username) => {
     logger.info("Deleted Unit")
     await sleep(2000) // make sure unit has been deleted
     await castDB.updateVersion(username)
-    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    const config = await castDB.getInfoForUsername(username)
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 }
 
@@ -131,7 +132,8 @@ export const upgradeDJ = async (username) => {
 export const unsuspendNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("unsuspending node")
-    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    const config = await castDB.getInfoForUsername(username)
+    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 };
 
