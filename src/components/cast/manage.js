@@ -3,10 +3,10 @@ import rest from "restler"
 import * as castDB from "./database.js"
 import * as configHelper from "./configHelper.js"
 import * as tunesDB from "../tunes/personalMusicDatabase.js"
-import fleet from "../coreos/fleet.js"
 import { Dispatch } from "../dispatch/dispatch.js"
 
 const dispatchDJ = new Dispatch(config.djLinkURL)
+const dispatchCast = new Dispatch(config.castLinkURL)
 const moduleLogger = log.child({ component: "cast" })
 
 
@@ -16,30 +16,19 @@ export const createNode = async (username) => {
     const config = await configHelper.createConfigForNewUser(username)
     logger.debug("Adding configuration to database")
     await castDB.addConfigForUsername(username, config)
-    await createFleet(username)
-}
-
-export const createFleet = async (username) => {
-    const logger = moduleLogger.child({ username });
-    logger.debug("Adding unit file")
-    const fleetUnit = await configHelper.createFleetUnit(username)
-    logger.debug("Created unit file", fleetUnit)
-    await fleet.newUnit(fleetUnit.name, fleetUnit)
-    logger.info("Created node")
+    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
 }
 
 export const startNode = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("Starting node");
-    const config = await castDB.getInfoForUsername(username)
-    return fleet.startUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
+    return dispatchCast.start(`cast-${username}.service`)
 }
 
 export const stopNode = async (username) => {
     let logger = moduleLogger.child({ username });
     logger.info("Stopping node");
-    const config = await castDB.getInfoForUsername(username)
-    return fleet.stopUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
+    return dispatchCast.stop(`cast-${username}.service`)
 }
 
 export const startDJ = (username) => {
@@ -51,8 +40,7 @@ export const destroyDJ = (username) => {
 }
 
 export const destroyUnit = async (username) => {
-    const config = await castDB.getInfoForUsername(username)
-    return fleet.destroyUnit(`${username}-${config.input.SHOUTcast.toString()}.service`);
+    return dispatchCast.destroy(`cast-${username}.service`)
 }
 
 export const hardRestartNode = async (username) => {
@@ -110,7 +98,7 @@ export const upgradeNode = async (username) => {
     logger.info("Deleted Unit")
     await sleep(2000) // make sure unit has been deleted
     await castDB.updateVersion(username)
-    await createFleet(username)
+    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 }
 
@@ -143,7 +131,7 @@ export const upgradeDJ = async (username) => {
 export const unsuspendNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("unsuspending node")
-    await createFleet(username)
+    await dispatchCast.newFromTemplate("cast-*.service", username, {}, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
     logger.info("Created node")
 };
 
