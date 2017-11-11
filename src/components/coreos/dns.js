@@ -1,4 +1,4 @@
-import etcd from "~/components/coreos/etcd.js";
+import * as etcd from "~/components/coreos/etcd.js";
 
 /**
  * Set a DNS record in etcd
