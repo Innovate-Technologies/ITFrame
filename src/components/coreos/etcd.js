@@ -31,29 +31,10 @@ const client = new Etcd3({
     },
 });
 
-export async function get(key, doNotRetry = false) {
-    // XXX: Handling auth token errors manually should not be required.
-    try {
-        return await client.get(key);
-    } catch (error) {
-        if (doNotRetry || error.message !== "etcdserver: invalid auth token") {
-            throw error;
-        }
-        // XXX: Internal API
-        client.auth.client.authenticator.invalidateMetadata();
-        return await get(key, true);
-    }
+export async function get(key) {
+    return await client.get(key);
 }
 
-export async function set(key, value, doNotRetry = false) {
-    try {
-        return await client.put(key).value(value);
-    } catch (error) {
-        if (doNotRetry || error.message !== "etcdserver: invalid auth token") {
-            throw error;
-        }
-        // XXX: Internal API
-        client.auth.client.authenticator.invalidateMetadata();
-        return await set(key, value, true);
-    }
+export async function set(key, value) {
+    return await client.put(key).value(value);
 }
