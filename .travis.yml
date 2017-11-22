@@ -6,6 +6,8 @@ services:
 - docker
 os:
 - linux
+before_install:
+- docker pull innovate/itframe:latest
 install:
 - npm install --only=dev
 cache:
@@ -13,7 +15,7 @@ cache:
   - node_modules
 script:
 - ./node_modules/.bin/babel ./src -d /tmp/bin --minified --ignore 'node_modules/'
-- docker build -t innovate/itframe:latest .
+- docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
 deploy:
   provider: script
   script: "./deploy.sh"
