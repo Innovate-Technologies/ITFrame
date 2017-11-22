@@ -50,7 +50,6 @@
     "shelljs": "^0.5.3",
     "simple-bufferstream": "~1.0.0",
     "slack-client": "2.0.1",
-    "snyk": "^1.49.4",
     "socket.io": "1.5.0",
     "speakeasy": "~1.0.3",
     "speakeasy-nlp": "^0.2.2",
@@ -81,11 +80,5 @@
     "eslint-import-resolver-node": "^0.2.0",
     "eslint-plugin-import": "^1.13.0",
     "eslint_d": "^4.0.1"
-  },
-  "scripts": {
-    "test": "snyk test",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
-  },
-  "snyk": true
+  }
 }
