@@ -1,12 +1,15 @@
 FROM node:6
 MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
-COPY ./src /opt/itframe/source 
+# Update npm packages first to avoid unnecessary rebuilds
+COPY ./package.json /opt/itframe/source/package.json
+RUN cd /opt/itframe/source/ && npm install --production
+
+COPY ./src /opt/itframe/source
 COPY ./.git /opt/itframe/source/.git
 
 WORKDIR /opt/itframe/source
 
-RUN npm install
 RUN mkdir keys
 
 CMD ln -s /run/secrets/itframe-conf config.json &&\
