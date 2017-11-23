@@ -3,6 +3,7 @@
  * This database stores account information for users on Centova Cast servers.
  */
 
+import dns from "dns";
 import _ from "underscore";
 
 let usersDatabase = {};
@@ -73,6 +74,12 @@ usersDatabase.register = (username, server, groupName, callback = () => {}) => {
     });
 };
 
+function isProxyUsable(username) {
+    return new Promise((resolve) => {
+        dns.resolve(username + ".radioca.st", (err) => resolve(!err));
+    });
+}
+
 usersDatabase.getStreamUrl = (username, callback) => {
     if (!username) {
         return callback(new Error("No username specified"));
@@ -87,7 +94,7 @@ usersDatabase.getStreamUrl = (username, callback) => {
         }
         let plsFileUrl = `http://${server}.shoutca.st/tunein/${username}.pls`;
         rest.get(plsFileUrl, { timeout: 5000 })
-            .on("complete", function (data) {
+            .on("complete", async function (data) {
                 if (data instanceof Error) {
                     return callback(data);
                 }
@@ -101,6 +108,11 @@ usersDatabase.getStreamUrl = (username, callback) => {
                 var streamURL = streamUrlArray.join(":");
                 if (streamURL.charAt(streamURL.length - 1) === "/") { // Centova is too lazy to serve propper SHOUTcast v1 links
                     streamURL += ";"
+                }
+                if (await isProxyUsable(username)) {
+                    const radiocastUrl = streamURL.replace(/\/\/(.*).shoutca.st:(\d+)\//,
+                                                           "//" + username + ".radioca.st/");
+                    return callback(null, radiocastUrl);
                 }
                 return callback(null, streamURL);
             })
