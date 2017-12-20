@@ -5,7 +5,7 @@ MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 COPY ./package.json /opt/itframe/source/package.json
 RUN cd /opt/itframe/source/ && npm install --production
 
-COPY ./src /opt/itframe/source
+COPY /tmp/bin /opt/itframe/source
 COPY ./.git /opt/itframe/source/.git
 
 WORKDIR /opt/itframe/source
