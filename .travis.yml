@@ -14,7 +14,7 @@ cache:
   directories:
   - node_modules
 script:
-- ./node_modules/.bin/babel ./src -d ./bin --minified --ignore 'node_modules/'
+- cd src && ../node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
 - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
 deploy:
   provider: script
