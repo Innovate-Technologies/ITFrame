@@ -1,18 +1,12 @@
-import promisify from "promisify-node";
 
 import BadRequestError from "~/http/classes/BadRequestError";
 import AccessDeniedError from "~/http/classes/AccessDeniedError";
-import apicache from "apicache"
 const users = requireFromRoot("components/legacy/usersDatabase.js");
 const controlUser = requireFromRoot("components/control/controlUser.js");
 const legacyiOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js");
 const castDatabase = requireFromRoot("components/cast/database.js");
 const nowPlayingDatabase = requireFromRoot("components/nowplaying/nowPlayingDatabase.js");
-const legacyNowPlaying = promisify(requireFromRoot("components/nowplaying/legacyNowPlaying.js"),
-    undefined, true);
-const AppsService = requireFromRoot("components/apps/api.js");
-const profiler = requireFromRoot("profiler");
-const cache = apicache.middleware
+
 const moduleLogger = log.child({ component: "internal/apps" });
 
 export default ({ app, wrap }) => {
@@ -78,12 +72,12 @@ export default ({ app, wrap }) => {
         }
     }));
 
-    app.get("/internal/apps/get-now-playing/:username", cache("10 seconds"), wrap(async function (req, res) {
+    app.get("/internal/apps/get-now-playing/:username", wrap(async function (req, res) {
         let username = req.params.username;
         if (!username) {
             throw new BadRequestError("Missing username");
         }
-        
+
         let song = await nowPlayingDatabase.getLatestSong(username);
         let songInfo = {
             title: "",
