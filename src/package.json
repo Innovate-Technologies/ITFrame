@@ -20,6 +20,7 @@
     "cld": "~2.4.4",
     "colors": "~1.1.2",
     "colorspaces": "^0.1.4",
+    "connect-timeout": "^1.9.0",
     "cors": "^2.8.4",
     "crypto": "0.0.3",
     "ejson": "^2.1.2",

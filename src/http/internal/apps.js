@@ -1,6 +1,7 @@
 
 import BadRequestError from "~/http/classes/BadRequestError";
 import AccessDeniedError from "~/http/classes/AccessDeniedError";
+import timeout from "connect-timeout";
 const users = requireFromRoot("components/legacy/usersDatabase.js");
 const controlUser = requireFromRoot("components/control/controlUser.js");
 const legacyiOSDatabase = requireFromRoot("components/iOS/legacyDatabase.js");
@@ -72,7 +73,7 @@ export default ({ app, wrap }) => {
         }
     }));
 
-    app.get("/internal/apps/get-now-playing/:username", wrap(async function (req, res) {
+    app.get("/internal/apps/get-now-playing/:username", timeout('5s'), wrap(async function (req, res) {
         let username = req.params.username;
         if (!username) {
             throw new BadRequestError("Missing username");
