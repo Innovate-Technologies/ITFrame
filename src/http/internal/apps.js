@@ -83,53 +83,23 @@ export default ({ app, wrap }) => {
         if (!username) {
             throw new BadRequestError("Missing username");
         }
-        let profilerCall = profiler.start("Getting app request from Apps", { username });
-        let appConfig;
-        try {
-            // appConfig = await AppsService.getRequest("android", { username });
-            appConfig = {useInternalNowPlaying: true}
-        } catch (error) {
-            appConfig = { useInternalNowPlaying: true };
-            log.warn(error, "Failed to get request from Apps.");
-        }
-        profilerCall.end();
-
-        let tryNowPlayingDatabase = async () => {
-            profilerCall = profiler.start("Getting now playing info from DB", { username });
-            let song = await nowPlayingDatabase.getLatestSong(username);
-            profilerCall.end();
-            let songInfo = {
-                title: "",
-                artist: "",
-                streamTitle: "Now Playing",
-                album: "",
-            };
-            try {
-                songInfo.title = song.song.trim();
-                songInfo.artist = song.artist.trim();
-                songInfo.album = song.cover;
-            } catch (_) {
-                moduleLogger.info("Found nothing in DB, replying with empty info");
-            }
-            moduleLogger.debug({ username }, "Sending response");
-            return res.json(songInfo);
+        
+        let song = await nowPlayingDatabase.getLatestSong(username);
+        let songInfo = {
+            title: "",
+            artist: "",
+            streamTitle: "Now Playing",
+            album: "",
         };
-
-        if (appConfig.useInternalNowPlaying) {
-            moduleLogger.debug({ username }, "Trying now playing database");
-            return tryNowPlayingDatabase();
-        }
-        moduleLogger.debug({ username }, "Trying Centova Cast");
         try {
-            profilerCall = profiler.start("Getting now playing info from Centova Cast", { username });
-            let response = await legacyNowPlaying.getNowPlayingInfo(username);
-            profilerCall.end();
-            moduleLogger.debug({ username }, "Sending response");
-            return res.json(response);
-        } catch (err) {
-            moduleLogger.debug({ username }, "Trying now playing database");
-            return tryNowPlayingDatabase();
+            songInfo.title = song.song.trim();
+            songInfo.artist = song.artist.trim();
+            songInfo.album = song.cover;
+        } catch (_) {
+            moduleLogger.info("Found nothing in DB, replying with empty info");
         }
+        moduleLogger.debug({ username }, "Sending response");
+        return res.json(songInfo);
     }));
 
 
