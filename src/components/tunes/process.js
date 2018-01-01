@@ -13,7 +13,7 @@ export const processSong = async ({ id }) => {
 
 export const stopContainer = async (id) => {
     try {
-        await dispatch.destroy(`tunes-worker-${id}`)
+        await dispatch.destroy(`tunes-worker-${id}.service`)
     } catch (error) {
         stopContainer({ id })
     }
