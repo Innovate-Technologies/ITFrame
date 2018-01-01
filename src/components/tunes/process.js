@@ -15,6 +15,6 @@ export const stopContainer = async (id) => {
     try {
         await dispatch.destroy(`tunes-worker-${id}.service`)
     } catch (error) {
-        stopContainer({ id })
+        stopContainer(id)
     }
 }
