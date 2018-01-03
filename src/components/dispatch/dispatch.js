@@ -15,6 +15,10 @@ export class Dispatch {
         }, {
             timeout: 10000,
         }).on("complete", function (returnData) {
+            if (returnData instanceof Error) {
+                logger.debug("Create failed", returnData);
+                reject(returnData)
+            }
             logger.debug("Create succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
@@ -27,6 +31,10 @@ export class Dispatch {
         rest.del(`${this.URL}/unit/${name}`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
+            if (returnData instanceof Error) {
+                logger.debug("Destroy failed", returnData);
+                reject(returnData)
+            }
             logger.debug("Destroy succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
@@ -39,6 +47,10 @@ export class Dispatch {
         rest.put(`${this.URL}/unit/${name}/start`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
+            if (returnData instanceof Error) {
+                logger.debug("Unit start failed", returnData);
+                reject(returnData)
+            }
             logger.debug("Unit start succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
@@ -51,7 +63,11 @@ export class Dispatch {
         rest.put(`${this.URL}/unit/${name}/stop`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            logger.debug("Unit start succeeded", returnData);
+            if (returnData instanceof Error) {
+                logger.debug("Unit stop failed", returnData);
+                reject(returnData)
+            }
+            logger.debug("Unit stop succeeded", returnData);
             resolve(returnData);
         }).on("timeout", function () {
             logger.error("Timeout");
