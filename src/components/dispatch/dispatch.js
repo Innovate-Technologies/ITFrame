@@ -16,10 +16,10 @@ export class Dispatch {
             timeout: 10000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error) {
-                logger.debug("Create failed", returnData);
+                logger.debug("Create failed", returnData, template, name, vars, ports);
                 reject(returnData)
             }
-            logger.debug("Create succeeded", returnData);
+            logger.debug("Create succeeded", returnData, template, name, vars, ports);
             resolve(returnData);
         }).on("timeout", function () {
             logger.error("Timeout");
@@ -32,10 +32,10 @@ export class Dispatch {
             timeout: 10000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error) {
-                logger.debug("Destroy failed", returnData);
+                logger.debug("Destroy failed", returnData, name);
                 reject(returnData)
             }
-            logger.debug("Destroy succeeded", returnData);
+            logger.debug("Destroy succeeded", returnData, name);
             resolve(returnData);
         }).on("timeout", function () {
             logger.error("Timeout");
