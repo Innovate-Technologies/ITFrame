@@ -18,6 +18,7 @@ export class Dispatch {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Create failed", returnData, template, name, vars, ports);
                 reject(returnData)
+                return
             }
             logger.debug("Create succeeded", returnData, template, name, vars, ports);
             resolve(returnData);
@@ -34,6 +35,7 @@ export class Dispatch {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Destroy failed", returnData, name);
                 reject(returnData)
+                return
             }
             logger.debug("Destroy succeeded", returnData, name);
             resolve(returnData);
@@ -50,6 +52,7 @@ export class Dispatch {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Unit start failed", returnData);
                 reject(returnData)
+                return
             }
             logger.debug("Unit start succeeded", returnData);
             resolve(returnData);
@@ -66,6 +69,7 @@ export class Dispatch {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Unit stop failed", returnData);
                 reject(returnData)
+                return
             }
             logger.debug("Unit stop succeeded", returnData);
             resolve(returnData);
