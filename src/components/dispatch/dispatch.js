@@ -13,7 +13,7 @@ export class Dispatch {
             vars,
             ports,
         }, {
-            timeout: 10000,
+            timeout: 30000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Create failed", returnData, template, name, vars, ports);
@@ -30,7 +30,7 @@ export class Dispatch {
 
     destroy = (name) => new Promise((resolve, reject) => {
         rest.del(`${this.URL}/unit/${name}`, {
-            timeout: 10000,
+            timeout: 30000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error || (returnData.status !== "ok" && returnData.error !== "unit does not exist")) {
                 logger.debug("Destroy failed", returnData, name);
@@ -47,7 +47,7 @@ export class Dispatch {
 
     start = (name) => new Promise((resolve, reject) => {
         rest.put(`${this.URL}/unit/${name}/start`, {
-            timeout: 10000,
+            timeout: 30000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Unit start failed", returnData);
@@ -64,7 +64,7 @@ export class Dispatch {
 
     stop = (name) => new Promise((resolve, reject) => {
         rest.put(`${this.URL}/unit/${name}/stop`, {
-            timeout: 10000,
+            timeout: 30000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Unit stop failed", returnData);
