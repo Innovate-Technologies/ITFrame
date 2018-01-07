@@ -32,7 +32,7 @@ export class Dispatch {
         rest.del(`${this.URL}/unit/${name}`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            if (returnData instanceof Error || returnData.status !== "ok") {
+            if (returnData instanceof Error || (returnData.status !== "ok" && returnData.error !== "unit does not exist")) {
                 logger.debug("Destroy failed", returnData, name);
                 reject(returnData)
                 return
