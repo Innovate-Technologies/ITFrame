@@ -15,7 +15,7 @@ export class Dispatch {
         }, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            if (returnData instanceof Error) {
+            if (returnData instanceof Error || returnData.result !== "ok") {
                 logger.debug("Create failed", returnData, template, name, vars, ports);
                 reject(returnData)
             }
@@ -31,7 +31,7 @@ export class Dispatch {
         rest.del(`${this.URL}/unit/${name}`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            if (returnData instanceof Error) {
+            if (returnData instanceof Error || returnData.result !== "ok") {
                 logger.debug("Destroy failed", returnData, name);
                 reject(returnData)
             }
@@ -47,7 +47,7 @@ export class Dispatch {
         rest.put(`${this.URL}/unit/${name}/start`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            if (returnData instanceof Error) {
+            if (returnData instanceof Error || returnData.result !== "ok") {
                 logger.debug("Unit start failed", returnData);
                 reject(returnData)
             }
@@ -63,7 +63,7 @@ export class Dispatch {
         rest.put(`${this.URL}/unit/${name}/stop`, {
             timeout: 10000,
         }).on("complete", function (returnData) {
-            if (returnData instanceof Error) {
+            if (returnData instanceof Error || returnData.result !== "ok") {
                 logger.debug("Unit stop failed", returnData);
                 reject(returnData)
             }
