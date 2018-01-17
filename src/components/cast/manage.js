@@ -133,7 +133,13 @@ export const unsuspendNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("unsuspending node")
     const config = await castDB.getInfoForUsername(username)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    try {
+        await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    } catch (e) {
+        if (e.message === "Timeout") {
+            return unsuspendNode(username)
+        }
+    }
     logger.info("Created node")
 };
 
