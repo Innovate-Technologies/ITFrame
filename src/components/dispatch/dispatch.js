@@ -13,7 +13,7 @@ export class Dispatch {
             vars,
             ports,
         }, {
-            timeout: 30000,
+            timeout: 60000,
         }).on("complete", function (returnData) {
             if (returnData instanceof Error || returnData.status !== "ok") {
                 logger.debug("Create failed", returnData, template, name, vars, ports);
