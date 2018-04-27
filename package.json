@@ -51,7 +51,7 @@
     "shelljs": "^0.5.3",
     "simple-bufferstream": "~1.0.0",
     "slack-client": "2.0.1",
-    "socket.io": "1.5.0",
+    "socket.io": "2.1.0",
     "speakeasy": "~1.0.3",
     "speakeasy-nlp": "^0.2.2",
     "twit": "^2.1.1",
