@@ -2,24 +2,20 @@ sudo: required
 language: node_js
 node_js:
 - '6'
-env:
-- CXX=g++-4.8
 services:
 - docker
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
 os:
 - linux
+before_install:
+- docker pull innovate/itframe:latest
+install:
+- npm install --only=dev
+cache:
+  directories:
+  - node_modules
 script:
-- npm -g install babel-cli babel-plugin-add-module-exports babel-plugin-syntax-class-properties
-  babel-plugin-transform-class-properties babel-polyfill babel-preset-es2015 babel-preset-stage-2
-  babel-register babel-root-import
-- babel ./src -d /tmp/bin --minified --ignore 'node_modules/'
-- docker build -t innovate/itframe:latest .
+- cd src && ../node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
+- docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
 deploy:
   provider: script
   script: "./deploy.sh"

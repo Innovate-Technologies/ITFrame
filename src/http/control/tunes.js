@@ -69,9 +69,9 @@ module.exports = function ({ app, wrap }) {
         }
         req.log.info({ link: req.file.link }, "Uploaded file");
         const castInfo = await castDatabase.getInfoForUsername(req.body.username)
-        let processedURLS = {}
+        let processedURLS = []
         for (var stream of castInfo.streams) {
-            processedURLS[stream.stream.replace("kbps", "")] = ""
+            processedURLS.push({bitrate: parseInt(stream.stream.replace("kbps", ""), 10), url:""})
         }
         const entry = await tunesDB.addSong(req.body.username, {
             type: "song",

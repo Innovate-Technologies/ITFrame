@@ -23,6 +23,27 @@ const IntervalsSchema = new Schema({
     start: Date,
     end: Date,
     forever: Boolean,
+    days: [Number],
+    dayStart: {
+        hour: {
+            type: Number,
+            default: 0,
+        },
+        minute: {
+            type: Number,
+            default: 0,
+        },
+    },
+    dayEnd: {
+        hour: {
+            type: Number,
+            default: 23,
+        },
+        minute: {
+            type: Number,
+            default: 59,
+        },
+    },
 }, { collection: "dj_intervals" })
 IntervalsSchema.index({
     username: 1,

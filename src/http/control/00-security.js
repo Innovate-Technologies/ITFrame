@@ -1,13 +1,19 @@
 import fs from "fs";
 import wait from "wait.for";
 import _ from "underscore";
+const logger = log.child({ component: "Security" });
 
 import BadRequestError from "~/http/classes/BadRequestError";
+import redisClient from "~/components/redisClient";
 
 const InvalidatedTokens = requireFromRoot("components/control/invalidatedTokensDatabase.js");
 const controlUser = requireFromRoot("components/control/controlUser.js");
 const publicKey = fs.readFileSync(global.appRoot + "/keys/controlPublicKey.pem");
 const cert = fs.readFileSync(global.appRoot + "/keys/controlSigningKey.pem");
+
+async function invalidateCacheForEmail(email) {
+    await redisClient.delAsync("user_products:" + email);
+}
 
 export default function ({ app, expressJwt, jwt, wrap }) {
     app.use("/control", expressJwt({
@@ -130,6 +136,7 @@ export default function ({ app, expressJwt, jwt, wrap }) {
             audience: "https://itframe.shoutca.st/control",
             algorithm: "RS256",
         });
+        await invalidateCacheForEmail(req.body.email);
         res.json({ token });
     }));
 
