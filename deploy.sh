@@ -1,7 +1,13 @@
 #!/bin/bash
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then 
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-    docker push innovate/itframe:latest
+    if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+      docker push innovate/itframe:latest 
+    fi
+    if [[ "$TRAVIS_BRANCH" == "staging" ]]; then
+        docker tag innovate/itframe:latest innovate/itframe:staging
+        docker push innovate/itframe:staging
+    fi
     docker tag innovate/itframe:latest innovate/itframe:$TRAVIS_COMMIT
     docker push innovate/itframe:$TRAVIS_COMMIT
 fi
