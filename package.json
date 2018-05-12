@@ -35,7 +35,7 @@
     "lodash": "^4.17.10",
     "maxmind": "~0.6.0",
     "moment": "^2.19.3",
-    "moment-timezone": "^0.5.14",
+    "moment-timezone": "^0.5.17",
     "mongoose": "4.11.1",
     "mongoose-paginate": "^5.0.0",
     "multer": "^1.1.0",
