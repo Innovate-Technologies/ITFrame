@@ -15,10 +15,6 @@ export const getLeastUsedPort = async () => {
         "14000": 0,
         "15000": 0,
         "16000": 0,
-        "17000": 0,
-        "18000": 0,
-        "19000": 0,
-        "20000": 0,
     }
 
     for (let service of services) {
