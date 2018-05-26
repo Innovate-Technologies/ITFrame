@@ -1,13 +1,13 @@
 let crypto = require("crypto");
-let swift = requireFromRoot("components/openstack/swift.js");
-let swiftClient = swift.getStorageClient();
+let s3 = requireFromRoot("components/openstack/s3.js");
+let s3Client = s3.getStorageClient();
 let PassThrough = require("stream").PassThrough;
-let moduleLogger = log.child({ component: "SwiftMulterStorage" });
+let moduleLogger = log.child({ component: "S3MulterStorage" });
 import UUID from "~/components/uuid";
 
-class SwiftMulterStorage {
+class S3MulterStorage {
     /**
-     * Constructor for SwiftMulterStorage
+     * Constructor for S3MulterStorage
      * @constructor
      * @param  {String}   options.container        Container name to upload the files to
      * @param  {String}   options.defaultExtension Default file extension to append to the file name (optional)
@@ -112,7 +112,7 @@ class SwiftMulterStorage {
                     return callback(error);
                 }
                 this.logger.info("Uploading file");
-                swift.uploadStream({
+                s3.uploadStream({
                     container: this.container,
                     name: fileName,
                     stream: this.streamB,
@@ -176,20 +176,20 @@ class SwiftMulterStorage {
      * @param  {Function} callback Callback function
      */
     _removeFile(req, file, callback) {
-        swiftClient.removeFile(file.container, file.remote, callback);
+        s3Client.removeFile(file.container, file.remote, callback);
     }
 }
 
-export default class SwiftMulterStorageWrapper {
+export default class S3MulterStorageWrapper {
     constructor(params) {
         this.params = params;
     }
 
     _handleFile(req, file, callback) {
-        return new SwiftMulterStorage(this.params)._handleFile(req, file, callback);
+        return new S3MulterStorage(this.params)._handleFile(req, file, callback);
     }
 
     _removeFile(req, file, callback) {
-        return new SwiftMulterStorage(this.params)._removeFile(req, file, callback);
+        return new S3MulterStorage(this.params)._removeFile(req, file, callback);
     }
 }

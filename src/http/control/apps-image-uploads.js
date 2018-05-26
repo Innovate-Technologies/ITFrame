@@ -8,7 +8,7 @@ let moduleLogger = log.child({ component: "apps-image-uploads" });
 let multer = require("multer");
 let sbuff = require("simple-bufferstream");
 let getFileType = require("file-type");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
+import S3MulterStorage from "~/components/openstack/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
 
@@ -52,7 +52,7 @@ let processImageUpload = (req, { stream }, callback) => {
 const ONE_MEGABYTE = 1 * Math.pow(10, 6);
 const MAX_FILE_SIZE = 5 * ONE_MEGABYTE;
 let upload = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.appImagesUploadContainer,
         processFileFn: processImageUpload,
         defaultExtension: "png",
@@ -74,7 +74,7 @@ module.exports = function ({ app }) {
         }
         req.log.info({ link: req.file.link }, "Uploaded file");
         res.json({
-            link: req.file.link,
+            link: `https://images.shoutca.st/${req.file.name}`,
             name: req.file.name,
         });
     });
