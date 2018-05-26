@@ -17,7 +17,7 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "bunyan": "^1.8.12",
-    "cld": "~2.4.4",
+    "cld": "~2.4.8",
     "colors": "~1.2.4",
     "colorspaces": "^0.1.4",
     "connect-timeout": "^1.9.0",
