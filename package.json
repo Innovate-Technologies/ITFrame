@@ -25,7 +25,7 @@
     "crypto": "0.0.3",
     "ejson": "^2.1.2",
     "etcd3": "^0.2.10",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "express-jwt": "^3.3.0",
     "file-type": "^3.3.1",
     "gelf-stream": "^1.1.1",
