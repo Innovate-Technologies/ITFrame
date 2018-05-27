@@ -45,7 +45,7 @@
     "pkgcloud": "^1.5.0",
     "pls": "^0.1.3",
     "promisify-node": "^0.3.0",
-    "rand-token": "^0.2.1",
+    "rand-token": "^0.4.0",
     "redis": "^2.8.0",
     "restler": "^3.3.0",
     "shelljs": "^0.8.2",
