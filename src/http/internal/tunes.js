@@ -7,7 +7,7 @@ const MAX_FILE_SIZE = 1024 * ONE_MEGABYTE;
 
 let moduleLogger = log.child({ component: "tunes-internal" });
 let multer = require("multer");
-import SwiftMulterStorage from "~/components/storage/SwiftMulterStorage";
+import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
 let sbuff = require("simple-bufferstream");
@@ -55,7 +55,7 @@ let processImageUpload = (req, { stream }, callback) => {
 };
 
 let uploadImage = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.appImagesUploadContainer,
         processFileFn: processImageUpload,
         defaultExtension: "png",
@@ -72,7 +72,7 @@ let uploadImage = multer({
 
 
 let upload = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.tunesUploadContainer,
         fileNameFn: (req) => req.query.name,
     }),
