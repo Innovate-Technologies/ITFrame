@@ -21,8 +21,8 @@ if (typeof global.appRoot === "undefined") {
 var shell = require("shelljs");
 shell.config.silent = true;
 global.ITFrame = {
-    version: (shell.exec("git describe --always --tags --abbrev=20").output || "").replace("\n", ""),
-    branch: (shell.exec("git rev-parse --abbrev-ref HEAD").output || "").replace("\n", ""),
+    version: (shell.exec("git describe --always --tags --abbrev=20").stdout || "").replace("\n", ""),
+    branch: (shell.exec("git rev-parse --abbrev-ref HEAD").stdout || "").replace("\n", ""),
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
