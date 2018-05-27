@@ -124,7 +124,8 @@ class S3MulterStorage {
                         container: File.container,
                         remote: File.name,
                         size: File.size,
-                        link: File.client._serviceUrl + "/" +
+                        name: File.name,
+                        link: config.s3Endpoint + "/" +
                             File.container + "/" +
                             File.name,
                     };
