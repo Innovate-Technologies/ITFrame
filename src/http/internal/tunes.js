@@ -7,7 +7,7 @@ const MAX_FILE_SIZE = 1024 * ONE_MEGABYTE;
 
 let moduleLogger = log.child({ component: "tunes-internal" });
 let multer = require("multer");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
+import SwiftMulterStorage from "~/components/storage/SwiftMulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
 let sbuff = require("simple-bufferstream");

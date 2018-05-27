@@ -8,7 +8,7 @@ let moduleLogger = log.child({ component: "apps-image-uploads" });
 let multer = require("multer");
 let sbuff = require("simple-bufferstream");
 let getFileType = require("file-type");
-import S3MulterStorage from "~/components/openstack/S3MulterStorage";
+import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
 

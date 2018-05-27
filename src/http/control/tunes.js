@@ -5,7 +5,7 @@ const castDatabase = requireFromRoot("components/cast/database.js");
 const moduleLogger = log.child({ component: "control-tunes" });
 const getFileType = require("file-type");
 const sbuff = require("simple-bufferstream");
-import S3MulterStorage from "~/components/openstack/S3MulterStorage";
+import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 const ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "gif"];
 

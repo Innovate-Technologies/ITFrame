@@ -1,5 +1,5 @@
 let crypto = require("crypto");
-let s3 = requireFromRoot("components/openstack/s3.js");
+let s3 = requireFromRoot("components/storage/s3.js");
 let s3Client = s3.getStorageClient();
 let PassThrough = require("stream").PassThrough;
 let moduleLogger = log.child({ component: "S3MulterStorage" });
