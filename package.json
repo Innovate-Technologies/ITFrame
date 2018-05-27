@@ -50,7 +50,7 @@
     "restler": "^3.3.0",
     "shelljs": "^0.8.2",
     "simple-bufferstream": "~1.0.0",
-    "slack-client": "2.0.1",
+    "slack-client": "2.0.6",
     "socket.io": "1.5.0",
     "speakeasy": "~1.0.3",
     "speakeasy-nlp": "^0.2.2",
