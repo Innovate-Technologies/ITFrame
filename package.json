@@ -42,7 +42,7 @@
     "node-fleet-api": "^1.0.3",
     "nodeify": "^1.0.0",
     "pajk-lwip": "^0.2.0",
-    "pkgcloud": "~1.2.0-alpha.0",
+    "pkgcloud": "~1.5.0",
     "pls": "^0.1.3",
     "promisify-node": "^0.3.0",
     "rand-token": "^0.2.1",
