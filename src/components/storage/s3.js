@@ -1,13 +1,14 @@
-let swift = { }
+let s3 = { }
 let sbuff = require("simple-bufferstream")
 let client = require("pkgcloud").storage.createClient({
-    provider: "openstack",
-    username: config.swiftUsername,
-    password: config.swiftPassword,
-    authUrl: config.keystoneURL,
-    region: config.swiftRegion,
+    provider: "amazon",
+    keyId: config.s3AccessKey,
+    key: config.s3SecretKey,
+    region: config.s3Region,
+    forcePathBucket: true,
+    endpoint: config.s3Endpoint,
 })
-let moduleLogger = log.child({ component: "swift" })
+let moduleLogger = log.child({ component: "s3" })
 
 if (process.env.OPENSTACK_DEBUG) {
     client.on("log::*", function (message, object) {
@@ -22,7 +23,7 @@ if (process.env.OPENSTACK_DEBUG) {
  * Get the OpenStack storage client
  * @return OpenStack storage client
  */
-swift.getStorageClient = () => client
+s3.getStorageClient = () => client
 
 /**
  * Upload a buffer to Swift and return a File with a `name`
@@ -31,7 +32,7 @@ swift.getStorageClient = () => client
  * @param  {Buffer}   options.buffer    Buffer to upload
  * @param  {Function} callback          Callback function (err, File)
  */
-swift.uploadBuffer = function ({ container, name, buffer }, callback) {
+s3.uploadBuffer = function ({ container, name, buffer }, callback) {
     let logger = moduleLogger.child({ container, newFileName: name });
     if (!container || !name || !buffer || !callback) {
         throw new TypeError("container, name, buffer and callback are required")
@@ -55,7 +56,7 @@ swift.uploadBuffer = function ({ container, name, buffer }, callback) {
  * @param  {Buffer}   options.stream    Stream to upload
  * @param  {Function} callback          Callback function (err, File)
  */
-swift.uploadStream = function ({ container, name, stream }, callback) {
+s3.uploadStream = function ({ container, name, stream }, callback) {
     let logger = moduleLogger.child({ container, newFileName: name });
     if (!container || !name || !stream || !callback) {
         throw new TypeError("container, name, stream and callback are required")
@@ -70,11 +71,11 @@ swift.uploadStream = function ({ container, name, stream }, callback) {
     stream.pipe(writeStream)
 }
 
-swift.deleteFile = function ({ container, name }, callback) {
+s3.deleteFile = function ({ container, name }, callback) {
     if (!container || !name || !callback) {
         throw new TypeError("container, name and callback are required")
     }
     client.removeFile(container, name, callback);
 }
 
-module.exports = swift
+module.exports = s3
