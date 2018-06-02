@@ -3,10 +3,10 @@ import rest from "restler"
 import * as castDB from "./database.js"
 import * as configHelper from "./configHelper.js"
 import * as tunesDB from "../tunes/personalMusicDatabase.js"
-import { Dispatch } from "../dispatch/dispatch.js"
+import { HelmetController } from "../helmet/controller.js"
 
-const dispatchDJ = new Dispatch(config.djLinkURL)
-const dispatchCast = new Dispatch(config.castLinkURL)
+const helmetDJ = new HelmetController(config.djHelmetURL, )
+const helmetCast = new HelmetController(config.castHelmetURL)
 const moduleLogger = log.child({ component: "cast" })
 
 
@@ -16,36 +16,32 @@ export const createNode = async (username) => {
     const config = await configHelper.createConfigForNewUser(username)
     logger.debug("Adding configuration to database")
     await castDB.addConfigForUsername(username, config)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
+    return createUnit(username)
 }
 
-export const startNode = async (username) => {
+export const createUnit = async (username) => {
     const logger = moduleLogger.child({ username });
-    logger.info("Starting node");
-    return dispatchCast.start(`cast-${username}.service`)
-}
-
-export const stopNode = async (username) => {
-    let logger = moduleLogger.child({ username });
-    logger.info("Stopping node");
-    return dispatchCast.stop(`cast-${username}.service`)
+    logger.info("Making configuration")
+    const config = await castDB.getInfoForUsername(username, config)
+    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username })
 }
 
 export const startDJ = (username) => {
-    return dispatchDJ.newFromTemplate("dj-*.service", username, {});
+    return helmetDJ.create(username, { username });
 }
 
 export const destroyDJ = (username) => {
-    return dispatchDJ.destroy(`dj-${username}`)
+    return helmetDJ.destroy(username, { username })
 }
 
 export const destroyUnit = async (username) => {
-    return dispatchCast.destroy(`cast-${username}.service`)
+    const config = await castDB.getInfoForUsername(username, config)
+    return helmetCast.destroy(username, { shoutcastPort: config.input.SHOUTcast.toString(), username })
 }
 
 export const hardRestartNode = async (username) => {
-    await stopNode(username)
-    await startNode(username)
+    await destroyUnit(username)
+    await createUnit(username)
 }
 
 export const hardRestartDJ = async (username) => {
@@ -79,7 +75,6 @@ export const terminateNode = async (username) => {
     } catch (error) {
         logger.info(error)
     }
-    await stopNode(username)
     await destroyUnit(username)
     await castDB.deleteUsername(username)
     await tunesDB.removeUser(username)
@@ -88,24 +83,14 @@ export const terminateNode = async (username) => {
 
 export const upgradeNode = async (username) => {
     const logger = moduleLogger.child({ username })
+    await castDB.updateVersion(username)
     logger.info("updating node");
-    try { // to fix missing unit file
-        await stopNode(username)
-        await destroyUnit(username)
+    try {
+        await hardRestartNode(username)
     } catch (error) {
         logger.error(error)
     }
-    logger.info("Deleted Unit")
-    await sleep(2000) // make sure unit has been deleted
-    await castDB.updateVersion(username)
-    const config = await castDB.getInfoForUsername(username)
-    await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
-    logger.info("Created node")
 }
-
-const sleep = (time) => new Promise((resolve) => {
-    setTimeout(resolve, time)
-})
 
 export const upgradeDJ = async (username) => {
     const logger = moduleLogger.child({ username });
@@ -132,21 +117,13 @@ export const upgradeDJ = async (username) => {
 export const unsuspendNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("unsuspending node")
-    const config = await castDB.getInfoForUsername(username)
-    try {
-        await dispatchCast.newFromTemplate("cast-*.service", username, { port: config.input.SHOUTcast.toString(), port2: (config.input.SHOUTcast + 1).toString() }, [config.input.SHOUTcast, config.input.SHOUTcast + 1])
-    } catch (e) {
-        if (e.message === "Timeout") {
-            return unsuspendNode(username)
-        }
-    }
+    await createUnit(username)
     logger.info("Created node")
 };
 
 export const suspendNode = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("suspending node");
-    await stopNode(username)
     await destroyUnit(username)
     try {
         destroyDJ(username)
