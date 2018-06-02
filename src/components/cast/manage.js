@@ -5,8 +5,8 @@ import * as configHelper from "./configHelper.js"
 import * as tunesDB from "../tunes/personalMusicDatabase.js"
 import { HelmetController } from "../helmet/controller.js"
 
-const helmetDJ = new HelmetController(config.djHelmetURL, )
-const helmetCast = new HelmetController(config.castHelmetURL)
+const helmetDJ = new HelmetController(config.djHelmetURL, config.djHelmetKey)
+const helmetCast = new HelmetController(config.castHelmetURL, config.castHelmetKey)
 const moduleLogger = log.child({ component: "cast" })
 
 
