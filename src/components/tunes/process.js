@@ -1,19 +1,19 @@
-import { Dispatch } from "../dispatch/dispatch.js"
-
-const dispatch = new Dispatch(config.tunesLinkURL)
+import { HelmetController } from "../helmet/controller.js"
+const controller = new HelmetController(config.tunesHelmetURL, config.tunesHelmetKey)
 
 export const processSong = async ({ id }) => {
     id = id + "" // make it a string
     try {
-        await dispatch.newFromTemplate("tunes-worker-*.service", id, {})
+        await controller.create(id, { id })
     } catch (error) {
         processSong({ id })
     }
 }
 
 export const stopContainer = async (id) => {
+    id = id + "" // make it a string
     try {
-        await dispatch.destroy(`tunes-worker-${id}.service`)
+        await controller.destroy(id, { id })
     } catch (error) {
         stopContainer(id)
     }
