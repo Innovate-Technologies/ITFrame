@@ -32,13 +32,13 @@ export class HelmetController {
     })
 
     destroy = (name, values = {}) => new Promise((resolve, reject) => {
-        rest.delJson(`${this.url}/deployment/${name}`, {
-            values,
-        }, {
+        rest.del(`${this.url}/deployment/${name}`, {
             timeout: 30000,
             headers: {
                 "Authorization": `Bearer ${this.key}`,
+                "Content-Type": "application/json",
             },
+            data: JSON.stringify({ values }),
         }).on("complete", function (returnData) {
             if (returnData instanceof Error) {
                 logger.debug("Destroy failed", returnData, name);
