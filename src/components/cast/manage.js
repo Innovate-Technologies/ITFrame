@@ -23,11 +23,11 @@ export const createUnit = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("Making configuration")
     const config = await castDB.getInfoForUsername(username, config)
-    const ingress = { hosts: [] }
+    let customHost = ""
     if (config.hostname != `https://${username}.radioca.st`) {
-        ingress.hosts = [ config.hostname ]
+        customHost = config.hostname.replace("https://", "")
     }
-    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, ingress })
+    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, customHost })
 }
 
 export const startDJ = (username) => {
