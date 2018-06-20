@@ -23,7 +23,7 @@ export const createUnit = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("Making configuration")
     const config = await castDB.getInfoForUsername(username, config)
-    const customHost = ""
+    let customHost = ""
     if (config.hostname != `https://${username}.radioca.st`) {
         customHost = config.hostname.replace("https://", "")
     }
