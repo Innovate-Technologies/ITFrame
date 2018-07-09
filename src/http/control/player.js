@@ -9,25 +9,23 @@ module.exports = ({ app, wrap }) => {
     // Configuration
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    app.get("/control/player/settings/:username", wrap((req, res, next) => {
-        wait.launchFiber(async function () {
-            try {
-                const config = wait.for(playerDatabase.getConfig, req.params.username)
-                if (config) {
-                    const nocoverEntry = await nocover.nocoverForUserame(req.params.username)
-                    if (nocoverEntry) {
-                        config.nocover = nocoverEntry.link
-                    }
+    app.get("/control/player/settings/:username", async (req, res, next) => {
+        try {
+            const config = await playerDatabase.getConfig(req.params.username)
+            if (config) {
+                const nocoverEntry = await nocover.nocoverForUserame(req.params.username)
+                if (nocoverEntry) {
+                    config.nocover = nocoverEntry.link
                 }
-                res.json(config);
-            } catch (error) {
-                if (error.message !== "Username not in database") {
-                    req.log.warn(error, "Failed to get settings");
-                }
-                return next(new NotFoundError("Failed to get settings: " + error.message));
             }
-        });
-    }));
+            res.json(config);
+        } catch (error) {
+            if (error.message !== "Username not in database") {
+                req.log.warn(error, "Failed to get settings");
+            }
+            return next(new NotFoundError("Failed to get settings: " + error.message));
+        }
+    });
 
     app.put("/control/player/settings/:username", (req, res, next) => {
         wait.launchFiber(function () {
