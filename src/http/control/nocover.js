@@ -65,7 +65,7 @@ module.exports = function ({ app, wrap }) {
     }));
 
     app.delete("/control/tunes/nocover/:username", wrap(async (req, res) => {
-        await nocover.delteNocoverForUsername(req.params.username)
+        await nocover.deleteNocoverForUsername(req.params.username)
         res.json({
             result: "ok",
         });

@@ -25,6 +25,6 @@ export const updateNocoverForUsername = async (username, link) => {
     return entry.save()
 }
 
-export const delteNocoverForUsername = async (username) => {
+export const deleteNocoverForUsername = async (username) => {
     return NocoverModel.remove({ username }).exec()
 }
