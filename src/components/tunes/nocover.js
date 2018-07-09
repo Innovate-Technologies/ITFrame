@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const nocoverSchema = new Schema({
     username: String,
     link: String,
-    linkSmall: String,
 }, { collection: "tunes_nocover", read: "nearest" });
 NocoverSchema.index({
     username: 1,
