@@ -1,7 +1,7 @@
 let wait = require("wait.for");
 let playerDatabase = requireFromRoot("components/player/database.js");
 import NotFoundError from "~/http/classes/NotFoundError";
-import * as nocover from "~/compenents/tunes/nocover";
+import * as nocover from "~/components/tunes/nocover";
 
 module.exports = ({ app, wrap }) => {
 
