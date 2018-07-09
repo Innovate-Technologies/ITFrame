@@ -1,8 +1,4 @@
 const ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "gif"];
-const DIMENSIONS = {
-    nocover: { width: 50, height: 50 },
-};
-
 let moduleLogger = log.child({ component: "centova-nocover" });
 let multer = require("multer");
 let sbuff = require("simple-bufferstream");
@@ -13,7 +9,7 @@ import resizeImage from "~/components/bufferImageResize";
 
 let processImageUpload = (req, { stream }, callback) => {
     let logger = moduleLogger.child({ req });
-    let targetDimensions = DIMENSIONS[req.query.imageType];
+    let targetDimensions = { width: 2048, height: 2048 },;
     let chunks = [];
     stream.on("data", (data) => chunks.push(data));
     stream.on("end", () => {
@@ -25,27 +21,15 @@ let processImageUpload = (req, { stream }, callback) => {
         if (type.ext && ALLOWED_IMAGE_TYPES.indexOf(type.ext) === -1) {
             return callback(new Error("Invalid file."));
         }
-        if (!targetDimensions) {
-            logger.info("Converting image to PNG");
-            convertImage(buffer, type.ext, (convertError, convertedBuffer) => {
-                if (convertError) {
-                    logger.error(convertError, "Failed to resize the image");
-                    return callback(convertError);
-                }
-                logger.info("Successfully converted the image")
-                return callback(null, sbuff(convertedBuffer));
-            });
-        } else {
-            logger.info("Resizing image and converting it to PNG");
-            resizeImage(buffer, type.ext, targetDimensions, (resizeError, resizedBuffer) => {
-                if (resizeError) {
-                    logger.error(resizeError, "Failed to resize the image");
-                    return callback(resizeError);
-                }
-                logger.info("Successfully resized the image")
-                return callback(null, sbuff(resizedBuffer));
-            });
-        }
+        logger.info("Resizing image and converting it to PNG");
+        resizeImage(buffer, type.ext, targetDimensions, (resizeError, resizedBuffer) => {
+            if (resizeError) {
+                logger.error(resizeError, "Failed to resize the image");
+                return callback(resizeError);
+            }
+            logger.info("Successfully resized the image")
+            return callback(null, sbuff(resizedBuffer));
+        });
     });
 };
 const ONE_MEGABYTE = 1 * Math.pow(10, 6);
@@ -67,7 +51,7 @@ let upload = multer({
 });
 
 module.exports = function ({ app }) {
-    app.post("/control/centova/upload-nocover", upload.single("nocover"), (req, res) => {
+    app.post("/control/tunes/upload-nocover", upload.single("nocover"), (req, res) => {
         if (!req.file) {
             throw new Error("Failed to upload the image.");
         }
