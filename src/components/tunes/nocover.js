@@ -14,6 +14,7 @@ export const nocoverForUserame = (username) => {
         username,
     }).exec()
 }
+
 export const updateNocoverForUsername = async (username, link) => {
     let entry = await NocoverModel.findOne({ username }).exec()
     if (entry === null) {
@@ -22,4 +23,8 @@ export const updateNocoverForUsername = async (username, link) => {
     }
     entry.link = link
     return entry.save()
+}
+
+export const delteNocoverForUsername = async (username) => {
+    return NocoverModel.remove({ username }).exec()
 }

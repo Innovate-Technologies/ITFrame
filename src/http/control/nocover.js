@@ -63,4 +63,11 @@ module.exports = function ({ app, wrap }) {
             name: req.file.name,
         });
     }));
+
+    app.delete("/control/tunes/upload-nocover/:username", wrap(async (req, res) => {
+        await nocover.delteNocoverForUsername(req.params.username, link)
+        res.json({
+            resulr: "ok",
+        });
+    }));
 };
