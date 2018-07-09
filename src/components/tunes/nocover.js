@@ -1,6 +1,6 @@
 const mongoose = requireFromRoot("components/database/mongodb.js");
 const Schema = mongoose.Schema;
-const nocoverSchema = new Schema({
+const NocoverSchema = new Schema({
     username: String,
     link: String,
 }, { collection: "tunes_nocover", read: "nearest" });
