@@ -9,8 +9,8 @@ module.exports = ({ app, wrap }) => {
     // Configuration
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    app.get("/control/player/settings/:username", wrap(async (req, res, next) => {
-        wait.launchFiber(function () {
+    app.get("/control/player/settings/:username", wrap((req, res, next) => {
+        wait.launchFiber(async function () {
             try {
                 const config = wait.for(playerDatabase.getConfig, req.params.username)
                 if (config) {
