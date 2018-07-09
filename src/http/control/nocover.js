@@ -5,7 +5,7 @@ let sbuff = require("simple-bufferstream");
 let getFileType = require("file-type");
 import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import resizeImage from "~/components/bufferImageResize";
-import * as nocover from "~/compenents/tunes/nocover";
+import * as nocover from "~/components/tunes/nocover";
 
 
 let processImageUpload = (req, { stream }, callback) => {
