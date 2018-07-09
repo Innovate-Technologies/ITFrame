@@ -10,7 +10,7 @@ import * as nocover from "~/compenents/tunes/nocover";
 
 let processImageUpload = (req, { stream }, callback) => {
     let logger = moduleLogger.child({ req });
-    let targetDimensions = { width: 2048, height: 2048 },;
+    let targetDimensions = { width: 2048, height: 2048 };
     let chunks = [];
     stream.on("data", (data) => chunks.push(data));
     stream.on("end", () => {
