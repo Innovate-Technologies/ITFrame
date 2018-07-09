@@ -6,7 +6,11 @@ module.exports = ({ app, wrap }) => {
         if (!req.params.username) {
             throw new BadRequestError("Missing username")
         }
-        res.json(await nocover.nocoverForUserame(req.params.username))
+        const entry = await nocover.nocoverForUserame(req.params.username)
+        if (!entry) {
+            res.status(404)
+        }
+        res.json(entry)
     }))
 }
 
