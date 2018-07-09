@@ -4,8 +4,9 @@ let multer = require("multer");
 let sbuff = require("simple-bufferstream");
 let getFileType = require("file-type");
 import S3MulterStorage from "~/components/storage/S3MulterStorage";
-import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
+import * as nocover from "~/compenents/tunes/nocover";
+
 
 let processImageUpload = (req, { stream }, callback) => {
     let logger = moduleLogger.child({ req });
@@ -50,15 +51,16 @@ let upload = multer({
     },
 });
 
-module.exports = function ({ app }) {
-    app.post("/control/tunes/upload-nocover", upload.single("nocover"), (req, res) => {
+module.exports = function ({ app, wrap }) {
+    app.post("/control/tunes/upload-nocover/:username", upload.single("nocover"), wrap(async (req, res) => {
         if (!req.file) {
             throw new Error("Failed to upload the image.");
         }
-        req.log.info({ link: req.file.link }, "Uploaded file");
+        const link = `https://images.shoutca.st/${req.file.name}`
+        await nocover.updateNocoverForUsername(req.params.username, link)
         res.json({
-            link: `https://images.shoutca.st/${req.file.name}`,
+            link,
             name: req.file.name,
         });
-    });
+    }));
 };
