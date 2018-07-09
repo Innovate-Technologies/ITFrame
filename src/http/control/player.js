@@ -14,7 +14,10 @@ module.exports = ({ app, wrap }) => {
             try {
                 const config = wait.for(playerDatabase.getConfig, req.params.username)
                 if (config) {
-                    config.nocover = (await nocover.nocoverForUserame(req.params.username) || {}).link
+                    const nocoverEntry = await nocover.nocoverForUserame(req.params.username)
+                    if (nocoverEntry) {
+                        config.nocover = nocoverEntry.link
+                    }
                 }
                 res.json(config);
             } catch (error) {
