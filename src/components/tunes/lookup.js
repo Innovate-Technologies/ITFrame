@@ -1,5 +1,6 @@
 import * as iTunes from "./iTunesAPI.js"
 import * as personalDB from "./personalMusicDatabase.js"
+import * as nocover from "./nocover.js"
 
 export const lookUp = async (username, song, artist) => {
     const songInDatabase = await personalDB.getSongForUsername(username, song, artist)
@@ -26,14 +27,14 @@ export const lookUp = async (username, song, artist) => {
     await personalDB.addSong(username, songInfo)
 
     const defaultInfo = await personalDB.getDefaultForUsername(username)
+    const nocoverEntry = await nocover.nocoverForUserame(username)
 
-    if (defaultInfo) {
-        if (!songInfo.artwork && defaultInfo.artwork) {
-            songInfo.artwork = defaultInfo.artwork
-        }
-        if (!songInfo.genre && defaultInfo.genre) {
-            songInfo.genre = defaultInfo.genre
-        }
+    if (defaultInfo && !songInfo.genre) {
+        songInfo.genre = defaultInfo.genre
+    }
+
+    if (nocoverEntry && !songInfo.artwork) {
+        songInfo.artwork = nocoverEntry.link
     }
 
     return songInfo

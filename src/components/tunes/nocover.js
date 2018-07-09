@@ -3,18 +3,22 @@ const Schema = mongoose.Schema;
 const nocoverSchema = new Schema({
     username: String,
     link: String,
-}, { collection: "centova_nocover", read: "nearest" });
-const nocoverModel = mongoose.model("centova_nocover", nocoverSchema, "centova_nocover");
+    linkSmall: String,
+}, { collection: "tunes_nocover", read: "nearest" });
+NocoverSchema.index({
+    username: 1,
+});
+const NocoverModel = mongoose.model("tunes_nocover", NocoverSchema, "tunes_nocover");
 
 export const nocoverForUserame = (username) => {
-    return nocoverModel.findOne({
+    return NocoverModel.findOne({
         username,
     }).exec()
 }
 export const updateNocoverForUsername = async (username, link) => {
-    let entry = await nocoverModel.findOne({ username }).exec()
+    let entry = await NocoverModel.findOne({ username }).exec()
     if (entry === null) {
-        entry = new nocoverModel()
+        entry = new NocoverModel()
         entry.username = username
     }
     entry.link = link
