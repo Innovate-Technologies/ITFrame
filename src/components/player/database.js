@@ -83,7 +83,7 @@ let playerDatabase = {
      * @return {Promise}
      */
     getPlayer(username, callback) {
-        return nodeify(new Promise((resolve, reject) => {
+        return nodeify(new Promise(async (resolve, reject) => {
             try {
                 let config = await playerDatabase.getConfig(username);
                 if (config.alternativeStreamUrl) {
