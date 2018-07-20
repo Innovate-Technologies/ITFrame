@@ -4,6 +4,7 @@ import * as listeners from "../../components/cast/stats/listeners.js"
 import * as sessions from "../../components/cast/stats/sessions.js"
 import * as calculated from "../../components/cast/stats/calculated.js"
 import * as status from "../../components/cast/stats/status.js"
+import * as songs from "../../components/cast/stats/songs.js"
 
 const cast = requireFromRoot("components/cast/database.js")
 
@@ -83,5 +84,14 @@ export default ({ app, wrap }) => {
 
     app.get("/cast/statistics/:user/:key/get-statuses-for-period/:start/:end", wrap(async (req, res) => {
         res.json(await status.getAllStatusesForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end)))
+    }))
+
+    app.post("/cast/statistics/:user/:key/store-song", wrap(async (req, res) => {
+        await songs.addSongsForUsername(req.params.user, req.body)
+        res.status(204).send()
+    }))
+
+    app.get("/cast/statistics/:user/:key/get-songs-for-period/:start/:end", wrap(async (req, res) => {
+        res.json(await songs.getAllSongsForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end)))
     }))
 }
