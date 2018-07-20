@@ -18,7 +18,7 @@ SongsSchema.index({
     stream: 1,
     time: 1,
 });
-const SongsModel = mongoose.model("cast_Songs", SongsSchema, "cast_Songs")
+const SongsModel = mongoose.model("cast_songs", SongsSchema, "cast_songs")
 
 export const getAllSongsForUsernameInPeriod = (username, start, end) => {
     return SongsModel.find({
