@@ -4,7 +4,9 @@ const SongsSchema = new Schema({
     username: String,
     stream: String,
     song: String,
+    title: String,
     artist: String,
+    album: String,
     time: {
         type: Date,
         expires: "5y",
