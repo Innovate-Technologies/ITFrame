@@ -29,5 +29,8 @@ export const getAllSongsForUsernameInPeriod = (username, start, end) => {
 
 export const addSongsForUsername = (username, song) => {
     song.username = username;
+    if (!song.time) {
+        song.time = Date.now()
+    }
     return (new SongsModel(song)).save()
 }
