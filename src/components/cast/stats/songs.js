@@ -24,7 +24,7 @@ export const getAllSongsForUsernameInPeriod = (username, start, end) => {
     return SongsModel.find({
         username,
         time: { $gte: start, $lte: end },
-    }).sort("time", -1).exec()
+    }).sort("-time").exec()
 }
 
 export const addSongsForUsername = (username, song) => {
