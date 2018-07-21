@@ -96,22 +96,21 @@ export default ({ app, wrap }) => {
     }))
 
     app.get("/cast/statistics/:user/:key/get-songs-for-period-csv/:start/:end", wrap(async (req, res) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/csv');
+        res.type("text/csv")
         const data = await songs.getAllSongsForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end))
 
-        res.write(`"time","stream","title","artist","album","song"\r\n`);
+        let response = `"time","stream","title","artist","album","song"\r\n`
 
         for (let entry of data) {
-            const time = entry.time.toString().replace(/\"/g, '""')
-            const stream = entry.stream.toString().replace(/\"/g, '""')
-            const title = entry.title.toString().replace(/\"/g, '""')
-            const artist = entry.artist.toString().replace(/\"/g, '""')
-            const album = entry.album.toString().replace(/\"/g, '""')
-            const song = entry.song.toString().replace(/\"/g, '""')
-            res.write(`"${time}","${stream}","${title}","${artist}","${album}","${song}"\r\n`);
+            let time = entry.time.toString().replace(/\"/g, '""')
+            let stream = entry.stream.toString().replace(/\"/g, '""')
+            let title = (entry.title || "").toString().replace(/\"/g, '""')
+            let artist = (entry.artist || "").toString().replace(/\"/g, '""')
+            let album = (entry.album || "").toString().replace(/\"/g, '""')
+            let song = (entry.song || "").toString().replace(/\"/g, '""')
+            response + `"${time}","${stream}","${title}","${artist}","${album}","${song}"\r\n`
         }
   
-        res.end();
+        res.send(response);
     }))
 }
