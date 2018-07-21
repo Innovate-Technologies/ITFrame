@@ -97,6 +97,7 @@ export default ({ app, wrap }) => {
 
     app.get("/cast/statistics/:user/:key/get-songs-for-period-csv/:start/:end", wrap(async (req, res) => {
         res.type("text/csv")
+        res.set("Content-Disposition", "attachment; filename=\"report.cvs\"")
         const data = await songs.getAllSongsForUsernameInPeriod(req.params.user, new Date(req.params.start), new Date(req.params.end))
 
         let response = `"time","stream","title","artist","album","song"\r\n`
