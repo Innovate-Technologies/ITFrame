@@ -109,7 +109,7 @@ export default ({ app, wrap }) => {
             let artist = (entry.artist || "").toString().replace(/\"/g, '""')
             let album = (entry.album || "").toString().replace(/\"/g, '""')
             let song = (entry.song || "").toString().replace(/\"/g, '""')
-            response + `"${time}","${stream}","${title}","${artist}","${album}","${song}"\r\n`
+            response += `"${time}","${stream}","${title}","${artist}","${album}","${song}"\r\n`
         }
   
         res.send(response);
