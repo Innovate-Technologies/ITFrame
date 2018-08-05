@@ -89,7 +89,7 @@ const castSchema = new Schema({
         type: Boolean,
         default: false,
     },
-}, { collection: "cast", read: "nearest" })
+}, { collection: "cast", read: "primaryPreferred" })
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
 export const getInfoForUsername = async (username) => {
