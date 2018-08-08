@@ -80,6 +80,10 @@ const castSchema = new Schema({
             type: String,
             enum: ["blacklist", "whitelist"],
         },
+        allowUnknown: {
+            type: Boolean,
+            default: false,
+        },
     },
     antiStreamRipper: {
         type: Boolean,
