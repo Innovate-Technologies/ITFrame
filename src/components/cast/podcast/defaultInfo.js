@@ -5,10 +5,8 @@ const defaultInfoSchema = new Schema({
     username: String,
     title: String,
     description: String,
-    url: String,
     categories: [ String ], // optional - array of item categories
     author: String, // optional - defaults to feed author property
-    date: Date, // any format that js Date can parse.
     explicit: false,
     subtitle: String,
 }, { collection: "cast_podcast_default_info" })
