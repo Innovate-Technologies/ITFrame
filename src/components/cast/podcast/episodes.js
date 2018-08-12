@@ -8,7 +8,7 @@ const episodeSchema = new Schema({
     url: String,
     categories: [ String ], // optional - array of item categories
     author: String, // optional - defaults to feed author property
-    date: Date, // any format that js Date can parse.
+    date: Date, // can be in future, should not publish before date
     explicit: false,
     subtitle: String,
 }, { collection: "cast_podcast_episodes" })
@@ -18,6 +18,14 @@ const EpisodeModel = mongoose.model("cast_podcast_episodes", episodeSchema, "cas
 export const getForUsername = (username) => {
     return EpisodeModel.findOne({ username }).exec()
 }
+
+export const getPublishedForUsername = (username) => {
+    return EpisodeModel.findOne({
+        username,
+        date: { lte: (new Date())},
+    }).exec()
+}
+
 
 export const addForUsername = async (username, object) => {
     object.username = username

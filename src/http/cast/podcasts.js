@@ -24,7 +24,7 @@ export default ({ app, wrap }) => {
     }))
 
     app.get("/cast/podcasts/:user/:key/episodes", wrap(async (req, res) => {
-        res.json(episodes.getForUsername(req.params.user))
+        res.json(episodes.getPublishedForUsername(req.params.user))
     }))
 
 }
