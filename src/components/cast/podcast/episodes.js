@@ -1,6 +1,7 @@
 const mongoose = requireFromRoot("components/database/mongodb.js")
 
 const Schema = mongoose.Schema
+const ObjectId = mongoose.Types.ObjectId
 const episodeSchema = new Schema({
     username: String,
     title: String,
@@ -37,3 +38,9 @@ export const updateForUsername = async (username, object) => {
     object.username = username
     return EpisodeModel.update({ username }, object).exec()
 }
+
+export const updateForUsernameAndID = async (username, id, object) => {
+    object.username = username
+    return EpisodeModel.update({ username, _id: new ObjectId(id) }, object).exec()
+}
+
