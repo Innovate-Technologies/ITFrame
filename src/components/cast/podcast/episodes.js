@@ -6,8 +6,10 @@ const episodeSchema = new Schema({
     username: String,
     title: String,
     description: String,
-    file: String,
-    internalURL: String,
+    fileID: {
+        type: Schema.Types.ObjectId,
+        ref: "cast_podcast_files",
+    },
     categories: [ String ], // optional - array of item categories
     author: String, // optional - defaults to feed author property
     date: Date, // can be in future, should not publish before date
