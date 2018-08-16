@@ -96,6 +96,16 @@ export const upgradeNode = async (username) => {
     }
 }
 
+export const relocateNode = async (username) => {
+    const logger = moduleLogger.child({ username })
+    logger.info("relocating node");
+    try {
+        await hardRestartNode(username)
+    } catch (error) {
+        logger.error(error)
+    }
+}
+
 export const upgradeDJ = async (username) => {
     const logger = moduleLogger.child({ username });
     logger.info("updating DJ");

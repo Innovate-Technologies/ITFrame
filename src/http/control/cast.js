@@ -33,6 +33,11 @@ module.exports = ({ app, wrap }) => {
         res.json({})
     }));
 
+    app.post("/control/cast/relocate/:username", wrap(async (req, res) => {
+        await cast.relocateNode(req.params.username)
+        res.json({})
+    }));
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Directories
