@@ -138,10 +138,7 @@ export const updateVersion = async (username) => {
         build = await buildinfo.buildInfoForName("Cast-beta")
     }
 
-    await CastModel.remove({ username }).exec()
-    delete castInfo._id
-    castInfo.version.Cast = build.version
-    return new CastModel(castInfo).save()
+    return CastModel.update({ username }, { "version.Cast": build.version }).exec()
 }
 
 export const updateDJVersion = async (username) => {
