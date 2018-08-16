@@ -27,7 +27,7 @@ export const createUnit = async (username) => {
     if (config.hostname != `https://${username}.radioca.st`) {
         customHost = config.hostname.replace("https://", "")
     }
-    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, customHost })
+    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, customHost, branch: config.branch })
 }
 
 export const startDJ = (username) => {

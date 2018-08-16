@@ -93,6 +93,11 @@ const castSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    branch: {
+        type: String,
+        enum: ["stable", "beta"],
+        default: "stable",
+    },
 }, { collection: "cast", read: "primaryPreferred" })
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
