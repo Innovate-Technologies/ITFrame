@@ -276,3 +276,10 @@ export const setCustomDomain = async (username, domain) => {
     await castDB.updateConfig(username, config)
     return upgradeNode(username)
 }
+
+export const setBranch = async (username, branch) => {
+    const config = await castDB.getInfoForUsername(username)
+    config.branch = branch;
+    await castDB.updateConfig(username, config)
+    upgradeNode(username)
+}

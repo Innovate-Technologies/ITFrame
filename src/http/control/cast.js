@@ -110,4 +110,9 @@ module.exports = ({ app, wrap }) => {
         res.json({})
     }));
 
+    app.put("/control/cast/branch/:username", wrap(async (req, res) => {
+        await cast.setBranch(req.params.username, req.body.branch)
+        res.json({})
+    }));
+
 };
