@@ -5,10 +5,17 @@ export default ({ app, wrap }) => {
         if (!req.body.sha) {
             throw new Error("No sha found")
         }
-        if (req.body.build_status !== "success" || req.body.ref !== "master" || req.body.build_stage !== "deploy") {
+        if (req.body.build_status !== "success" || req.body.build_stage !== "deploy") {
             throw new Error("We won't deploy this build")
         }
-        await buildInfo.updateVersionForName(req.params.name, req.body.sha)
+
+        if (req.body.ref === "master") {
+            await buildInfo.updateVersionForName(req.params.name, req.body.sha)
+        } else if (req.body.ref === "beta") {
+            await buildInfo.updateVersionForName(req.params.name = "-beta", req.body.sha)
+        } else {
+            throw new Error("We won't deploy this ref")
+        }
         res.json({result: "success"})
     }))
 }
