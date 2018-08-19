@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
-- '6'
+- '8'
 services:
 - docker
 os:
@@ -9,12 +9,12 @@ os:
 before_install:
 - docker pull innovate/itframe:latest
 install:
-- npm install --only=dev
+- cd src && npm install && cd ..
 cache:
   directories:
-  - node_modules
+  - src/node_modules
 script:
-- cd src && ../node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
+- cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
 - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
 deploy:
   provider: script

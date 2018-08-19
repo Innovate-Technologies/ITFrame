@@ -24,5 +24,6 @@ global.requireFromRoot = function (path) {
     return require(global.appRoot + "/" + path);
 };
 
-require("babel-polyfill");
+require("babel-register")
+require("babel-polyfill")
 require("./itframe.js");

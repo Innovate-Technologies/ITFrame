@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import rest from "restler";
 import xml2js from "xml2js";
 import moment from "moment-timezone";
