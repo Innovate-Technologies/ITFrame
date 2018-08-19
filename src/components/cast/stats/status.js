@@ -9,7 +9,7 @@ const StatusSchema = new Schema({
         expires: "2y",
         default: Date.now,
     },
-}, { collection: "cast_status", read: "nearest" })
+}, { collection: "cast_status" })
 StatusSchema.index({
     username: 1,
     stream: 1,

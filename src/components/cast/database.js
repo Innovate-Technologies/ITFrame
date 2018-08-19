@@ -80,6 +80,10 @@ const castSchema = new Schema({
             type: String,
             enum: ["blacklist", "whitelist"],
         },
+        allowUnknown: {
+            type: Boolean,
+            default: false,
+        },
     },
     antiStreamRipper: {
         type: Boolean,
@@ -89,7 +93,12 @@ const castSchema = new Schema({
         type: Boolean,
         default: false,
     },
-}, { collection: "cast", read: "nearest" })
+    branch: {
+        type: String,
+        enum: ["stable", "beta"],
+        default: "stable",
+    },
+}, { collection: "cast", read: "primaryPreferred" })
 const CastModel = mongoose.model("cast", castSchema, "cast")
 
 export const getInfoForUsername = async (username) => {
@@ -117,15 +126,19 @@ export const addConfigForUsername = async (username, conf) => {
 }
 
 export const updateVersion = async (username) => {
-    const build = await buildinfo.buildInfoForName("Cast");
+    let build
     const castInfo = await CastModel.findOne({ username }).lean().exec()
     if (!castInfo) {
         throw new Error("username not found")
     }
-    await CastModel.remove({ username }).exec()
-    delete castInfo._id
-    castInfo.version.Cast = build.version
-    return new CastModel(castInfo).save()
+
+    if (castInfo.branch === "stable") {
+        build = await buildinfo.buildInfoForName("Cast")
+    } else if (castInfo.branch === "beta") {
+        build = await buildinfo.buildInfoForName("Cast-beta")
+    }
+
+    return CastModel.update({ username }, { "version.Cast": build.version }).exec()
 }
 
 export const updateDJVersion = async (username) => {

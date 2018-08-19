@@ -108,13 +108,13 @@ module.exports = function ({ app, wrap }) {
         res.json({ status: "ok" });
     }));
 
-    app.delete("/tunes/stopContainer/" + config.tunesKey, (req, res) => {
+    app.delete("/tunes/stopContainer/" + config.tunesKey, wrap(async (req, res) => {
         if (!req.body.id) {
             throw new Error("Missing parameters");
         }
-        processSong.stopContainer(req.body.id);
-        res.json({ status: "ok" }); // if we wait for a callback we will send an okay signal to a server that is already dead
-    });
+        await processSong.stopContainer(req.body.id);
+        res.json({ status: "ok" });
+    }));
 
     app.post("/tunes/upload-image/" + config.tunesKey, uploadImage.single("image"), (req, res) => {
         if (!req.file) {

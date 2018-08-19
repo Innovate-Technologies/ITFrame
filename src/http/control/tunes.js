@@ -88,7 +88,7 @@ module.exports = function ({ app, wrap }) {
             size: 0,
             available: false,
         })
-        processingWorker.processSong({
+        await processingWorker.processSong({
             id: entry._id,
         })
         res.json({ id: entry._id });
