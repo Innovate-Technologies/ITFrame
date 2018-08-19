@@ -4,7 +4,11 @@ import * as nocover from "./nocover.js"
 
 export const lookUp = async (username, song, artist) => {
     const songInDatabase = await personalDB.getSongForUsername(username, song, artist)
+    const nocoverEntry = await nocover.nocoverForUserame(username)
     if (songInDatabase) {
+        if (nocoverEntry && !songInDatabase.artwork) {
+            songInDatabase.artwork = nocoverEntry.link
+        }
         return songInDatabase
     }
 
@@ -27,7 +31,7 @@ export const lookUp = async (username, song, artist) => {
     await personalDB.addSong(username, songInfo)
 
     const defaultInfo = await personalDB.getDefaultForUsername(username)
-    const nocoverEntry = await nocover.nocoverForUserame(username)
+    
 
     if (defaultInfo && !songInfo.genre) {
         songInfo.genre = defaultInfo.genre

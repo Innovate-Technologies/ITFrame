@@ -12,7 +12,7 @@ const nowplayingSchema = new Schema({
         expires: "1d",
         default: Date.now,
     },
-}, { collection: "nowplaying", read: "nearest" })
+}, { collection: "nowplaying" })
 nowplayingSchema.index({ username: 1, expireAt: 1 }, {
     expireAfterSeconds: 0,
 })
