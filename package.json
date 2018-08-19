@@ -33,7 +33,7 @@
     "js-string-escape": "~1.0.0",
     "jsonwebtoken": "^5.4.1",
     "lodash": "^4.17.10",
-    "maxmind": "~0.6.0",
+    "maxmind": "~2.7.0",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
     "mongoose": "4.11.1",
