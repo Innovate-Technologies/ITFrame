@@ -50,17 +50,17 @@
     "restler": "^3.3.0",
     "shelljs": "^0.8.2",
     "simple-bufferstream": "~1.0.0",
-    "slack-client": "2.0.1",
+    "slack-client": "^2.0.6",
+    "snyk": "^1.88.1",
     "socket.io": "1.5.0",
     "speakeasy": "~1.0.3",
     "speakeasy-nlp": "^0.2.2",
-    "twit": "^2.1.1",
+    "twit": "^2.2.11",
     "underscore": "~1.8.3",
     "unirest": "0.5.1",
     "util": "~0.10.3",
     "wait.for": "~0.6.6",
-    "xml2js": "^0.4.19",
-    "snyk": "^1.88.1"
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
