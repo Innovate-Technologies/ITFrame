@@ -1,7 +1,5 @@
-let database = require("./supportDatabase.js")
 let wait = require("wait.for")
 let cld = require("cld")
-let maya = requireFromRoot("runners/maya/maya");
 let whmcs = requireFromRoot("components/legacy/whmcs.js")
 
 module.exports.answerClient = function (ticket) {
@@ -26,10 +24,4 @@ Artificial Intelligence | Innovate Technologies
 Please ignore this reply if you think this is an error, I am just a robot.`
         })
     }
-    let question = ticket.content;
-    let answer = wait.for(database.lookUpAnswer, question)
-    if (answer.length === 0) {
-        return maya.sendMessage("#support", "Sorry, I have no idea what that means.")
-    }
-    // maya.sendMessage("#support", "If I were you I'd reply\n```Hi " + ticket.firstname + ",\n\n" + answer[0].reply + "\n\nKindest Regards\nMaya\nArtificial Intelligence | Innovate Technologies.\nSorry if my reply was inaccurate, I am just a robot trying to help```")
 }

@@ -28,7 +28,7 @@ export default ({ app, wrap }) => {
         if (!req.body.token) {
             throw new AccessDeniedError("No token found in the request");
         }
-        const valid = await timetoken.validateTokenForService("legacy-centova", req.body.token, 10)
+        const valid = await timetoken.validateTokenForService("legacy-centova", req.body.token)
         if (!valid) {
             throw new AccessDeniedError("Invalid token");
         }
