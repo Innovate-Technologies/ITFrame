@@ -11,7 +11,7 @@
   "homepage": "https://github.com/Innovate-Technologies/ITFrame",
   "dependencies": {
     "apicache": "^0.3.4",
-    "asteroid": "^0.6.1",
+    "asteroid": "^2.0.3",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.1",
