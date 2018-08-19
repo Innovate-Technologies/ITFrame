@@ -7,6 +7,11 @@ module.exports = ({ app, wrap }) => {
         if (!req.params.username) {
             return next(new BadRequestError("username is required"));
         }
-        return res.json(await alexa.entryForUsername(req.params.username))
+        const entry = await alexa.entryForUsername(req.params.username)
+        if (!entry) {
+            return next(new BadRequestError("username is not found"));
+        }
+        entry.tuneInURL = await alexa.getTuneInURL(req.params.username)
+        return res.json(entry)
     }));
 };
