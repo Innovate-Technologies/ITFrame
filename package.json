@@ -22,7 +22,7 @@
     "colorspaces": "^0.1.4",
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.4",
-    "crypto": "0.0.3",
+    "crypto": "1.0.1",
     "ejson": "^2.1.2",
     "etcd3": "^0.2.10",
     "express": "^4.16.2",
