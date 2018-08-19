@@ -1,5 +1,5 @@
 let tuneinDatabase = {}
-let _ = require("../../../../../.cache/typescript/2.9/node_modules/@types/underscore")
+let _ = require("underscore")
 let mongoose = requireFromRoot("components/database/mongodb.js")
 let Schema = mongoose.Schema
 let tuneinSchema = new Schema({
