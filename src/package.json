@@ -53,7 +53,7 @@
     "shelljs": "^0.8.2",
     "simple-bufferstream": "~1.0.0",
     "snyk": "^1.91.0",
-    "speakeasy": "~1.0.3",
+    "speakeasy": "~2.0.0",
     "speakeasy-nlp": "^0.2.2",
     "twit": "^2.2.11",
     "underscore": "~1.8.3",
