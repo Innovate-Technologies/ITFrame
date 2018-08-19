@@ -4,17 +4,17 @@ const buildinfoSchema = new Schema({
     name: String,
     version: String,
 }, { collection: "build_info" });
-const buildinfoModel = mongoose.model("build_info", buildinfoSchema, "build_info");
+const BuildinfoModel = mongoose.model("build_info", buildinfoSchema, "build_info");
 
 export const buildInfoForName = (name) => {
-    return buildinfoModel.findOne({
+    return BuildinfoModel.findOne({
         name,
     }).exec()
 }
 export const updateVersionForName = async (name, version) => {
-    const info = await buildinfoModel.findOne({ name }).exec()
+    const info = await BuildinfoModel.findOne({ name }).exec()
     if (info === null) {
-        throw new Error("Name not found")
+        return (new BuildinfoModel({name, version})).save()
     }
     info.version = version
     return info.save()

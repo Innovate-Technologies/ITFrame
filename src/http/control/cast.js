@@ -33,6 +33,11 @@ module.exports = ({ app, wrap }) => {
         res.json({})
     }));
 
+    app.post("/control/cast/relocate/:username", wrap(async (req, res) => {
+        await cast.relocateNode(req.params.username)
+        res.json({})
+    }));
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Directories
@@ -102,6 +107,11 @@ module.exports = ({ app, wrap }) => {
 
     app.delete("/control/cast/custom-domain/:username", wrap(async (req, res) => {
         await cast.setCustomDomain(req.params.username, `${req.params.username}.radioca.st`)
+        res.json({})
+    }));
+
+    app.put("/control/cast/branch/:username", wrap(async (req, res) => {
+        await cast.setBranch(req.params.username, req.body.branch)
         res.json({})
     }));
 

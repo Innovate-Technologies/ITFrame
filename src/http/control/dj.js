@@ -53,7 +53,7 @@ export default ({ app, wrap }) => {
     app.get("/control/cast/dj/intervals/:username", wrap(async (req, res) => {
         const intervalsForUser = await intervals.intervalsForUsername(req.params.username)
         for (let id in intervalsForUser) {
-            if (intervalsForUser.hasOwnPropery(intervals)) {
+            if (intervalsForUser.hasOwnProperty(intervals)) {
                 for (let songid in intervalsForUser[id].songs) {
                     if (intervalsForUser[id].songs.hasOwnPropery(songid)) {
                         intervalsForUser[id].songs[songid].internalURL = null
