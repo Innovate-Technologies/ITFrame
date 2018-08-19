@@ -87,6 +87,7 @@
     "eslint_d": "^4.0.1"
   },
   "scripts": {
+    "snyk-wizard": "snyk wizard",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
