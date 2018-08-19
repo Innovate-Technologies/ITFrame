@@ -1,5 +1,5 @@
 let tuneinDatabase = {}
-let _ = require("underscore")
+let _ = require("../../../../../.cache/typescript/2.9/node_modules/@types/underscore")
 let mongoose = requireFromRoot("components/database/mongodb.js")
 let Schema = mongoose.Schema
 let tuneinSchema = new Schema({
@@ -35,84 +35,58 @@ let moduleLogger = log.child({ component: "tunein/database" });
 /**
  * Get TuneIn AIR integration settings for a given username
  * @param  {String}   username username
- * @param  {Function} callback Callback function (err, settings)
+ * @return  {Promise}
  */
-tuneinDatabase.getInfo = function (username, callback) {
-    TuneinModel.findOne({ username }, function (err, settings) {
-        if (err) {
-            return callback(err)
-        }
-        if (settings === null) {
-            return callback(new Error("Username not in database"))
-        }
-        return callback(null, settings)
-    })
+tuneinDatabase.getInfo = async (username) => {
+    const settings = await TuneinModel.findOne({ username }).exec()
+    if (settings === null) {
+        throw new Error("Username not in database")
+    }
+    return settings
 }
 
 /**
  * Get TuneIn AIR integration settings for all users
- * @param  {Function} callback Callback function (err, arrayOfSettings)
+ * @return  {Promise}
  */
-tuneinDatabase.getAllUsers = function (callback) {
-    TuneinModel.find({}, callback);
+tuneinDatabase.getAllUsers = () => {
+    return TuneinModel.find({}).exec();
 }
 
 /**
  * Remove TuneIn AIR integration settings for a given username
  * @param  {String}   username Username
- * @param  {Function} callback Callback function (err)
+ * @return  {Promise}
  */
-tuneinDatabase.remove = (username, callback) => {
-    TuneinModel.findOneAndRemove({ username }, function (err, doc) {
-        if (err) {
-            err.message = "Could not remove TuneIn AIR settings: " + err.message;
-            return callback(err);
-        }
-        if (!doc) {
-            return callback(new Error("Username not in database"));
-        }
-        return callback();
-    });
+tuneinDatabase.remove = async (username) => {
+    const doc = await TuneinModel.findOneAndRemove({ username }).exec()
+    if (!doc) {
+        throw new Error("Username not in database");
+    }
 };
 
 /**
  * Add TuneIn AIR integration settings to the database
  * @param  {Object}   settings TuneIn AIR integration settings
- * @param  {Function} callback Callback function (err)
+ * @return  {Promise}
  */
-tuneinDatabase.addUser = (settings, callback) => {
-    new TuneinModel(settings).save(function (err) {
-        if (err) {
-            err.message = "Could not add TuneIn AIR settings: " + err.message;
-            return callback(err);
-        }
-        return callback();
-    });
+tuneinDatabase.addUser = (settings) => {
+    return new TuneinModel(settings).save();
 };
 
 /**
  * Update TuneIn AIR integration settings for a given username
  * @param  {String}   username Username
  * @param  {Object}   modifier TuneIn AIR integration settings modifier object
- * @param  {Function} callback Callback function (err)
+ * @return  {Promise}
  */
-tuneinDatabase.update = (username, modifier, callback) => {
-    TuneinModel.findOne({ username }, function (err, doc) {
-        if (err) {
-            return callback(err);
-        }
-        if (!doc) {
-            return callback(new Error("Username not in database"));
-        }
-        doc = _.extend(doc, modifier);
-        doc.save((error) => {
-            if (error) {
-                error.message = "Could not update TuneIn AIR settings: " + error.message;
-                return callback(error);
-            }
-            return callback();
-        });
-    });
+tuneinDatabase.update = async (username, modifier, callback) => {
+    let doc = await TuneinModel.findOne({ username }).exec()
+    if (!doc) {
+        return callback(new Error("Username not in database"));
+    }
+    doc = _.extend(doc, modifier);
+    return doc.save();
 };
 
 /**
@@ -121,30 +95,20 @@ tuneinDatabase.update = (username, modifier, callback) => {
  * update the settings otherwise.
  * @param  {String}   username Username
  * @param  {Object}   settings TuneIn AIR integration settings
- * @param  {Function} callback Callback function (err)
+ * @return  {Promise}
  */
-tuneinDatabase.upsert = (username, settings, callback) => {
+tuneinDatabase.upsert = async (username, settings) => {
     // XXX: As of August 2015, Mongoose still does not support running validators
     // for update() calls properly (despite claiming having support for it since
     // version 4.0), so we have to resort to first getting the document,
     // then creating/updating it and re-saving it. Not ideal but it works.
-    TuneinModel.findOne({ username }, function (err, doc) {
-        if (err) {
-            return callback(err);
-        }
-        if (!doc) {
-            doc = new TuneinModel(settings);
-        } else {
-            doc = _.extend(doc, settings);
-        }
-        doc.save((error) => {
-            if (error) {
-                error.message = "Could not update TuneIn AIR settings: " + error.message;
-                return callback(error);
-            }
-            return callback();
-        });
-    });
+    let doc = TuneinModel.findOne({ username }).exec();
+    if (!doc) {
+        doc = new TuneinModel(settings);
+    } else {
+        doc = _.extend(doc, settings);
+    }
+    return doc.save();
 };
 
 /**
@@ -152,24 +116,13 @@ tuneinDatabase.upsert = (username, settings, callback) => {
  * @param  {String}   username Username
  * @param  {String}   reason   Reason for disabling the integration
  */
-tuneinDatabase.disable = (username, reason) => {
-    let logger = moduleLogger.child({ username, reason });
-    TuneinModel.findOne({ username }, function (err, doc) {
-        if (err) {
-            return;
-        }
-        if (!doc) {
-            return;
-        }
-        doc = _.extend(doc, { disableReason: reason, isEnabled: false });
-        doc.save((error) => {
-            if (error) {
-                logger.error(error, "Failed to disable integration");
-                return;
-            }
-            logger.warn("Disabled integration");
-        });
-    });
+tuneinDatabase.disable = async (username, reason) => {
+    let doc = TuneinModel.findOne({ username }).exec()
+    if (!doc) {
+        return;
+    }
+    doc = _.extend(doc, { disableReason: reason, isEnabled: false });
+    return doc.save();
 };
 
 module.exports = tuneinDatabase;
