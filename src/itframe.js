@@ -64,8 +64,6 @@ log.info({
 
 log.info("Loading HTTP handlers");
 requireFromRoot("http/loader.js")();
-log.info("Loading runners");
-requireFromRoot("runners/loader.js")();
 
 log.info("Loading hooks");
 global.hooks = requireFromRoot("hooks/loader.js");
