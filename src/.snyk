@@ -28,6 +28,8 @@ patch:
   'npm:lodash:20180130':
     - pkgcloud > lodash:
         patched: '2018-08-19T11:03:53.690Z'
+    - pkgcloud > lodash:
+        patched: '2018-08-19T11:39:10.924Z'
   'npm:tunnel-agent:20170305':
     - unirest > request > tunnel-agent:
         patched: '2018-08-19T11:03:53.690Z'
