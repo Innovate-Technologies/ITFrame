@@ -1,4 +1,6 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:ms:20151024':
     - socket.io > socket.io-client > engine.io-client > debug > ms:
@@ -24,4 +26,13 @@ patch:
         patched: '2016-07-27T13:38:38.866Z'
     - socket.io > socket.io-client > engine.io-client > ws:
         patched: '2016-07-27T13:38:38.866Z'
-version: v1.5.0
+  'npm:hoek:20180212':
+    - unirest > request > hawk > hoek:
+        patched: '2018-06-20T06:54:07.342Z'
+    - unirest > request > hawk > boom > hoek:
+        patched: '2018-06-20T06:54:07.342Z'
+    - unirest > request > hawk > sntp > hoek:
+        patched: '2018-06-20T06:54:07.342Z'
+    - unirest > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-06-20T06:54:07.342Z'
+version: v1.12.0
