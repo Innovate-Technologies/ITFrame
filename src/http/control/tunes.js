@@ -5,7 +5,7 @@ const castDatabase = requireFromRoot("components/cast/database.js");
 const moduleLogger = log.child({ component: "control-tunes" });
 const getFileType = require("file-type");
 const sbuff = require("simple-bufferstream");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
+import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 const ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "gif"];
 
@@ -13,7 +13,7 @@ const ONE_MEGABYTE = 1 * Math.pow(10, 6);
 const MAX_FILE_SIZE = 1024 * ONE_MEGABYTE;
 
 let upload = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.tunesUploadContainer,
     }),
     limits: {
@@ -47,7 +47,7 @@ let processImageUpload = (req, { stream }, callback) => {
     });
 };
 let uploadImage = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.appImagesUploadContainer,
         processFileFn: processImageUpload,
         defaultExtension: "png",
@@ -88,7 +88,7 @@ module.exports = function ({ app, wrap }) {
             size: 0,
             available: false,
         })
-        processingWorker.processSong({
+        await processingWorker.processSong({
             id: entry._id,
         })
         res.json({ id: entry._id });

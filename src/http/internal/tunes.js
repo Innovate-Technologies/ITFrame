@@ -7,7 +7,7 @@ const MAX_FILE_SIZE = 1024 * ONE_MEGABYTE;
 
 let moduleLogger = log.child({ component: "tunes-internal" });
 let multer = require("multer");
-import SwiftMulterStorage from "~/components/openstack/SwiftMulterStorage";
+import S3MulterStorage from "~/components/storage/S3MulterStorage";
 import convertImage from "~/components/bufferImageConvert";
 import resizeImage from "~/components/bufferImageResize";
 let sbuff = require("simple-bufferstream");
@@ -55,7 +55,7 @@ let processImageUpload = (req, { stream }, callback) => {
 };
 
 let uploadImage = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.appImagesUploadContainer,
         processFileFn: processImageUpload,
         defaultExtension: "png",
@@ -72,7 +72,7 @@ let uploadImage = multer({
 
 
 let upload = multer({
-    storage: new SwiftMulterStorage({
+    storage: new S3MulterStorage({
         container: config.tunesUploadContainer,
         fileNameFn: (req) => req.query.name,
     }),
@@ -108,13 +108,13 @@ module.exports = function ({ app, wrap }) {
         res.json({ status: "ok" });
     }));
 
-    app.delete("/tunes/stopContainer/" + config.tunesKey, (req, res) => {
+    app.delete("/tunes/stopContainer/" + config.tunesKey, wrap(async (req, res) => {
         if (!req.body.id) {
             throw new Error("Missing parameters");
         }
-        processSong.stopContainer(req.body.id);
-        res.json({ status: "ok" }); // if we wait for a callback we will send an okay signal to a server that is already dead
-    });
+        await processSong.stopContainer(req.body.id);
+        res.json({ status: "ok" });
+    }));
 
     app.post("/tunes/upload-image/" + config.tunesKey, uploadImage.single("image"), (req, res) => {
         if (!req.file) {

@@ -111,7 +111,7 @@ usersDatabase.getStreamUrl = (username, callback) => {
                 }
                 if (await isProxyUsable(username)) {
                     const radiocastUrl = streamURL.replace(/\/\/(.*).shoutca.st:(\d+)\//,
-                                                           "//" + username + ".radioca.st/");
+                                                           "//" + username + ".radioca.st/").replace("http://", "https://");
                     return callback(null, radiocastUrl);
                 }
                 return callback(null, streamURL);
