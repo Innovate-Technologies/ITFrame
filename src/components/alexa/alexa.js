@@ -1,3 +1,7 @@
+import _ from "underscore";
+import * as users from "~/components/legacy/usersDatabase.js"
+import * as castDatabase from "~/components/cast/database.js"
+
 const mongoose = requireFromRoot("components/database/mongodb.js");
 const Schema = mongoose.Schema;
 const AlexaSchema = new Schema({
@@ -34,6 +38,21 @@ export const entryForUsername = (username) => {
         username,
     }).exec()
 }
+
+export const getTuneInURL = (username) => new Promise(async (resolve, reject) => {
+    try {
+        const streamUrl = await castDatabase.getStreamUrl(username);
+        resolve(streamUrl);
+    } catch (e) {
+        users.getStreamUrl(username, (err, streamUrl) => {
+            if (err) {
+                err.message = "Failed to get the stream URL: " + err.message;
+                return reject(err);
+            }
+            resolve(streamUrl);
+        });
+    }
+})
 
 export const newForUsername = async (username, info) => {
     info.username = username
