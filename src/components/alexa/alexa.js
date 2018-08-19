@@ -2,6 +2,11 @@ const mongoose = requireFromRoot("components/database/mongodb.js");
 const Schema = mongoose.Schema;
 const AlexaSchema = new Schema({
     username: String,
+    status: {
+        type: String,
+        default: "processing",
+        enum: [ "processing", "rejected", "active" ],
+    },
     name: String,
     logo: String,
     languageEntries: [
