@@ -5,7 +5,6 @@ var expressJwt = require("express-jwt");
 var jwt = require("jsonwebtoken");
 var app = express();
 var http = require("http").createServer(app);
-var io = require("socket.io").listen(http);
 var _ = require("underscore");
 var cors = require("cors");
 let moduleLogger = log.child({ component: "http" });
@@ -60,7 +59,6 @@ module.exports = function () {
         app: app,
         jwt: jwt,
         expressJwt: expressJwt,
-        io: io,
         wrap,
     }
 
