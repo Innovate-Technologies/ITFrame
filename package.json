@@ -52,7 +52,7 @@
     "simple-bufferstream": "~1.0.0",
     "slack-client": "2.0.1",
     "socket.io": "1.5.0",
-    "speakeasy": "~1.0.3",
+    "speakeasy": "~2.0.0",
     "speakeasy-nlp": "^0.2.2",
     "twit": "^2.1.1",
     "underscore": "~1.8.3",
