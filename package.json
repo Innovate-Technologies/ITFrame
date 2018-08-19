@@ -74,7 +74,7 @@
     "esformatter-eol-last": "^1.0.0",
     "esformatter-var-each": "^2.1.0",
     "eslint": "^3.3.0",
-    "eslint-config-eslint": "^1.0.1",
+    "eslint-config-eslint": "^5.0.1",
     "eslint-config-import": "^0.13.0",
     "eslint-import-resolver-node": "^0.3.2",
     "eslint-plugin-import": "^1.13.0",
