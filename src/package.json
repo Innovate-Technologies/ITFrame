@@ -82,7 +82,7 @@
     "eslint-config-import": "^0.13.0",
     "eslint-import-resolver-node": "^0.3.2",
     "eslint-plugin-import": "^2.14.0",
-    "eslint_d": "^4.0.1"
+    "eslint_d": "^6.0.1"
   },
   "scripts": {
     "snyk-wizard": "snyk wizard",
