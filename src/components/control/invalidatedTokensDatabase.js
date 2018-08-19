@@ -1,6 +1,5 @@
 let InvalidatedTokens = {};
 let mongoose = requireFromRoot("components/database/mongodb.js");
-let wait = require("wait.for");
 let Schema = mongoose.Schema;
 let InvalidatedTokensSchema = new Schema({ token: String });
 let InvalidatedTokensModel = mongoose.model("invalidated_tokens", InvalidatedTokensSchema, "invalidated_tokens");
@@ -8,24 +7,20 @@ let InvalidatedTokensModel = mongoose.model("invalidated_tokens", InvalidatedTok
 /**
  * Check if a token is invalidated
  * @param  {String}   token    Token to check
- * @param  {Function} callback Callback function (err, isInvalidated (bool))
+ * @return {Promise}
  */
-InvalidatedTokens.isTokenInvalidated = (token, callback) => {
-    wait.launchFiber(() => {
-        let result = wait.forMethod(InvalidatedTokensModel, "findOne", {
-            token,
-        });
-        return callback(null, !!result);
-    });
+InvalidatedTokens.isTokenInvalidated = async (token) => {
+    const result = await InvalidatedTokensModel.findOne({ token }).exec()
+    return !!result
 };
 
 /**
  * Add a token to the invalidated token database
  * @param  {String}   token    Token to add
- * @param  {Function} callback Callback function (err)
+ * @return {Promise}
  */
-InvalidatedTokens.addToken = (token, callback) => {
-    new InvalidatedTokensModel({ token }).save(callback);
+InvalidatedTokens.addToken = (token) => {
+    return new InvalidatedTokensModel({ token }).save();
 }
 
 module.exports = InvalidatedTokens;
