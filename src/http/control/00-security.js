@@ -1,7 +1,4 @@
 import fs from "fs";
-import wait from "wait.for";
-import _ from "underscore";
-const logger = log.child({ component: "Security" });
 
 import BadRequestError from "~/http/classes/BadRequestError";
 import redisClient from "~/components/redisClient";
@@ -21,44 +18,43 @@ export default function ({ app, expressJwt, jwt, wrap }) {
         audience: "https://itframe.shoutca.st/control",
     }));
 
-    app.all("/control/*", function checkToken(req, res, next) {
-        wait.launchFiber(() => {
-            let [scheme, token] = req.headers.authorization.split(" ");
-            if (!/^Bearer$/i.test(scheme)) {
-                return next(new BadRequestError("No token was found in the Authorization header."));
-            }
-            if (wait.for(InvalidatedTokens.isTokenInvalidated, token)) {
-                req.log.info("Found invalidated token, sending 419");
-                return res.status(419).json({
-                    result: "error",
-                    error: "The token has been invalidated.",
-                });
-            }
+    app.all("/control/*", async (req, res, next) => {
+        let [scheme, token] = req.headers.authorization.split(" ");
+        if (!/^Bearer$/i.test(scheme)) {
+            return next(new BadRequestError("No token was found in the Authorization header."));
+        }
 
-            // The keep-alive route was once bugged and generated tokens without an
-            // email property in the token information.
-            // As ITFrame expects the token to always hold the user's email, this obviously
-            // causes issues, and in this case, a major one since it crashes the whole app.
-            // The following checks for such invalid tokens and stops the request.
-            if (!req.user.email) {
-                req.log.warn(`Found an invalid token for ${req.user.email}, sending 401`);
-                return res.status(401).json({
-                    result: "error",
-                    error: "Invalid token. Please log in again.",
-                });
-            }
-
-            req.token = token;
-            req.log = req.log.child({
-                req: {
-                    method: req.method,
-                    url: req.url,
-                    ip: req.ip,
-                    user: req.user,
-                },
+        if (await InvalidatedTokens.isTokenInvalidated(token)) {
+            req.log.info("Found invalidated token, sending 419");
+            return res.status(419).json({
+                result: "error",
+                error: "The token has been invalidated.",
             });
-            return next(); // allow request to continue
+        }
+
+        // The keep-alive route was once bugged and generated tokens without an
+        // email property in the token information.
+        // As ITFrame expects the token to always hold the user's email, this obviously
+        // causes issues, and in this case, a major one since it crashes the whole app.
+        // The following checks for such invalid tokens and stops the request.
+        if (!req.user.email) {
+            req.log.warn(`Found an invalid token for ${req.user.email}, sending 401`);
+            return res.status(401).json({
+                result: "error",
+                error: "Invalid token. Please log in again.",
+            });
+        }
+
+        req.token = token;
+        req.log = req.log.child({
+            req: {
+                method: req.method,
+                url: req.url,
+                ip: req.ip,
+                user: req.user,
+            },
         });
+        return next(); // allow request to continue
     });
 
     app.all("/control/*", wrap(async (req, res, next) => {
@@ -150,11 +146,9 @@ export default function ({ app, expressJwt, jwt, wrap }) {
         res.json({ token });
     }));
 
-    app.post("/control/log-out", function (req, res) {
-        wait.launchFiber(() => {
-            wait.for(InvalidatedTokens.addToken, req.token);
-            res.json({});
-        });
-    });
+    app.post("/control/log-out", wrap(async (req, res) => {
+        await InvalidatedTokens.addToken(req.token)
+        res.json({});
+    }));
 
 }
