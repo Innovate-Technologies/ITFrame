@@ -1,5 +1,4 @@
 let nodeify = require("nodeify");
-let wait = require("wait.for");
 let _ = require("underscore");
 
 let users = requireFromRoot("components/legacy/usersDatabase.js");
@@ -84,29 +83,28 @@ let playerDatabase = {
      * @return {Promise}
      */
     getPlayer(username, callback) {
-        return nodeify(new Promise((resolve, reject) => {
-            wait.launchFiber(async function () {
-                try {
-                    let config = wait.for(playerDatabase.getConfig, username);
-                    if (config.alternativeStreamUrl) {
-                        return resolve(_.extend(config, { streamUrl: config.alternativeStreamUrl }));
-                    }
-                    try {
-                        const streamUrl = await castDatabase.getStreamUrl(username);
-                        resolve(_.extend(config, { streamUrl }));
-                    } catch (e) {
-                        users.getStreamUrl(username, (err, streamUrl) => {
-                            if (err) {
-                                err.message = "Failed to get the stream URL: " + err.message;
-                                return reject(err);
-                            }
-                            resolve(_.extend(config, { streamUrl }));
-                        });
-                    }
-                } catch (e) {
-                    reject(e);
+        return nodeify(new Promise(async (resolve, reject) => {
+            try {
+                let config = await playerDatabase.getConfig(username);
+                if (config.alternativeStreamUrl) {
+                    return resolve(_.extend(config, { streamUrl: config.alternativeStreamUrl }));
                 }
-            });
+                try {
+                    const streamUrl = await castDatabase.getStreamUrl(username);
+                    resolve(_.extend(config, { streamUrl }));
+                } catch (e) {
+                    users.getStreamUrl(username, (err, streamUrl) => {
+                        if (err) {
+                            err.message = "Failed to get the stream URL: " + err.message;
+                            return reject(err);
+                        }
+                        resolve(_.extend(config, { streamUrl }));
+                    });
+                }
+            } catch (e) {
+                reject(e);
+            }
+
         }), callback);
     },
 
