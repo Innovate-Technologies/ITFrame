@@ -10,7 +10,7 @@
   },
   "homepage": "https://github.com/Innovate-Technologies/ITFrame",
   "dependencies": {
-    "apicache": "^0.3.4",
+    "apicache": "^1.2.1",
     "asteroid": "^0.6.1",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^1.0.3",
