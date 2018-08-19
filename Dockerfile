@@ -2,7 +2,8 @@ FROM node:8
 MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
 # Update npm packages first to avoid unnecessary rebuilds
-COPY ./package.json /opt/itframe/source/package.json
+COPY ./src/package.json /opt/itframe/source/package.json
+COPY ./src/package-lock.json /opt/itframe/source/package-lock.json
 RUN cd /opt/itframe/source/ && npm install --production
 
 COPY ./src /opt/itframe/source
