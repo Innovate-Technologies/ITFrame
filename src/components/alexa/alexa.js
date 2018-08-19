@@ -1,5 +1,5 @@
-import * as users from "~/components/legacy/usersDatabase.js"
-import * as castDatabase from "~/components/cast/database.js"
+let users = requireFromRoot("components/legacy/usersDatabase.js");
+let castDatabase = requireFromRoot("components/cast/database.js");
 
 const mongoose = requireFromRoot("components/database/mongodb.js");
 const Schema = mongoose.Schema;
