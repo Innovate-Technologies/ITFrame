@@ -1,4 +1,4 @@
-let lwip = require("pajk-lwip");
+let lwip = require("lwip");
 
 /**
  * Resize a PNG image contained in a Buffer

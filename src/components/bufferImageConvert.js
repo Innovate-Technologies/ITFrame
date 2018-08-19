@@ -1,4 +1,4 @@
-let lwip = require("pajk-lwip");
+let lwip = require("lwip");
 
 /**
  * Convert an image to a PNG image
