@@ -1,4 +1,4 @@
-/* global requireFromRoot */
+import _ from "underscore"
 import * as alexa from "~/components/alexa/alexa"
 import BadRequestError from "~/http/classes/BadRequestError";
 
@@ -11,7 +11,7 @@ module.exports = ({ app, wrap }) => {
         if (!entry) {
             return next(new BadRequestError("username is not found"));
         }
-        entry.tuneInURL = await alexa.getTuneInURL(req.params.username)
-        return res.json(entry)
+        const tuneInURL = await alexa.getTuneInURL(req.params.username)
+        return res.json(_.extend(entry, { tuneInURL }))
     }));
 };
