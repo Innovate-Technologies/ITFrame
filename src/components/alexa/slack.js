@@ -64,26 +64,26 @@ export const sendForReview = (entry) => {
                 "actions": [
                     {
                         "name": "Reject invocation name",
-                        "text": "Recommend",
-                        "type": "reject_invocation",
+                        "text": "Reject invocation name",
+                        "type": "button",
                         "value": entry.username,
                     },
                     {
                         "name": "Reject intro",
-                        "text": "Recommend",
-                        "type": "reject_intro",
+                        "text": "Reject intro",
+                        "type": "button",
                         "value": entry.username,
                     },
                     {
                         "name": "Reject help",
-                        "text": "Recommend",
-                        "type": "reject_help",
+                        "text": "Reject help",
+                        "type": "button",
                         "value": entry.username,
                     },
                     {
                         "name": "Accept",
                         "text": "Accept",
-                        "type": "accept",
+                        "type": "button",
                         "value": entry.username,
                     },
                 ],
