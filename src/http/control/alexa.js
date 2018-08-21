@@ -16,6 +16,9 @@ export default function ({ app, wrap }) {
         if (entry === null) {
             await alexa.newForUsername(req.params.username, settings)
         } else {
+            if (entry.status === "rejected" || entry.status === "processing") {
+                settings.status = "in-review"
+            }
             await alexa.updateForUsername(req.params.username, settings);
         }
         res.json({});
