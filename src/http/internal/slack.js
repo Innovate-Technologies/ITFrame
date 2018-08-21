@@ -17,22 +17,22 @@ export default ({ app }) => {
 
         if (payload.actions[0].name === "Reject invocation name") {
             alexa.updateForUsername(payload.actions[0].selected_options[0].value, { status: "rejected", rejectReason: "The invocation name text does not comply to Amazon's specifications" })
-            return respond({ text: "The app has been rejected!" })
+            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` })
         }
 
         if (payload.actions[0].name === "Reject intro") {
             alexa.updateForUsername(payload.actions[0].selected_options[0].value, { status: "rejected", rejectReason: "The intro text does not comply to Amazon's specifications" })
-            return respond({ text: "The app has been rejected!" });
+            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` });
         }
 
         if (payload.actions[0].name === "Reject help") {
             alexa.updateForUsername(payload.actions[0].selected_options[0].value, { status: "rejected", rejectReason: "The help text does not comply to Amazon's specifications" })
-            return respond({ text: "The app has been rejected!" });
+            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` });
         }
 
         if (payload.actions[0].name === "Accept") {
             alexa.updateForUsername(payload.actions[0].selected_options[0].value, { status: "approved" })
-            return respond({ text: "The app has been approved!" })
+            return respond({ text: `The app for ${payload.actions[0].value} has been approved!` })
         }
     });
 }
