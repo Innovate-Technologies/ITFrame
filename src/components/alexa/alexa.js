@@ -8,8 +8,9 @@ const AlexaSchema = new Schema({
     status: {
         type: String,
         default: "in-review",
-        enum: [ "in-review", "processing", "rejected", "active" ],
+        enum: [ "in-review", "processing", "rejected", "active", "approved" ],
     },
+    rejectReason: String,
     name: String,
     logo: String,
     languageEntries: [

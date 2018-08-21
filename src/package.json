@@ -10,6 +10,8 @@
   },
   "homepage": "https://github.com/Innovate-Technologies/ITFrame",
   "dependencies": {
+    "@slack/client": "^4.4.0",
+    "@slack/interactive-messages": "^1.0.1",
     "asteroid": "^0.6.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
