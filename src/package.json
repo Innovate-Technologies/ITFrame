@@ -28,7 +28,7 @@
     "etcd3": "^0.2.10",
     "express": "^4.16.2",
     "express-jwt": "^3.3.0",
-    "express-rate-limit": "^2.12.2",
+    "express-rate-limit": "^3.0.1",
     "file-type": "^3.3.1",
     "gelf-stream": "^1.1.1",
     "heapdump": "^0.3.7",
