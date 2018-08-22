@@ -15,12 +15,12 @@ export const sendForReview = (entry) => {
             "title": lang.lanuage,
             "fields": [
                 {
-                    "title": "Intro",
-                    "value": lang.intro,
-                },
-                {
                     "title": "Invocation name",
                     "value": lang.invocationName,
+                },
+                {
+                    "title": "Intro",
+                    "value": lang.intro,
                 },
                 {
                     "title": "Help",
