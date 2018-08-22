@@ -9,7 +9,7 @@ export default ({ app }) => {
     // NOTE: The path must match the Request URL and/or Options URL configured in Slack
     app.use("/slack/alexa-review/actions", slackInteractions.expressMiddleware())
 
-    slackInteractions.action({ callbackId: "review", type: "message_action" }, (payload, respond) => {
+    slackInteractions.action({ callbackId: "review" }, (payload, respond) => {
         if (!payload.actions[0] || !payload.actions[0].name) {
             respond({ text: JSON.stringify(payload) });
             return
