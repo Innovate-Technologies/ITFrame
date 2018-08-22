@@ -72,11 +72,16 @@ module.exports = function () {
         wrap,
     }
 
+    const disabledModules = global.config.disabledModules || []
+
     var modules = _.without(
         fs.readdirSync(global.appRoot + "/http"),
         "loader.js", "classes", "error-handlers"
     )
     for (let module of modules) {
+        if (disabledModules.indexOf(module) >= 0) {
+            continue
+        }
         if (module.includes(".")) {
             moduleLogger.info("Loading file: " + module);
             try {
