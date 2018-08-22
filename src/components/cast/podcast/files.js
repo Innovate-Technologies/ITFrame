@@ -20,3 +20,14 @@ export const addForUsername = async (username, object) => {
     object.username = username
     return (new FilesModel(object)).save()
 }
+
+export const calculateUsedSpace = async (username) => {
+    let total = 0
+    const files = await FilesModel.findOne({ username }).exec()
+
+    for (let file of files) {
+        total += file.size || 0
+    }
+
+    return total
+}
