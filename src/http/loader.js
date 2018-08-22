@@ -9,6 +9,16 @@ var _ = require("underscore");
 var cors = require("cors");
 let moduleLogger = log.child({ component: "http" });
 
+const filterSlack = (fn) => { // Slack is not a fan of body parsers so we should not use them on those
+    return (req, res, next) => {
+        if (req.path.indexOf("/slack") === 0) {
+            return next();
+        }
+
+        return fn(req, res, next);
+    }
+}
+
 module.exports = function () {
 
     app.use(function (req, res, next) {
@@ -44,11 +54,11 @@ module.exports = function () {
         app.options("*", cors());
     }
 
-    app.use(bodyParser.json({ limit: "1024mb" }));
-    app.use(bodyParser.urlencoded({
+    app.use(filterSlack(bodyParser.json({ limit: "1024mb" })));
+    app.use(filterSlack(bodyParser.urlencoded({
         extended: true,
         limit: "1024mb",
-    }));
+    })));
 
     http.listen(config.port);
 
