@@ -100,5 +100,6 @@ export const disableButtons = (original, newMesage) => {
             original.attachments[id].text = newMesage
         }
     }
-    return web.chat.update(original)
+    //return web.chat.update(original)
+    return original
 }
