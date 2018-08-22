@@ -91,5 +91,14 @@ export const sendForReview = (entry) => {
         ],
     })
     .catch(console.error);
+}
 
+export const disableButtons = (original, newMesage) => {
+    for (let id in original.attachments) {
+        if (original.attachments.hasOwnProperty(id) && original.attachments[id].title === "Review") {
+            original.attachments[id].actions = []
+            original.attachments[id].text = newMesage
+        }
+    }
+    return web.chat.update(original)
 }

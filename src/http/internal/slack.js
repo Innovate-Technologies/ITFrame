@@ -1,5 +1,6 @@
 import { createMessageAdapter } from "@slack/interactive-messages"
 import * as alexa from "~/components/alexa/alexa"
+import * as slack from "~/components/alexa/slack"
 
 export default ({ app }) => {
     // Create the adapter using the app's signing secret, read from environment variable
@@ -9,30 +10,32 @@ export default ({ app }) => {
     // NOTE: The path must match the Request URL and/or Options URL configured in Slack
     app.use("/slack/alexa-review/actions", slackInteractions.expressMiddleware())
 
-    slackInteractions.action({ callbackId: "review" }, (payload, respond) => {
+    slackInteractions.action({ callbackId: "review" }, async (payload, respond) => {
         if (!payload.actions[0] || !payload.actions[0].name) {
             respond({ text: JSON.stringify(payload) });
             return
         }
 
+        respond({})
+
         if (payload.actions[0].name === "Reject invocation name") {
-            alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The invocation name text does not comply to Amazon's specifications" })
-            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` })
+            await alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The invocation name text does not comply to Amazon's specifications" })
+            await slack.disableButtons(payload.original_message, `:heavy_multiplication_x: rejected by <@${payload.user.id}>`)
         }
 
         if (payload.actions[0].name === "Reject intro") {
-            alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The intro text does not comply to Amazon's specifications" })
-            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` });
+            await alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The intro text does not comply to Amazon's specifications" })
+            await slack.disableButtons(payload.original_message, `:heavy_multiplication_x: rejected by <@${payload.user.id}>`);
         }
 
         if (payload.actions[0].name === "Reject help") {
-            alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The help text does not comply to Amazon's specifications" })
-            return respond({ text: `The app for ${payload.actions[0].value} has been rejected!` });
+            await alexa.updateForUsername(payload.actions[0].value, { status: "rejected", rejectReason: "The help text does not comply to Amazon's specifications" })
+            await slack.disableButtons(payload.original_message, `:heavy_multiplication_x: rejected by <@${payload.user.id}>`);
         }
 
         if (payload.actions[0].name === "Accept") {
-            alexa.updateForUsername(payload.actions[0].value, { status: "approved" })
-            return respond({ text: `The app for ${payload.actions[0].value} has been approved!` })
+            await alexa.updateForUsername(payload.actions[0].value, { status: "approved" })
+            await slack.disableButtons(payload.original_message, `:heavy_check_mark: approved by <@${payload.user.id}>`)
         }
     });
 }
