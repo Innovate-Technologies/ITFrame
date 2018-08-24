@@ -57,7 +57,7 @@
     "simple-bufferstream": "~1.0.0",
     "snyk": "^1.92.6",
     "twit": "^2.2.11",
-    "underscore": "~1.8.3",
+    "underscore": "~1.9.1",
     "unirest": "0.5.1",
     "util": "~0.11.0",
     "wait.for": "~0.6.6",
