@@ -68,10 +68,15 @@ module.exports = function ({ app, wrap }) {
             throw new Error("Failed to upload the song.");
         }
         req.log.info({ link: req.file.link }, "Uploaded file");
+
+        if (typeof req.body.tags === "string") {
+            req.body.tags = JSON.parse(req.body.tags)
+        }
+
         const castInfo = await castDatabase.getInfoForUsername(req.body.username)
         let processedURLS = []
         for (var stream of castInfo.streams) {
-            processedURLS.push({bitrate: parseInt(stream.stream.replace("kbps", ""), 10), url:""})
+            processedURLS.push({bitrate: parseInt(stream.stream.replace("kbps", ""), 10), url: ""})
         }
         const entry = await tunesDB.addSong(req.body.username, {
             type: "song",
