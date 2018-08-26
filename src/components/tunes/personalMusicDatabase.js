@@ -134,6 +134,10 @@ export const getSongsForUser = async (username, itemsPerPage, page = 1, sortBy) 
     return result.docs
 }
 
+export const getSongCountsForUser = async (username) => {
+    return TunesPersonalModel.countDocuments({ username, type: "song" }).exec()
+}
+
 export const getSongsForUserWithTag = (username, tag) => {
     return TunesPersonalModel.find({
         username: username,

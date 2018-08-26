@@ -113,6 +113,12 @@ module.exports = function ({ app, wrap }) {
         res.json(songs)
     }))
 
+    app.get("/control/cast/tunes/get-song-count/:username/", wrap(async (req, res) => {
+        const count = await tunesDB.getSongCountsForUser(req.params.username)
+        res.json({ count })
+    }))
+
+
     app.post("/control/cast/tunes/set-tags/:username/:song", wrap(async (req, res) => {
         await tunesDB.setSongTagForUserWithID(req.params.username, req.params.song, req.body)
         res.json({})
