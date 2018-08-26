@@ -65,3 +65,55 @@ export const replaceClocksForUsername = async (username, clocks) => {
         await addClock(username, clock)
     }
 }
+
+
+const getClockForDayHourMinute = (clocks, day, hour, minute) => {
+    for (let id in clocks) {
+        if (clocks.hasOwnProperty(id)) {
+            if (clocks[id].start.dayOfWeek < day && clocks[id].end.dayOfWeek > day) {
+          // ] day [
+                return clocks[id];
+            } else if ((clocks[id].start.dayOfWeek === day || clocks[id].end.dayOfWeek === day)) {
+          // [ day ]
+                if ((clocks[id].start.dayOfWeek === day && clocks[id].start.hour <= hour) || (clocks[id].end.dayOfWeek === day && clocks[id].end.hour >= hour)) {
+            // check end minutes
+            // [ day ] [ hour ]
+                    if (clocks[id].start.hour < hour && clocks[id].end.hour > hour) {
+              // ] hour [
+                        return clocks[id];
+                    } else if ((clocks[id].start.hour === hour && clocks[id].start.minute >= minute) || (clocks[id].end.hour === hour && clocks[id].end.minute >= minute)) {
+              // [ day ] [ hour ] [ minute ]
+                        return clocks[id];
+                    }
+                }
+            }
+        }
+    }
+    return null;
+};
+
+export const hasAllClocks = async (username) => {
+    const clocks = await clocksForUsername(username)
+    for (let day = 1; day <= 7; day++) {
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute = 0; minute < 60; minute++) {
+                if (getClockForDayHourMinute(clocks, day, hour, minute) === null) {
+                    return false
+                }
+            }
+        }
+    }
+
+    return true
+}
+
+export const getAllTagsInClocks = async (username) => {
+    const clocks = await clocksForUsername(username)
+    const tags = []
+
+    for (let clock of clocks) {
+        tags.push(...clock.tags)
+    }
+
+    return tags
+}

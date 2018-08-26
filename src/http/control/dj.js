@@ -3,6 +3,7 @@ import * as clocks from "../../components/dj/clocks.js"
 import * as intervals from "../../components/dj/intervals.js"
 import * as tags from "../../components/dj/tags.js"
 import * as dj from "../../components/dj/manage.js"
+import * as tunes from "../../components/tunes/personalMusicDatabase"
 import BadRequestError from "~/http/classes/BadRequestError";
 
 export default ({ app, wrap }) => {
@@ -12,6 +13,18 @@ export default ({ app, wrap }) => {
     //////////////////////////////////////////////////////
 
     app.post("/control/cast/dj/settings/:username", wrap(async (req, res) => {
+        if (req.body.enabled) {
+            if (!await clocks.hasAllClocks(req.params.username)) {
+                throw new BadRequestError("Not all time slots have a clock")
+            }
+            const alltags = await clocks.getAllTagsInClocks(req.params.username)
+            for (let tag of alltags) {
+                const songs = await tunes.getSongsForUserWithTag(req.params.username, tag)
+                if (songs.length === 0) {
+                    throw new BadRequestError("Not all played tags contain songs")
+                }
+            }
+        }
         await cast.configureDJ(req.params.username, {
             enabled: req.body.enabled || false,
             fadeLength: req.body.fadeLength || 0,
