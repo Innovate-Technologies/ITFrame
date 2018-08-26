@@ -81,7 +81,7 @@ const getClockForDayHourMinute = (clocks, day, hour, minute) => {
                     if (clocks[id].start.hour < hour && clocks[id].end.hour > hour) {
               // ] hour [
                         return clocks[id];
-                    } else if ((clocks[id].start.hour === hour && clocks[id].start.minute >= minute) || (clocks[id].end.hour === hour && clocks[id].end.minute >= minute)) {
+                    } else if ((clocks[id].start.hour === hour && clocks[id].start.minute <= minute) || (clocks[id].end.hour === hour && clocks[id].end.minute >= minute)) {
               // [ day ] [ hour ] [ minute ]
                         return clocks[id];
                     }
