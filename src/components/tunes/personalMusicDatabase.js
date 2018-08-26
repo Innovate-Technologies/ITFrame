@@ -209,3 +209,11 @@ export const deleteTagOutOfRecords = async (username, id) => {
         await song.save()
     }
 }
+
+export const markAllForReprocess = (username) => {
+    return TunesPersonalModel.update({
+        username,
+        type: "song",
+        available: true,
+    }, { available: false }).exec()
+}

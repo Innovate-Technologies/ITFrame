@@ -1,6 +1,7 @@
 import dns from "dns"
 import * as cast from "../../components/cast/manage.js"
 import * as castDatabase from "../../components/cast/database.js"
+import * as tunes from "../../components/tunes/personalMusicDatabase"
 import NotFoundError from "~/http/classes/NotFoundError";
 import BadRequestError from "~/http/classes/BadRequestError";
 
@@ -69,7 +70,26 @@ module.exports = ({ app, wrap }) => {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     app.put("/control/cast/streams/:username", wrap(async (req, res) => {
+        const oldConfig = await castDatabase.getInfoForUsername(req.params.username)
+        let oldSteamNames = []
+        let newStreamNames = []
+
+        for (let stream of oldConfig.streams) {
+            oldSteamNames.push(stream.stream)
+        }
+
+        for (let stream of req.body) {
+            newStreamNames.push(stream.stream)
+        }
+
         await cast.configureStreams(req.params.username, req.body)
+
+        oldSteamNames = oldSteamNames.sort()
+        newStreamNames = newStreamNames.sort()
+        if (JSON.stringify(oldSteamNames) !== JSON.stringify(newStreamNames)) {
+            await tunes.markAllForReprocess(req.params.username)
+        }
+
         res.json({})
     }));
 
