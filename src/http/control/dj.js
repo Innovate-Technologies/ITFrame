@@ -25,7 +25,7 @@ export default ({ app, wrap }) => {
                 }
             }
         }
-        await cast.configureDJ(req.params.username, {
+        cast.configureDJ(req.params.username, {
             enabled: req.body.enabled || false,
             fadeLength: req.body.fadeLength || 0,
             name: req.body.name || "Unknown",
