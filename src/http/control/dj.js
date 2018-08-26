@@ -19,7 +19,7 @@ export default ({ app, wrap }) => {
             }
             const alltags = await clocks.getAllTagsInClocks(req.params.username)
             for (let tag of alltags) {
-                const songs = await tunes.getSongsForUserWithTag(req.params.username, tag)
+                const songs = await tunes.getSongsForUserWithTag(req.params.username, tag.tag)
                 if (songs.length === 0) {
                     throw new BadRequestError("Not all played tags contain songs")
                 }
