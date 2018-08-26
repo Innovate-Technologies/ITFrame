@@ -121,11 +121,9 @@ module.exports = function ({ app, wrap }) {
         if (!req.file) {
             throw new Error("Failed to upload the image.");
         }
+        const link = `https://images.shoutca.st/${req.file.name}`
         req.log.info({ link: req.file.link }, "Uploaded file");
-        res.json({
-            link: req.file.link,
-            name: req.file.name,
-        });
+        res.json({ link });
     });
 
     app.get("/tunes/is-link-in-use/" + config.tunesKey, wrap(async (req, res) => {
