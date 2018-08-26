@@ -14,6 +14,7 @@ let sbuff = require("simple-bufferstream");
 let getFileType = require("file-type");
 
 let db = requireFromRoot("components/tunes/personalMusicDatabase.js");
+let castDatabase = requireFromRoot("components/cast/database.js");
 let processSong = requireFromRoot("components/tunes/process.js");
 
 let processImageUpload = (req, { stream }, callback) => {
@@ -133,6 +134,18 @@ module.exports = function ({ app, wrap }) {
         }
         const isInUse = await db.isLinkInUse(req.query.link)
         res.json({ isInUse })
+    }));
+
+    app.get("/tunes/bitrates/" + config.tunesKey, wrap(async (req, res) => {
+        if (!req.query.username) {
+            throw new Error("No username provided");
+        }
+        const castInfo = await castDatabase.getInfoForUsername(req.query.username)
+        const bitrates = []
+        for (var stream of castInfo.streams) {
+            bitrates.push(parseInt(stream.stream.replace("kbps", ""), 10))
+        }
+        res.json(bitrates)
     }));
 
 };
