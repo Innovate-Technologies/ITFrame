@@ -90,7 +90,7 @@ export const upgradeNode = async (username) => {
     await castDB.updateVersion(username)
     logger.info("updating node");
     try {
-        await hardRestartNode(username)
+        hardRestartNode(username)
     } catch (error) {
         logger.error(error)
     }
