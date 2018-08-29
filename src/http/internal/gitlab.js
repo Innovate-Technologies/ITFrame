@@ -12,7 +12,7 @@ export default ({ app, wrap }) => {
         if (req.body.ref === "master") {
             await buildInfo.updateVersionForName(req.params.name, req.body.sha)
         } else if (req.body.ref === "beta") {
-            await buildInfo.updateVersionForName(req.params.name = "-beta", req.body.sha)
+            await buildInfo.updateVersionForName(req.params.name + "-beta", req.body.sha)
         } else {
             throw new Error("We won't deploy this ref")
         }
