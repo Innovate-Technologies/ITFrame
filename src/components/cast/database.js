@@ -126,15 +126,13 @@ export const addConfigForUsername = async (username, conf) => {
 }
 
 export const updateVersion = async (username) => {
-    let build
+    let build = await buildinfo.buildInfoForName("Cast")
     const castInfo = await CastModel.findOne({ username }).lean().exec()
     if (!castInfo) {
         throw new Error("username not found")
     }
 
-    if (castInfo.branch === "stable") {
-        build = await buildinfo.buildInfoForName("Cast")
-    } else if (castInfo.branch === "beta") {
+    if (castInfo.branch === "beta") {
         build = await buildinfo.buildInfoForName("Cast-beta")
     }
 
