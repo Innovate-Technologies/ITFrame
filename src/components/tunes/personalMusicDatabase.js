@@ -91,12 +91,10 @@ export const updateSong = async (username, id, newInfo) => {
         _id: new ObjectId(id),
     }).exec()
     if (!song) {
-        return
+        throw new Error("Song not found")
     }
-    song = _.extend(song, newInfo)
 
-    song._id = new ObjectId(id)
-    return song.save()
+    return TunesPersonalModel.update({ username, _id: new ObjectId(id) }, newInfo).exec()
 }
 
 export const getDefaultForUsername = (username) => {
