@@ -78,7 +78,7 @@ const castSchema = new Schema({
         countryCodes: [String],
         mode: {
             type: String,
-            enum: ["blacklist", "whitelist"],
+            enum: ["blacklist", "whitelist"], // TODO: change to allowlist and denylist once change in cast hists stable
         },
         allowUnknown: {
             type: Boolean,
