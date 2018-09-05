@@ -25,11 +25,23 @@ patch:
         patched: '2018-08-19T11:03:53.690Z'
     - unirest > request > hawk > hoek:
         patched: '2018-08-19T11:03:53.690Z'
+    - unirest > request > hawk > hoek:
+        patched: '2018-09-02T01:38:21.877Z'
+    - unirest > request > hawk > boom > hoek:
+        patched: '2018-09-02T01:38:21.877Z'
+    - unirest > request > hawk > sntp > hoek:
+        patched: '2018-09-02T01:38:21.877Z'
+    - unirest > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-02T01:38:21.877Z'
   'npm:lodash:20180130':
     - pkgcloud > lodash:
         patched: '2018-08-19T11:03:53.690Z'
     - pkgcloud > lodash:
         patched: '2018-08-19T11:39:10.924Z'
+    - pkgcloud > lodash:
+        patched: '2018-09-02T01:38:21.877Z'
   'npm:tunnel-agent:20170305':
     - unirest > request > tunnel-agent:
         patched: '2018-08-19T11:03:53.690Z'
+    - unirest > request > tunnel-agent:
+        patched: '2018-09-02T01:38:21.877Z'
