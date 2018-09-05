@@ -10,7 +10,7 @@ before_install:
 - docker pull innovate/itframe:latest
 install:
 - cd src && npm install && cd ..
-- sudo npm install -g maxmind-geolite-mirror
+- npm install -g maxmind-geolite-mirror
 
 cache:
   directories:
