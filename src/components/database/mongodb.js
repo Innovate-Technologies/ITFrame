@@ -1,26 +1,22 @@
 /* global config,log */
-var fs = require("fs");
+import mongoose from "mongoose"
+import fs from "fs"
 let moduleLogger = log.child({ component: "mongodb" });
-var mongoose = require("mongoose");
 mongoose.set("debug", false);
 var options = {
-    db: {
-        "native_parser": true,
-        ssl: config.mongoSSL || false,
-    },
-    server: {
-        poolSize: 5,
-    },
+    useNewUrlParser: true,
+    ssl: config.mongoSSL || false,
+    sslValidate: config.mongoSSL || false,
     user: config.mongoUsername,
     pass: config.mongoPassword,
     auth: {
         authdb: config.mongoDatabase,
     },
+    replicaSet: "rs0",
 };
 
 if (config.mongoCA) {
-    options.db.sslValidate = true
-    options.db.sslCA = [fs.readFileSync(config.mongoCA)]
+    options.sslCA = [fs.readFileSync(config.mongoCA)]
 }
 
 if (config.mongoAuthMechanism) {
@@ -28,7 +24,7 @@ if (config.mongoAuthMechanism) {
 }
 
 moduleLogger.info("Connecting to the database");
-mongoose.connect(`mongodb://${config.mongoHost}/${config.mongoDatabase}?replicaSet=rs0`, options);
+mongoose.connect(`mongodb://${config.mongoHost}/${config.mongoDatabase}`, options);
 mongoose.connection.on("connected", function () {
     clearInterval(connectedCheck);
     moduleLogger.info("Connected to the database");
