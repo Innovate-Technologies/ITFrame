@@ -35,7 +35,7 @@
     "gelf-stream": "^1.1.1",
     "heapdump": "^0.3.7",
     "js-string-escape": "~1.0.0",
-    "jsonwebtoken": "^7.4.1",
+    "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "lwip": "git://github.com/kant2002/lwip.git#node-10",
     "maxmind": "~0.6.0",
