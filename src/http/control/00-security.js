@@ -128,7 +128,7 @@ export default function ({ app, expressJwt, jwt, wrap }) {
             email: req.body.email,
             test: "ok",
         }, cert, {
-            expiresInMinutes: 60,
+            expiresIn: "60m",
             audience: "https://itframe.shoutca.st/control",
             algorithm: "RS256",
         });
@@ -139,7 +139,7 @@ export default function ({ app, expressJwt, jwt, wrap }) {
     app.post("/control/keep-alive", wrap(async (req, res) => {
         const data = await controlUser.getInfoForEmail(req.user.email);
         const token = jwt.sign({ email: data.email }, cert, {
-            expiresInMinutes: 120,
+            expiresIn: "120m",
             audience: "https://itframe.shoutca.st/control",
             algorithm: "RS256",
         });
