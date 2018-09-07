@@ -27,11 +27,11 @@ export const createUnit = async (username) => {
     if (config.hostname != `https://${username}.radioca.st`) {
         customHost = config.hostname.replace("https://", "")
     }
-    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, customHost, branch: config.branch })
+    await helmetCast.create(username, { shoutcastPort: config.input.SHOUTcast.toString(), username, customHost, branch: config.branch, date: "" + (new Date()).getTime() })
 }
 
 export const startDJ = (username) => {
-    return helmetDJ.create(username, { username });
+    return helmetDJ.create(username, { username, date: "" + (new Date()).getTime() });
 }
 
 export const destroyDJ = (username) => {
@@ -90,7 +90,7 @@ export const upgradeNode = async (username) => {
     await castDB.updateVersion(username)
     logger.info("updating node");
     try {
-        hardRestartNode(username)
+        createUnit(username)
     } catch (error) {
         logger.error(error)
     }
@@ -100,7 +100,7 @@ export const relocateNode = async (username) => {
     const logger = moduleLogger.child({ username })
     logger.info("relocating node");
     try {
-        await hardRestartNode(username)
+        createUnit(username)
     } catch (error) {
         logger.error(error)
     }
