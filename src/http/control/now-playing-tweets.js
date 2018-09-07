@@ -32,7 +32,7 @@ export default function ({ app, wrap }) {
         if (songs.length < 1) {
             throw new NotFoundError("Failed to get current song playing");
         }
-        await twitter.sendTweet(req.params.username, {
+        await twitter.sendTweetNow(req.params.username, {
             song: songs[0].song,
             artist: songs[0].artist,
         })

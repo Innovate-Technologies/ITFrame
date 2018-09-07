@@ -2,6 +2,41 @@ let database = require("./twitterDatabase");
 let Twit = require("twit"); // not to be confused with This Week In Tech
 let moduleLogger = log.child({ component: "twitter" });
 
+// this will send tweets as triggered by the user
+module.exports.sendTweetNow = (username, songInfo) => new Promise(async (resolve, reject) => {
+    const settings = await database.getSettings(username);
+    if (!settings) {
+        return reject("No Twitter settings found.");
+    }
+    if (typeof settings._count !== "number") {
+        settings._count = 0;
+    }
+    if (!settings.isEnabled) {
+        return reject("Tweets are not ebabled");
+    }
+
+    const tweet = settings.tweet
+    .replace("%title", songInfo.song)
+    .replace("%artist", songInfo.artist);
+   
+    new Twit({
+        "consumer_key": settings.consumerKey,
+        "consumer_secret": settings.consumerSecret,
+        "access_token": settings.accessToken,
+        "access_token_secret": settings.accessTokenSecret,
+    }).post("statuses/update", { status: tweet }, function (error) {
+        if (!error) {
+            return resolve();
+        }
+
+        if (error.message.includes("Status is a duplicate") || error.message.includes("Status is over")) {
+            return reject("Status is a duplicate");
+        }
+        return reject(error.message);
+    });
+})
+
+
 module.exports.sendTweet = async (username, songInfo) => {
     let logger = moduleLogger.child({ username });
     try {
