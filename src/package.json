@@ -12,7 +12,7 @@
   "dependencies": {
     "@slack/client": "^4.6.0",
     "@slack/interactive-messages": "^1.0.1",
-    "asteroid": "^0.6.1",
+    "asteroid": "^0.7.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2017": "^6.24.1",
@@ -30,7 +30,7 @@
     "etcd3": "^0.2.10",
     "express": "^4.16.2",
     "express-jwt": "^5.3.1",
-    "express-rate-limit": "^3.1.0",
+    "express-rate-limit": "^3.1.1",
     "file-type": "^9.0.0",
     "gelf-stream": "^1.1.1",
     "heapdump": "^0.3.7",
