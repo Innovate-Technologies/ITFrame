@@ -21,7 +21,7 @@ try {
     process.exit(1);
 }
 
-var ttl = parseInt(process.argv[3] || 5, 10);
+var ttl = process.argv[3] || "5m";
 try {
     var privateKey = fs.readFileSync("../keys/controlSigningKey.pem");
 } catch (error) {
@@ -32,7 +32,7 @@ try {
 }
 
 var token = jwt.sign({ email: email }, privateKey, {
-    expiresInMinutes: ttl,
+    expiresIn: ttl,
     audience: "https://itframe.shoutca.st/control",
     algorithm: "RS256",
 });
