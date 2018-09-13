@@ -36,7 +36,7 @@
     "heapdump": "^0.3.7",
     "js-string-escape": "~1.0.0",
     "jsonwebtoken": "^8.3.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "lwip": "git://github.com/kant2002/lwip.git#node-10",
     "maxmind": "~2.7.0",
     "moment": "^2.19.3",
