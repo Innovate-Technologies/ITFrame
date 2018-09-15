@@ -63,7 +63,7 @@ let playerDatabase = {
      */
     getConfig(username, callback) {
         return nodeify(new Promise((resolve, reject) => {
-            PlayerModel.findOne({ username }).lean().exec((err, config) => {
+            PlayerModel.findOne({ username }).exec((err, config) => {
                 if (err) {
                     return reject(err);
                 }
@@ -132,7 +132,7 @@ let playerDatabase = {
                 } else {
                     doc = _.extend(doc, config);
                 }
-                doc.save((error) => {
+                PlayerModel.update({ username }, doc).exec((error) => {
                     if (error) {
                         error.message = "Could not update Player config: " + error.message;
                         return reject(error);
