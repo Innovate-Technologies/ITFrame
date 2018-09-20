@@ -41,7 +41,7 @@
     "maxmind": "~2.7.0",
     "moment": "^2.19.3",
     "moment-timezone": "^0.5.14",
-    "mongoose": "5.2.14",
+    "mongoose": "5.2.16",
     "mongoose-paginate": "git://github.com/zerok78/mongoose-paginate.git#version-5.0.4",
     "multer": "^1.1.0",
     "node-fleet-api": "^1.0.3",
