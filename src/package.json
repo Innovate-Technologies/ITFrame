@@ -55,7 +55,7 @@
     "restler": "^3.3.0",
     "shelljs": "^0.8.2",
     "simple-bufferstream": "~1.0.0",
-    "snyk": "^1.96.0",
+    "snyk": "^1.99.0",
     "twit": "^2.2.11",
     "underscore": "~1.9.1",
     "unirest": "0.5.1",
