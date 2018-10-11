@@ -28,7 +28,7 @@
     "cors": "^2.8.4",
     "ejson": "^2.1.2",
     "etcd3": "^0.2.10",
-    "express": "^4.16.2",
+    "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "express-rate-limit": "^3.2.0",
     "file-type": "^9.0.0",
