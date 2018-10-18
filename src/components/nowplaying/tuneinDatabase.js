@@ -102,7 +102,7 @@ tuneinDatabase.upsert = async (username, settings) => {
     // for update() calls properly (despite claiming having support for it since
     // version 4.0), so we have to resort to first getting the document,
     // then creating/updating it and re-saving it. Not ideal but it works.
-    let doc = TuneinModel.findOne({ username }).exec();
+    let doc = await TuneinModel.findOne({ username }).exec();
     if (!doc) {
         doc = new TuneinModel(settings);
     } else {
