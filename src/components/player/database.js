@@ -87,18 +87,21 @@ let playerDatabase = {
             try {
                 let config = await playerDatabase.getConfig(username);
                 if (config.alternativeStreamUrl) {
-                    return resolve(_.extend(config, { streamUrl: config.alternativeStreamUrl }));
+                    config.streamUrl = config.alternativeStreamUrl
+                    return resolve(config);
                 }
                 try {
                     const streamUrl = await castDatabase.getStreamUrl(username);
-                    resolve(_.extend(config, { streamUrl }));
+                    config.streamUrl = streamUrl
+                    resolve(config);
                 } catch (e) {
                     users.getStreamUrl(username, (err, streamUrl) => {
                         if (err) {
                             err.message = "Failed to get the stream URL: " + err.message;
                             return reject(err);
                         }
-                        resolve(_.extend(config, { streamUrl }));
+                        config.streamUrl = streamUrl
+                        resolve(config);
                     });
                 }
             } catch (e) {
