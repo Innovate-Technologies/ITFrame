@@ -40,7 +40,7 @@
     "lwip": "git://github.com/kant2002/lwip.git#node-10",
     "maxmind": "~2.7.0",
     "moment": "^2.19.3",
-    "moment-timezone": "^0.5.14",
+    "moment-timezone": "^0.5.23",
     "mongoose": "5.3.4",
     "mongoose-paginate": "git://github.com/zerok78/mongoose-paginate.git#version-5.0.4",
     "multer": "^1.4.1",
