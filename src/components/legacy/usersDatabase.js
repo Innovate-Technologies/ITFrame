@@ -92,7 +92,7 @@ usersDatabase.getStreamUrl = (username, callback) => {
         if (server === "cast") {
             return callback(new Error("Server is Cast? What do you expect this legacy method to do?"));
         }
-        let plsFileUrl = `http://${server}.shoutca.st/tunein/${username}.pls`;
+        let plsFileUrl = `https://${server}.shoutca.st/tunein/${username}.pls`;
         rest.get(plsFileUrl, { timeout: 5000 })
             .on("complete", async function (data) {
                 if (data instanceof Error) {
