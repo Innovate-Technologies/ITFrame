@@ -21,6 +21,19 @@ if (config.sendLogsToGraylog && config.graylogServer && config.graylogPort) {
     });
 }
 
+if (config.sendLogsToStackdriver && config.stackdriverProject && config.stackdriverKey) {
+    // Imports the Google Cloud client library for Bunyan (Node 6+)
+    const {LoggingBunyan} = require('@google-cloud/logging-bunyan');
+
+    // Creates a Bunyan Stackdriver Logging client
+    const loggingBunyan = new LoggingBunyan({
+        projectId: config.stackdriverProject,
+        keyFilename: config.stackdriverKey,
+    });
+    streams.push(loggingBunyan.stream("debug"));
+}
+
+
 if (config.sendLogsToExternal) {
     externalSystem = require("./logs-external");
     streams.push({
