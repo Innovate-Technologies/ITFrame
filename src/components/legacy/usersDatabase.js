@@ -46,8 +46,9 @@ usersDatabase.register = (username, server, groupName, callback = () => {}) => {
             return callback(err);
         }
         if (info) {
-            logger.debug({ userInfo: info }, "Record already exists, not registering");
-            return callback();
+            info.server = server
+            logger.debug({ userInfo: info }, "Record already exists, updating server name");
+            return info.save(callback)    
         }
         let type = "unknown";
         if (groupName.includes("SHOUTcast v2 Servers")) {
