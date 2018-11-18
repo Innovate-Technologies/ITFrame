@@ -93,7 +93,7 @@ export default ({ app, wrap }) => {
         } catch (_) {
             moduleLogger.info("Found nothing in DB, replying with empty info");
         }
-        moduleLogger.debug({ username }, "Sending response");
+        //moduleLogger.debug({ username }, "Sending response");
         return res.json(songInfo);
     }));
 
