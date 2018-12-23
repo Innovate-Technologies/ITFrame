@@ -27,7 +27,7 @@ cache:
 
 jobs:
   include:
-     - name: 'test build'
+    - name: 'test build'
       stage: testbuild
       script:
         - docker pull innovate/itframe:latest
