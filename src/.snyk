@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.13.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:base64url:20180511':
@@ -13,9 +13,13 @@ patch:
         patched: '2018-08-19T11:03:53.690Z'
     - jsonwebtoken > ms:
         patched: '2018-08-19T11:03:53.690Z'
+    - pkgcloud > liboneandone > mocha > debug > ms:
+        patched: '2018-11-30T00:48:40.335Z'
   'npm:debug:20170905':
     - mongoose > mquery > debug:
         patched: '2018-08-19T11:03:53.690Z'
+    - pkgcloud > liboneandone > mocha > debug:
+        patched: '2018-11-30T00:48:40.335Z'
   'npm:hoek:20180212':
     - unirest > request > hawk > boom > hoek:
         patched: '2018-08-19T11:03:53.690Z'
@@ -45,3 +49,6 @@ patch:
         patched: '2018-08-19T11:03:53.690Z'
     - unirest > request > tunnel-agent:
         patched: '2018-09-02T01:38:21.877Z'
+  'npm:minimatch:20160620':
+    - pkgcloud > liboneandone > mocha > glob > minimatch:
+        patched: '2018-11-30T00:48:40.335Z'
