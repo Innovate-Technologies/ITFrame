@@ -15,8 +15,6 @@ stages:
   - name: deploy
     if: branch = master AND type = push
 
-before_install:
-- docker pull innovate/itframe:latest
 install:
 - cd src && npm install && cd ..
 - npm install -g maxmind-geolite-mirror
