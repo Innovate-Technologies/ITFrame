@@ -15,10 +15,6 @@ stages:
   - name: deploy
     if: branch = master AND type = push
 
-install:
-- cd src && npm install && cd ..
-- npm install -g maxmind-geolite-mirror
-
 cache:
   directories:
   - src/node_modules
@@ -27,11 +23,17 @@ jobs:
   include:
     - name: 'test build'
       stage: testbuild
+      install:
+        - cd src && npm install && cd ..
+        - npm install -g maxmind-geolite-mirror
       script:
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
     - name: 'build'
       stage: build
+      install:
+        - cd src && npm install && cd ..
+        - npm install -g maxmind-geolite-mirror
       script:
         - docker pull innovate/itframe:latest
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
