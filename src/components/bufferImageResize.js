@@ -16,7 +16,7 @@ export default function resizeImage(buffer, format, { width, height }, callback)
         image = image.jpeg()
     }
 
-    image= image.resize({ width, height })
+    image = image.resize({ width, height })
 
-    return callback(null, image.toBuffer());
+    image.toBuffer().then(data => { callback(null, data) }).catch(err => { callback(err) });
 }

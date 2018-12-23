@@ -13,5 +13,5 @@ export default function resizeImage(buffer, format, callback) {
     } else if (format == "jpg") {
         image = image.jpeg()
     }
-    return callback(null, image.toBuffer());
+    image.toBuffer().then(data => { callback(null, data) }).catch(err => { callback(err) });
 }
