@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:10
 MAINTAINER Maartje Eyskens <maartje@eyskens.me>
 
 # Update npm packages first to avoid unnecessary rebuilds
