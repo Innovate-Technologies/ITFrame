@@ -10,7 +10,7 @@ os:
 stages:
   - name: testbuild
     if: type = pr
-  - name: release
+  - name: build
     if: type = push
   - name: deploy
     if: branch = master AND type = push
