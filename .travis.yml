@@ -45,6 +45,7 @@ jobs:
         - docker push innovate/itframe:$TRAVIS_COMMIT
     - name: 'deploy'
       stage: deploy
+      language: bash
       script:
         - HELM_VERSION=v2.12.1 B64_CA_CRT=$B64_CA_CRT_LDN SERVICE_ACCOUNT_TOKEN=$SERVICE_ACCOUNT_TOKEN_LDN CLUSTER_ENDPOINT=$CLUSTER_ENDPOINT_LDN HELM_RELEASE=itframe HELM_CHART="./chart" K8S_NAMESPACE=itframe HELM_ARGS="--set image.tag=$TRAVIS_COMMIT" make deploy
         - HELM_VERSION=v2.12.1 B64_CA_CRT=$B64_CA_CRT_FRA SERVICE_ACCOUNT_TOKEN=$SERVICE_ACCOUNT_TOKEN_FRA CLUSTER_ENDPOINT=$CLUSTER_ENDPOINT_FRA HELM_RELEASE=itframe HELM_CHART="./chart" K8S_NAMESPACE=itframe HELM_ARGS="--set image.tag=$TRAVIS_COMMIT" make deploy
