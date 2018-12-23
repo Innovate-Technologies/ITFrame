@@ -1,13 +1,13 @@
-let wait = require("wait.for")
-let cld = require("cld")
+let promisify = require("promisify-node");
+let cld = promisify("cld")
 let whmcs = requireFromRoot("components/legacy/whmcs.js")
 
 module.exports.answerClient = function (ticket) {
-    wait.launchFiber(answerClient, ticket)
+    answerClient(ticket)
 }
 
-let answerClient = function (ticket) {
-    let cldAnalyse = wait.for(cld.detect, ticket.content)
+let answerClient = async (ticket) => {
+    let cldAnalyse = await cld.detect(ticket.content)
     if (cldAnalyse.languages.length === 1 && ["en", "nl", "fr"].indexOf(cldAnalyse.languages[0].code) === -1) {
         return whmcs.replyTicket({
             id: ticket.id,
