@@ -38,7 +38,7 @@ jobs:
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
         - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker push innovate/itframe:latest fi
+        - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker push innovate/itframe:latest; fi
         - docker tag innovate/itframe:latest innovate/itframe:$TRAVIS_COMMIT
         - docker push innovate/itframe:$TRAVIS_COMMIT
     - name: 'deploy'
