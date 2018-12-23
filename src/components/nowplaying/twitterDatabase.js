@@ -113,8 +113,8 @@ twitterDatabase.addUser = async (settings) => {
  */
 twitterDatabase.update = async (username, modifier) => {
     let settings = await twitterDatabase.getSettings(username);
-    let newSettings = _.extend(settings, modifier);
-    await newSettings.save();
+    modifier.username = username
+    return TwitterModel.update( { username }, modifier).exec()
 };
 
 /**
@@ -126,15 +126,12 @@ twitterDatabase.update = async (username, modifier) => {
  * @async
  */
 twitterDatabase.upsert = async (username, settings) => {
-    // XXX: As of August 2015, Mongoose still does not support running validators
-    // for update() calls properly (despite claiming having support for it since
-    // version 4.0), so we have to resort to first getting the document,
-    // then creating/updating it and re-saving it. Not ideal but it works.
+    settings.username = username
     let doc = await TwitterModel.findOne({ username });
-    doc = doc
-        ? _.extend(doc, settings)
-        : new TwitterModel(settings);
-    await doc.save();
+    if (!doc) {
+        return (new TwitterModel(settings)).save()
+    }
+    return TwitterModel.update({ username }, settings).exec()
 };
 
 /**

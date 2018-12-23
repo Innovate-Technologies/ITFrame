@@ -99,12 +99,17 @@ export const updateIntervalWithUsernameAndID = async (username, id, interval) =>
     if (!oldInterval) {
         throw new Error("No matching entry found")
     }
-    oldInterval = _.extend(oldInterval, interval)
-    oldInterval.username = username
+
+    interval.username = username
     const songs = []
     for (let songId of oldInterval.songs) {
         songs.push(new ObjectId(songId))
     }
     interval.songs = songs
-    return oldInterval.save()
+    return IntervalsModel.update({
+        _id: new ObjectId(id),
+        username: username,
+    }, {
+        interval
+    }).exec()
 }
