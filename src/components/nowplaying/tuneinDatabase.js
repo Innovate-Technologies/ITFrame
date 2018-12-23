@@ -85,8 +85,8 @@ tuneinDatabase.update = async (username, modifier, callback) => {
     if (!doc) {
         return callback(new Error("Username not in database"));
     }
-    doc = _.extend(doc, modifier);
-    return doc.save();
+    modifier.username = username
+    return TuneinModel.update({ username }, modifier).exec()
 };
 
 /**
@@ -98,17 +98,13 @@ tuneinDatabase.update = async (username, modifier, callback) => {
  * @return  {Promise}
  */
 tuneinDatabase.upsert = async (username, settings) => {
-    // XXX: As of August 2015, Mongoose still does not support running validators
-    // for update() calls properly (despite claiming having support for it since
-    // version 4.0), so we have to resort to first getting the document,
-    // then creating/updating it and re-saving it. Not ideal but it works.
+    settings.username = username
     let doc = await TuneinModel.findOne({ username }).exec();
     if (!doc) {
-        doc = new TuneinModel(settings);
-    } else {
-        doc = _.extend(doc, settings);
+        return (new TuneinModel(settings)).save();
     }
-    return doc.save();
+
+    return TuneinModel.update({ username }, settings).exec()
 };
 
 /**
@@ -121,8 +117,7 @@ tuneinDatabase.disable = async (username, reason) => {
     if (!doc) {
         return;
     }
-    doc = _.extend(doc, { disableReason: reason, isEnabled: false });
-    return doc.save();
+    return TuneinModel.update({ username }, { disableReason: reason, isEnabled: false }).exec()
 };
 
 module.exports = tuneinDatabase;
