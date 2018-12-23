@@ -28,8 +28,6 @@ jobs:
     - name: 'test build'
       stage: testbuild
       script:
-        - docker pull innovate/itframe:latest
-        - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd .
     - name: 'build'
