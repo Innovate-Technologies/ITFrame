@@ -29,14 +29,14 @@ jobs:
       stage: testbuild
       script:
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
-        - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd .
+        - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
     - name: 'build'
       stage: build
       script:
         - docker pull innovate/itframe:latest
-        - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
-        - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd .
+        - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
+        - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - if [[ "$TRAVIS_BRANCH" == "master" ]]; then docker push innovate/itframe:latest fi
         - docker tag innovate/itframe:latest innovate/itframe:$TRAVIS_COMMIT
