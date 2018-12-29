@@ -56,7 +56,7 @@
     "sharp": "^0.21.1",
     "shelljs": "^0.8.3",
     "simple-bufferstream": "~1.0.0",
-    "snyk": "^1.111.1",
+    "snyk": "^1.119.0",
     "twit": "^2.2.11",
     "underscore": "~1.9.1",
     "unirest": "0.5.1",
