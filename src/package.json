@@ -54,7 +54,7 @@
     "redis": "^2.8.0",
     "restler": "^3.3.0",
     "sharp": "^0.21.1",
-    "shelljs": "^0.8.2",
+    "shelljs": "^0.8.3",
     "simple-bufferstream": "~1.0.0",
     "snyk": "^1.111.1",
     "twit": "^2.2.11",
