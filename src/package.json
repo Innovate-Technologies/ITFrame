@@ -38,7 +38,7 @@
     "js-string-escape": "~1.0.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
-    "maxmind": "~2.11.0",
+    "maxmind": "~2.11.2",
     "moment": "^2.23.0",
     "moment-timezone": "^0.5.14",
     "mongoose": "5.4.1",
