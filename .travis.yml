@@ -25,18 +25,16 @@ jobs:
       stage: testbuild
       install:
         - cd src && npm install && cd ..
-        - npm install -g maxmind-geolite-mirror
       script:
-        - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
+        - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ ./downloadGeo.sh
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
     - name: 'build'
       stage: build
       install:
         - cd src && npm install && cd ..
-        - npm install -g maxmind-geolite-mirror
       script:
         - docker pull innovate/itframe:latest
-        - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
+        - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ ./downloadGeo.sh
         - if [ ! -f /src/components/geoip/database/GeoLite2-City.mmdb ]; then exit 1; fi
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
         - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
