@@ -37,6 +37,7 @@ jobs:
       script:
         - docker pull innovate/itframe:latest
         - MAXMIND_DB_DIR=$(pwd)/src/components/geoip/database/ maxmind-geolite-mirror
+        - if [ ! -f /src/components/geoip/database/GeoLite2-City.mmdb ]; then exit 1; fi
         - cd src && ./node_modules/.bin/babel ./ -d ../bin --minified --ignore 'node_modules/' && cd ..
         - docker build --cache-from innovate/itframe:latest -t innovate/itframe:latest .
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
