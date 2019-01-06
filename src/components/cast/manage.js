@@ -148,6 +148,10 @@ export const suspendNode = async (username) => {
 };
 
 export const supportedDirectories = [{
+    name: "discover.fm",
+    url: "https://yp.discover.fm/icecast",
+    type: "Icecast",
+}, {
     name: "SHOUTcast.com",
     url: "https://yp.shoutcast.com",
     type: "Icecast",
