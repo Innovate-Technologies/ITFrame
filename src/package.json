@@ -46,7 +46,7 @@
     "multer": "^1.4.1",
     "node-fleet-api": "^1.0.3",
     "nodeify": "^1.0.0",
-    "pkgcloud": "^1.6.0",
+    "pkgcloud": "^1.7.0",
     "pls": "^0.1.3",
     "promisify-node": "^0.5.0",
     "rand-token": "^0.4.0",
