@@ -5,7 +5,7 @@ export default ({ app, wrap }) => {
         if (!req.body.sha) {
             throw new Error("No sha found")
         }
-        if (req.body.build_status !== "success" || req.body.build_stage !== "deploy") {
+        if (req.body.build_status !== "success" || req.body.build_stage !== "build") {
             throw new Error("We won't deploy this build")
         }
 
