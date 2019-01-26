@@ -96,7 +96,7 @@ module.exports = function ({ app, wrap }) {
             throw new Error("Failed to upload the song.");
         }
         res.json({
-            link: `https://s3.shoutca.st/${req.file.name}`,
+            link: `https://tunes-us-east-1.shoutca.st/${req.file.name}`,
             name: req.file.name,
         });
     });
