@@ -1,6 +1,7 @@
 var bodyParser = require("body-parser");
 var fs = require("fs");
 var express = require("express");
+const Sentry = require('@sentry/node');
 var expressJwt = require("express-jwt");
 var jwt = require("jsonwebtoken");
 var app = express();
@@ -20,6 +21,11 @@ const filterSlack = (fn) => { // Slack is not a fan of body parsers so we should
 }
 
 module.exports = function () {
+
+    if (global.config.sentryDSN) {
+        Sentry.init({ dsn: global.config.sentryDSN })
+        app.use(Sentry.Handlers.requestHandler())
+    }
 
     app.use(function (req, res, next) {
         let requestId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -114,5 +120,7 @@ module.exports = function () {
         .filter((route) => route.route && route.route.methods)
         .map((route) => `${Object.keys(route.route.methods).join(",").toUpperCase()} ${route.route.path}`);
     moduleLogger.info("All defined application routes", humanReadableRoutes);
-
+    if (global.config.sentryDSN) {
+        app.use(Sentry.Handlers.errorHandler());
+    }
 }
