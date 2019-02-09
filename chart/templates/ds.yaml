@@ -1,0 +1,56 @@
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ template "itframe.fullname" . }}
+  labels:
+{{ include "itframe.labels" . | indent 4 }}
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+{{ include "itframe.labels" . | indent 8 }}
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: harbor
+      volumes:
+        - name: keys
+          secret:
+            secretName: itframe-keys
+        - name: config
+          secret:
+            secretName: itframe-config
+        - name: google
+          secret:
+            secretName: stackdriver
+      containers:
+        - name: {{ .Chart.Name }}
+          image: innovate/itframe:{{ required "missing tag" .Values.image.tag }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: keys
+              mountPath: "/run/secrets/controlPublicKey.pem"
+              readOnly: true
+              subPath: controlPublicKey.pem
+            - name: keys
+              mountPath: "/run/secrets/controlSigningKey.pem"
+              readOnly: true
+              subPath: controlSigningKey.pem
+            - name: config
+              mountPath: "/run/secrets/itframe-conf"
+              readOnly: true
+              subPath: itframe-conf
+            - name: google
+              mountPath: "/etc/google/"
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 5

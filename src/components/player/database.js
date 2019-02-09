@@ -121,29 +121,14 @@ let playerDatabase = {
      * @return {Promise}
      */
     upsertConfig(username, config, callback) {
-        return nodeify(new Promise((resolve, reject) => {
-            // XXX: As of August 2015, Mongoose still does not support running validators
-            // for update() calls properly (despite claiming having support for it since
-            // version 4.0), so we have to resort to first getting the document,
-            // then creating/updating it and re-saving it. Not ideal but it works.
-            PlayerModel.findOne({ username }, (err, doc) => {
-                if (err) {
-                    return reject(err);
-                }
-                if (!doc) {
-                    doc = new PlayerModel(config);
-                } else {
-                    doc = _.extend(doc, config);
-                }
-                PlayerModel.update({ username }, doc).exec((error) => {
-                    if (error) {
-                        error.message = "Could not update Player config: " + error.message;
-                        return reject(error);
-                    }
-                    return resolve();
-                });
-            });
-        }), callback);
+        return nodeify((async (username, config) => {
+            let entry = await PlayerModel.findOne({ username }).exec()
+            if (! entry || !entry.username) {
+                return (new PlayerModel(config)).save()
+            }
+            config.username = username
+            return PlayerModel.update({ username }, config).exec()
+        })(username, config), callback);
     },
 
     /**

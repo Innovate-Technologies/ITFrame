@@ -33,7 +33,7 @@ let processImageUpload = (req, { stream }, callback) => {
         }
         if (!targetDimensions) {
             logger.info("Converting image to PNG");
-            convertImage(buffer, type.ext, (convertError, convertedBuffer) => {
+            convertImage(buffer, "png", (convertError, convertedBuffer) => {
                 if (convertError) {
                     logger.error(convertError, "Failed to resize the image");
                     return callback(convertError);
@@ -43,7 +43,7 @@ let processImageUpload = (req, { stream }, callback) => {
             });
         } else {
             logger.info("Resizing image and converting it to PNG");
-            resizeImage(buffer, type.ext, targetDimensions, (resizeError, resizedBuffer) => {
+            resizeImage(buffer, "png", targetDimensions, (resizeError, resizedBuffer) => {
                 if (resizeError) {
                     logger.error(resizeError, "Failed to resize the image");
                     return callback(resizeError);
@@ -96,7 +96,7 @@ module.exports = function ({ app, wrap }) {
             throw new Error("Failed to upload the song.");
         }
         res.json({
-            link: `https://s3.shoutca.st/${req.file.name}`,
+            link: `https://tunes-us-east-1.shoutca.st/${req.file.name}`,
             name: req.file.name,
         });
     });

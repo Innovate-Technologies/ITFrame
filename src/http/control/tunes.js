@@ -71,6 +71,7 @@ module.exports = function ({ app, wrap }) {
 
         if (typeof req.body.tags === "string") {
             req.body.tags = JSON.parse(req.body.tags)
+            req.log.info({ tags: req.body.tags  }, "Parsed JSON tags");
         }
 
         const castInfo = await castDatabase.getInfoForUsername(req.body.username)
@@ -80,7 +81,7 @@ module.exports = function ({ app, wrap }) {
         }
         const entry = await tunesDB.addSong(req.body.username, {
             type: "song",
-            song: "",
+            song: req.file.originalname || "",
             artist: "",
             album: "",
             externalURL: {},

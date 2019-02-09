@@ -5,6 +5,7 @@
 
 import dns from "dns";
 import _ from "underscore";
+import { User } from "etcd3";
 
 let usersDatabase = {};
 let rest = require("restler");
@@ -32,11 +33,13 @@ usersDatabase.getInfoForUsername = (username, callback) => {
 }
 
 usersDatabase.upsert = async (username, updatedDocument) => {
+    updatedDocument.username = username
     let doc = await UsersModel.findOne({ username });
-    doc = doc
-        ? _.extend(doc, updatedDocument)
-        : new UsersModel(_.extend({ username }, updatedDocument));
-    await doc.save();
+    if (!doc) {
+        return (new UsersModel(updatedDocument)).save()
+    }
+    
+    return UsersModel.update({ username }, updatedDocument).exec()
 }
 
 usersDatabase.register = (username, server, groupName, callback = () => {}) => {

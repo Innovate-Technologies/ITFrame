@@ -29,6 +29,7 @@ if (config.sendLogsToStackdriver && config.stackdriverProject && config.stackdri
     const loggingBunyan = new LoggingBunyan({
         projectId: config.stackdriverProject,
         keyFilename: config.stackdriverKey,
+        maxRetries: 50,
     });
     streams.push(loggingBunyan.stream("debug"));
 }

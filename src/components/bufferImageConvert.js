@@ -1,25 +1,17 @@
-let lwip = require("lwip");
+const sharp = require("sharp");
 
 /**
  * Convert an image to a PNG image
  * @param  {Buffer}   buffer         Buffer containing the image
- * @param  {String}   format         Image format (png, jpg, gif)
+ * @param  {String}   format         Image format (png, jpg)
  * @param  {Function} callback       Callback function (err, buffer)
  */
 export default function resizeImage(buffer, format, callback) {
-    let openCallback = (err, image) => {
-        if (err) {
-            return callback("Failed to open the image: " + err);
-        }
-        image.toBuffer("png", toBufferCallback);
-    };
-
-    let toBufferCallback = (err, resizedBuffer) => {
-        if (err) {
-            return callback("Failed to get the resized image: " + err);
-        }
-        return callback(null, resizedBuffer);
-    };
-
-    lwip.open(buffer, format, openCallback);
+    let image = sharp(buffer)
+    if (format == "png") {
+        image = image.png()
+    } else if (format == "jpg") {
+        image = image.jpeg()
+    }
+    image.toBuffer().then(data => { callback(null, data) }).catch(err => { callback(err) });
 }
