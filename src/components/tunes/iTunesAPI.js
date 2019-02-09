@@ -6,7 +6,6 @@ const search = (data) => new Promise((resolve, reject) => {
         data: data,
         timeout: 10000,
     }).on("complete", function (returnData) {
-        logger.debug("Call succeeded");
         resolve(returnData);
     }).on("timeout", function () {
         logger.error("Timeout");

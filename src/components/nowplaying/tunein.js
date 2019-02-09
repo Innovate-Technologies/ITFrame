@@ -14,7 +14,7 @@ module.exports.sendSong = async (username, title, artist) => {
         return
     }
     if (!res.isEnabled) {
-        return logger.debug("Skipping as isEnabled is falsy");
+        return
     }
     if (typeof title === "undefined" || title.length === 0) {
         title = "Unknown"

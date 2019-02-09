@@ -91,7 +91,7 @@ export default ({ app, wrap }) => {
             songInfo.artist = song.artist.trim();
             songInfo.album = song.cover;
         } catch (_) {
-            moduleLogger.info("Found nothing in DB, replying with empty info");
+            // moduleLogger.info("Found nothing in DB, replying with empty info");
         }
         //moduleLogger.debug({ username }, "Sending response");
         return res.json(songInfo);
