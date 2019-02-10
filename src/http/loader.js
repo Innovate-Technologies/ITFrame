@@ -28,9 +28,9 @@ const controlCors = (req, res, next) => {
     res.setHeader("Access-Control-Max-Age", "1728000")
 
     if (req.method == "OPTIONS") {
-        res.setHeader("Content-Type", "text/plain charset=UTF-8")
+        res.type("text/plain")
         res.setHeader("Content-Length", "0")
-        return res.status(204).send()
+        return res.status(204).send("")
     }
 
     next();
