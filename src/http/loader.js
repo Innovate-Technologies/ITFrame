@@ -20,12 +20,23 @@ const filterSlack = (fn) => { // Slack is not a fan of body parsers so we should
     }
 }
 
+const controlCors = (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Credentials", "true")
+    res.setHeader("Access-Control-Allow-Headers", "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization")
+    res.setHeader("Access-Control-Allow-Method", "GET, POST, OPTIONS, PUT, DELETE")
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Max-Age", "1728000")
+    next();
+}
+
 module.exports = function () {
 
     if (global.config.sentryDSN) {
         Sentry.init({ dsn: global.config.sentryDSN })
         app.use(Sentry.Handlers.requestHandler())
     }
+
+    app.use(controlCors)
 
     app.use(function (req, res, next) {
         let requestId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
