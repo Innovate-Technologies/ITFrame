@@ -54,3 +54,10 @@ spec:
               port: http
             periodSeconds: 20
             timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 3
+            failureThreshold: 8
