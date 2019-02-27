@@ -23,7 +23,7 @@ const filterSlack = (fn) => { // Slack is not a fan of body parsers so we should
 const controlCors = (req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true")
     res.setHeader("Access-Control-Allow-Headers", "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization")
-    res.setHeader("Access-Control-Allow-Method", "GET, POST, OPTIONS, PUT, DELETE")
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Access-Control-Max-Age", "1728000")
 
