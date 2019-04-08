@@ -37,7 +37,7 @@
     "gelf-stream": "^1.1.1",
     "heapdump": "^0.3.12",
     "js-string-escape": "~1.0.0",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "maxmind": "~2.12.0",
     "moment": "^2.24.0",
