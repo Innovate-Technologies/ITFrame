@@ -52,24 +52,3 @@ patch:
   'npm:minimatch:20160620':
     - pkgcloud > liboneandone > mocha > glob > minimatch:
         patched: '2018-11-30T00:48:40.335Z'
-  SNYK-JS-AXIOS-174505:
-    - '@slack/client > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-auth-library > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-auth-library > gtoken > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-auth-library > gcp-metadata > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-gax > google-auth-library > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > @google-cloud/common-grpc > @google-cloud/common > google-auth-library > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-gax > google-auth-library > gcp-metadata > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > google-gax > google-auth-library > gtoken > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > @google-cloud/common-grpc > @google-cloud/common > google-auth-library > gtoken > axios':
-        patched: '2019-05-05T21:54:52.280Z'
-    - '@google-cloud/logging-bunyan > @google-cloud/logging > @google-cloud/common-grpc > @google-cloud/common > google-auth-library > gcp-metadata > axios':
-        patched: '2019-05-05T21:54:52.280Z'
