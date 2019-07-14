@@ -19,6 +19,8 @@ const ListenersSchema = new Schema({
 }, { collection: "cast_listeners" })
 ListenersSchema.index({
     username: 1,
+    ip: 1,
+    client: 1,
 });
 const ListenersModel = mongoose.model("cast_listeners", ListenersSchema, "cast_listeners")
 
