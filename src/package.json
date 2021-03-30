@@ -28,7 +28,7 @@
     "colorspaces": "^0.1.4",
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.4",
-    "ejson": "^2.1.2",
+    "ejson": "^2.2.0",
     "etcd3": "^0.2.10",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
@@ -59,7 +59,7 @@
     "simple-bufferstream": "~1.0.0",
     "snyk": "^1.161.2",
     "twit": "^2.2.11",
-    "underscore": "~1.9.1",
+    "underscore": "~1.12.1",
     "unirest": "0.6.0",
     "util": "~0.11.0",
     "xml2js": "^0.4.19"
