@@ -16,7 +16,10 @@ for i in *tar.gz; do tar -zxvf $i ;done
 for FILE in *; do
     if [ -d "$FILE" ]; then
         cd $FILE
-        cp *.mmdb ../
+        count=`ls -1 *.mmdb 2>/dev/null | wc -l`
+        if [ $count != 0 ]; then 
+            cp *.mmdb ../
+        fi 
         cd ..
     fi
 done
