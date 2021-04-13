@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# cd $MAXMIND_DB_DIR
+cd $MAXMIND_DB_DIR
 # wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz || { echo 'Could not download GeoLiteCountry, exiting.' ; exit 1; }
 # wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz || { echo 'Could not download GeoLiteCity, exiting.' ; exit 1; }
 # wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz || { echo 'Could not download GeoLiteCityv6, exiting.' ; exit 1; }
