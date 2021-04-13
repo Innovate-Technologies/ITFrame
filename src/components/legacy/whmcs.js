@@ -75,11 +75,8 @@ const sendRequest = (action, data, format = "json") => new Promise((resolve, rej
  */
 export const checkLogin = async (email, password) => {
     try {
-        const [correctHash, salt] =
-            (await sendRequest("getclientpassword", { email })).password.split(":");
-        const oldHash = crypto.createHash("md5").update(salt + password).digest("hex");
-        const bcryptCorrect = await bcrypt.compare(password, correctHash.replace(/^\$2y(.+)$/i, "\$2a$1"))
-        return oldHash === correctHash || bcryptCorrect;
+        const data = await sendRequest("validatelogin", { email: email, password2: password });
+        return data.result === "success";
     } catch (error) {
         if (error instanceof WHMCSError) {
             // WHMCS returned an error explicitely, which means the login failed
