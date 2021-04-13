@@ -12,4 +12,4 @@ wget -O GeoLite2-Country.tar.gz https://download.maxmind.com/app/geoip_download?
 wget -O GeoLite2-City.tar.gz https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=${GEOLITE_KEY}&suffix=tar.gz || { echo 'Could not download GeoLite2 City, exiting.' ; exit 1; }
 wget -O GeoLite2-ASN.tar.gz https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=${GEOLITE_KEY}&suffix=tar.gz || { echo 'Could not download GeoLite2 ASN, exiting.' ; exit 1; }
 
-tar -zxvf '*.gz'
+tar zxvf '*.gz'
