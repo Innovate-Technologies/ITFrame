@@ -13,3 +13,10 @@ curl "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&l
 curl "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=${GEOLITE_KEY}&suffix=tar.gz" -o GeoLite2-ASN.tar.gz || { echo 'Could not download GeoLite2 ASN, exiting.' ; exit 1; }
 
 for i in *tar.gz; do tar -zxvf $i ;done
+for FILE in *; do
+    if [ -d "$FILE" ]; then
+        cd $FILE
+        cp *.mmdb ../
+        cd ..
+    fi
+done
