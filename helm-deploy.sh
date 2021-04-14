@@ -31,7 +31,7 @@ done
 KUBECONFIG=$(mktemp)
 trap "rm -f $KUBECONFIG" EXIT
 cat > $KUBECONFIG <<EOF
-apiVersion: apps/v1
+apiVersion: v1
 clusters:
 - cluster:
     certificate-authority-data: $B64_CA_CRT
@@ -54,5 +54,5 @@ users:
 EOF
 
 export KUBECONFIG
-helm init --stable-repo-url https://charts.helm.sh/stable --client-only
+helm init --stable-repo-url https://charts.helm.sh/stable --client-only --kube-context helm
 helm upgrade "$RELEASE" "$CHART" --install $HELM_ARGS
