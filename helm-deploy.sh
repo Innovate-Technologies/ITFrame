@@ -31,7 +31,7 @@ done
 KUBECONFIG=$(mktemp)
 trap "rm -f $KUBECONFIG" EXIT
 cat > $KUBECONFIG <<EOF
-apiVersion: v1
+apiVersion: apps/v1
 clusters:
 - cluster:
     certificate-authority-data: $B64_CA_CRT
