@@ -56,5 +56,5 @@ EOF
 export KUBECONFIG
 helm init --client-only --kube-context helm
 helm plugin install https://github.com/hickeyma/helm-mapkubeapis
-helm mapkubeapis itframe --dry-run --v2
+helm mapkubeapis itframe --v2
 helm upgrade "$RELEASE" "$CHART" --install $HELM_ARGS --version 2.17.0
