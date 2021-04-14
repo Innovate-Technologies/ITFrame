@@ -54,5 +54,5 @@ users:
 EOF
 
 export KUBECONFIG
-helm init --stable-repo-url https://charts.helm.sh/stable --client-only --kube-context helm
+helm init --client-only --kube-context helm
 helm upgrade "$RELEASE" "$CHART" --install $HELM_ARGS
