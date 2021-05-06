@@ -59,7 +59,7 @@
     "simple-bufferstream": "~1.0.0",
     "snyk": "^1.161.2",
     "twit": "^2.2.11",
-    "underscore": "~1.9.1",
+    "underscore": "~1.12.1",
     "unirest": "0.6.0",
     "util": "~0.11.0",
     "xml2js": "^0.4.19"
