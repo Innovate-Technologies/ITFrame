@@ -25,8 +25,8 @@ const parseXml = (s) => new Promise((resolve, reject) => {
 const sendRequest = (action, data, format = "json") => new Promise((resolve, reject) => {
     const logger = moduleLogger.child({ action, data });
 
-    data.username = config.whmcsUsername;
-    data.password = config.whmcsPassword;
+    data.identifier = config.whmcsIdentifier;
+    data.secret = config.whmcsSecret;
     data.accesskey = config.whmcsKey;
     data.responsetype = format;
     data.action = action;
