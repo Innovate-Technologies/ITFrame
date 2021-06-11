@@ -85,7 +85,7 @@
     "eslint-config-eslint": "^5.0.1",
     "eslint-config-import": "^0.13.0",
     "eslint-import-resolver-node": "^0.3.2",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-import": "^2.23.4",
     "eslint_d": "^7.3.0"
   },
   "scripts": {
