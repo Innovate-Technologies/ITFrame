@@ -82,8 +82,7 @@ module.exports.testInfo = (settings) => new Promise((resolve, reject) => {
         if (response instanceof Error) {
             return reject(new Error("Invalid details provided for TuneIn AIR"))
         }
-        if (typeof response === "string" && response.includes("<status>403</status>")
-            || info.statusCode === 403) {
+        if (info.statusCode === 403) { // Removed <status>403</status> because TuneIn sends 403s randomly
             return reject(new Error("Invalid details provided for TuneIn AIR"));
         }
         return resolve()
