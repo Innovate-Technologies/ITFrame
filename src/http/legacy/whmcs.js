@@ -1,4 +1,5 @@
 import * as tunesDatabase from "../../components/tunes/personalMusicDatabase.js"
+import * as podcastFilesDatabase from "../../components/cast/podcast/files"
 const cast = requireFromRoot("components/cast/manage.js")
 const castDatabase = requireFromRoot("components/cast/database.js")
 const mayaSupport = requireFromRoot("components/maya/support.js")
@@ -58,6 +59,7 @@ export default ({ app, wrap }) => {
         const users = await castDatabase.getAll()
         for (let user of users) {
             usagePerUsername[user.username] = await tunesDatabase.calculateUsedSpace(user.username)
+            usagePerUsername[user.username] += await podcastFilesDatabase.calculateUsedSpace(user.username)
         }
         res.json(usagePerUsername)
     }))
